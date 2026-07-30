@@ -22,10 +22,10 @@ function SamplesContent() {
         <div className="flex items-center justify-between gap-4">
           <button
             type="button"
-            onClick={() => router.push("/dashboard/campaigns/new")}
+            onClick={() => router.push("/dashboard/campaigns/new/match")}
             className="text-sm font-semibold text-muted hover:text-navy"
           >
-            ← Back to formats
+            ← Back to match
           </button>
           <div className="w-full max-w-xs">
             <PrimaryButton

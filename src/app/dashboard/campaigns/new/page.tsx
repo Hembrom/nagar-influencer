@@ -1,262 +1,169 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageFrame } from "@/components/dashboard/PageFrame";
-import { PrimaryButton } from "@/components/PrimaryButton";
-import {
-  saveBrief,
-  type CampaignBrief,
-  type CampaignGoal,
-  type ProductType,
-} from "@/lib/recommend";
+import { buildChatBrief, saveChatBrief } from "@/lib/recommend";
 
-const GOALS: { id: CampaignGoal; label: string; hint: string }[] = [
-  { id: "awareness", label: "Awareness", hint: "Get discovered by new audiences" },
-  { id: "trust", label: "Build trust", hint: "Proof, reviews, credibility" },
-  { id: "conversions", label: "Conversions", hint: "Demos, signups, sales" },
-  { id: "launch", label: "Product launch", hint: "Release-week momentum" },
-];
+type Role = "assistant" | "user";
 
-const PRODUCTS: { id: ProductType; label: string }[] = [
-  { id: "saas", label: "SaaS / B2B software" },
-  { id: "app", label: "Mobile app" },
-  { id: "hardware", label: "Hardware / gadget" },
-  { id: "d2c", label: "D2C / consumer brand" },
-  { id: "other", label: "Other" },
-];
+type Msg = {
+  id: string;
+  role: Role;
+  text: string;
+};
 
-export default function NewCampaignBriefPage() {
+type Phase = "story" | "want" | "done";
+
+const OPENING: Msg = {
+  id: "m0",
+  role: "assistant",
+  text: "Hey — tell me about your store or product. What are you building, who is it for, and what’s the story behind it?",
+};
+
+export default function NewCampaignChatPage() {
   const router = useRouter();
-  const [form, setForm] = useState<CampaignBrief>({
-    brandName: "",
-    productName: "",
-    productType: "saas",
-    goal: "conversions",
-    audience: "",
-    story: "",
-    want: "",
-    timeline: "2weeks",
-  });
+  const [messages, setMessages] = useState<Msg[]>([OPENING]);
+  const [input, setInput] = useState("");
+  const [phase, setPhase] = useState<Phase>("story");
+  const [story, setStory] = useState("");
+  const [typing, setTyping] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
-  const canContinue =
-    form.brandName.trim().length > 1 &&
-    form.productName.trim().length > 1 &&
-    form.story.trim().length > 20 &&
-    form.want.trim().length > 10;
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, typing]);
 
-  function submit() {
-    if (!canContinue) return;
-    saveBrief(form);
-    router.push("/dashboard/campaigns/new/match");
+  function pushAssistant(text: string, delay = 600) {
+    setTyping(true);
+    window.setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        { id: `a-${Date.now()}`, role: "assistant", text },
+      ]);
+      setTyping(false);
+    }, delay);
+  }
+
+  function send() {
+    const text = input.trim();
+    if (!text || typing || phase === "done") return;
+
+    setMessages((prev) => [
+      ...prev,
+      { id: `u-${Date.now()}`, role: "user", text },
+    ]);
+    setInput("");
+
+    if (phase === "story") {
+      setStory(text);
+      setPhase("want");
+      pushAssistant(
+        "Got it. What do you want to see influencers create for you — demos, reviews, Reels, unboxing, launch buzz, something else? Be as specific as you like.",
+      );
+      return;
+    }
+
+    if (phase === "want") {
+      setPhase("done");
+      const brief = buildChatBrief(story, text);
+      saveChatBrief(brief);
+      pushAssistant(
+        "Perfect. I’ll pull the best-fit creators from our network and show you up to 5 of their existing reels — pick the style you love.",
+        500,
+      );
+      window.setTimeout(() => {
+        router.push("/dashboard/campaigns/new/reels");
+      }, 1400);
+    }
   }
 
   return (
     <PageFrame
       title="New campaign"
-      subtitle="Tell us your story — we’ll recommend the best format for your goals"
-      footer={
-        <div className="flex items-center justify-between gap-4">
-          <p className="text-sm text-muted">
-            Step 1 of 2 · Brief → system match
-          </p>
-          <div className="w-full max-w-xs">
-            <PrimaryButton onClick={submit} disabled={!canContinue}>
-              Get my recommendation
-            </PrimaryButton>
+      subtitle="Chat with us — share your product story and what you want influencers to create"
+    >
+      <div className="mx-auto flex h-[min(680px,calc(100dvh-220px))] max-w-3xl flex-col overflow-hidden rounded-2xl border border-border bg-card">
+        <div className="flex items-center gap-3 border-b border-border px-5 py-3.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-purple text-xs font-extrabold text-white">
+            NI
+          </div>
+          <div>
+            <p className="text-sm font-bold text-navy">Campaign matcher</p>
+            <p className="text-[11px] text-muted">
+              {phase === "done"
+                ? "Finding creators…"
+                : "Usually replies instantly"}
+            </p>
           </div>
         </div>
-      }
-    >
-      <div className="mx-auto grid max-w-4xl gap-8 lg:grid-cols-[1fr_280px]">
-        <div className="space-y-6">
-          <section className="rounded-2xl border border-border bg-card p-6">
-            <h2 className="text-sm font-bold tracking-wide text-muted-light uppercase">
-              Brand basics
-            </h2>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <Field
-                label="Brand / company"
-                value={form.brandName}
-                onChange={(v) => setForm({ ...form, brandName: v })}
-                placeholder="Acme Tech"
-              />
-              <Field
-                label="Product name"
-                value={form.productName}
-                onChange={(v) => setForm({ ...form, productName: v })}
-                placeholder="Acme Analytics"
-              />
+
+        <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
+          {messages.map((m) => (
+            <div
+              key={m.id}
+              className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+            >
+              <div
+                className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                  m.role === "user"
+                    ? "rounded-br-md bg-purple text-white"
+                    : "rounded-bl-md bg-background text-navy"
+                }`}
+              >
+                {m.text}
+              </div>
             </div>
-
-            <p className="mt-5 mb-2 text-sm font-semibold text-navy">
-              Product type
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {PRODUCTS.map((p) => (
-                <Chip
-                  key={p.id}
-                  active={form.productType === p.id}
-                  onClick={() => setForm({ ...form, productType: p.id })}
-                >
-                  {p.label}
-                </Chip>
-              ))}
+          ))}
+          {typing ? (
+            <div className="flex justify-start">
+              <div className="rounded-2xl rounded-bl-md bg-background px-4 py-3 text-sm text-muted">
+                <span className="inline-flex gap-1">
+                  <span className="animate-pulse">●</span>
+                  <span className="animate-pulse" style={{ animationDelay: "120ms" }}>
+                    ●
+                  </span>
+                  <span className="animate-pulse" style={{ animationDelay: "240ms" }}>
+                    ●
+                  </span>
+                </span>
+              </div>
             </div>
-          </section>
-
-          <section className="rounded-2xl border border-border bg-card p-6">
-            <h2 className="text-sm font-bold tracking-wide text-muted-light uppercase">
-              What do you want?
-            </h2>
-            <p className="mt-4 mb-2 text-sm font-semibold text-navy">
-              Primary goal
-            </p>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {GOALS.map((g) => (
-                <button
-                  key={g.id}
-                  type="button"
-                  onClick={() => setForm({ ...form, goal: g.id })}
-                  className={`rounded-2xl border-2 p-4 text-left transition ${
-                    form.goal === g.id
-                      ? "border-orange bg-orange-soft/40"
-                      : "border-border hover:border-orange/40"
-                  }`}
-                >
-                  <p className="text-sm font-bold text-navy">{g.label}</p>
-                  <p className="mt-1 text-xs text-muted">{g.hint}</p>
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-4">
-              <Field
-                label="Who is this for?"
-                value={form.audience}
-                onChange={(v) => setForm({ ...form, audience: v })}
-                placeholder="e.g. Indian SMB founders, SaaS marketers…"
-              />
-            </div>
-
-            <label className="mt-4 block text-sm">
-              <span className="mb-1.5 block font-semibold text-navy">
-                Your story
-              </span>
-              <textarea
-                rows={4}
-                value={form.story}
-                onChange={(e) => setForm({ ...form, story: e.target.value })}
-                placeholder="What are you building? What’s the problem you solve? Why now?"
-                className="w-full resize-y rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-purple"
-              />
-              <span className="mt-1 block text-xs text-muted-light">
-                Min. ~20 characters — the more context, the better the match.
-              </span>
-            </label>
-
-            <label className="mt-4 block text-sm">
-              <span className="mb-1.5 block font-semibold text-navy">
-                What should this campaign achieve?
-              </span>
-              <textarea
-                rows={3}
-                value={form.want}
-                onChange={(e) => setForm({ ...form, want: e.target.value })}
-                placeholder="e.g. Drive demo signups, explain our dashboard, launch to tech YouTubers…"
-                className="w-full resize-y rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-purple"
-              />
-            </label>
-
-            <p className="mt-5 mb-2 text-sm font-semibold text-navy">Timeline</p>
-            <div className="flex flex-wrap gap-2">
-              {(
-                [
-                  { id: "asap" as const, label: "ASAP" },
-                  { id: "2weeks" as const, label: "Within 2 weeks" },
-                  { id: "flexible" as const, label: "Flexible" },
-                ] as const
-              ).map((t) => (
-                <Chip
-                  key={t.id}
-                  active={form.timeline === t.id}
-                  onClick={() => setForm({ ...form, timeline: t.id })}
-                >
-                  {t.label}
-                </Chip>
-              ))}
-            </div>
-          </section>
+          ) : null}
+          <div ref={bottomRef} />
         </div>
 
-        <aside className="h-fit rounded-2xl border border-purple/20 bg-purple-soft p-5">
-          <p className="text-xs font-bold tracking-wide text-purple uppercase">
-            How matching works
-          </p>
-          <ol className="mt-3 space-y-3 text-sm leading-relaxed text-purple">
-            <li>
-              <span className="font-bold">1.</span> You share story & goals — no
-              format picking yet.
-            </li>
-            <li>
-              <span className="font-bold">2.</span> We score formats against your
-              product type and outcome.
-            </li>
-            <li>
-              <span className="font-bold">3.</span> You get one best pick + why,
-              then reserve with ₹500.
-            </li>
-          </ol>
-        </aside>
+        <div className="border-t border-border p-4">
+          <form
+            className="flex gap-3"
+            onSubmit={(e) => {
+              e.preventDefault();
+              send();
+            }}
+          >
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={phase === "done" || typing}
+              placeholder={
+                phase === "story"
+                  ? "Describe your product or store…"
+                  : phase === "want"
+                    ? "What should influencers create?"
+                    : "Matching creators…"
+              }
+              className="flex-1 rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-purple disabled:opacity-60"
+            />
+            <button
+              type="submit"
+              disabled={!input.trim() || typing || phase === "done"}
+              className="rounded-xl bg-orange px-5 py-3 text-sm font-bold text-white transition hover:bg-[#f05f20] disabled:opacity-50"
+            >
+              Send
+            </button>
+          </form>
+        </div>
       </div>
     </PageFrame>
-  );
-}
-
-function Field({
-  label,
-  value,
-  onChange,
-  placeholder,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder?: string;
-}) {
-  return (
-    <label className="block text-sm">
-      <span className="mb-1.5 block font-semibold text-navy">{label}</span>
-      <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="w-full rounded-xl border border-border bg-background px-3 py-2.5 outline-none focus:border-purple"
-      />
-    </label>
-  );
-}
-
-function Chip({
-  children,
-  active,
-  onClick,
-}: {
-  children: React.ReactNode;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition ${
-        active
-          ? "bg-orange text-white"
-          : "bg-background text-muted hover:text-navy"
-      }`}
-    >
-      {children}
-    </button>
   );
 }

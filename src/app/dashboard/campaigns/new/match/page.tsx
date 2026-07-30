@@ -6,25 +6,27 @@ import { PageFrame } from "@/components/dashboard/PageFrame";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { FormatIcon } from "@/components/FormatIcons";
 import {
-  loadBrief,
-  recommendFromBrief,
-  type CampaignBrief,
+  loadChatBrief,
+  recommendFromSelection,
+  type ChatBrief,
   type MatchResult,
 } from "@/lib/recommend";
 
 export default function MatchPage() {
   const router = useRouter();
-  const [brief, setBrief] = useState<CampaignBrief | null>(null);
+  const [brief, setBrief] = useState<ChatBrief | null>(null);
   const [match, setMatch] = useState<MatchResult | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
 
   useEffect(() => {
-    const b = loadBrief();
-    if (!b) {
-      router.replace("/dashboard/campaigns/new");
+    const b = loadChatBrief();
+    if (!b?.selectedReelId) {
+      router.replace(
+        b?.story ? "/dashboard/campaigns/new/reels" : "/dashboard/campaigns/new",
+      );
       return;
     }
-    const result = recommendFromBrief(b);
+    const result = recommendFromSelection(b);
     setBrief(b);
     setMatch(result);
     setPicked(result.primary.id);
@@ -33,7 +35,7 @@ export default function MatchPage() {
   if (!brief || !match || !picked) {
     return (
       <div className="flex flex-1 items-center justify-center p-8 text-muted">
-        Matching the best format for you…
+        Building your best match…
       </div>
     );
   }
@@ -46,15 +48,17 @@ export default function MatchPage() {
   return (
     <PageFrame
       title="Best match for you"
-      subtitle={`Based on ${brief.productName} · ${brief.goal.replace(/^\w/, (c) => c.toUpperCase())} goal`}
+      subtitle={`Based on ${brief.productHint}${
+        match.reel ? ` · liked ${match.reel.influencerName}` : ""
+      }`}
       footer={
         <div className="flex items-center justify-between gap-4">
           <button
             type="button"
-            onClick={() => router.push("/dashboard/campaigns/new")}
+            onClick={() => router.push("/dashboard/campaigns/new/reels")}
             className="text-sm font-semibold text-muted hover:text-navy"
           >
-            ← Edit brief
+            ← Change reel
           </button>
           <div className="w-full max-w-xs">
             <PrimaryButton
@@ -147,7 +151,10 @@ export default function MatchPage() {
             </p>
             <ul className="mt-3 space-y-2.5">
               {match.reasons.map((r) => (
-                <li key={r} className="flex gap-2 text-sm leading-relaxed text-purple">
+                <li
+                  key={r}
+                  className="flex gap-2 text-sm leading-relaxed text-purple"
+                >
                   <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-purple" />
                   {r}
                 </li>
@@ -155,25 +162,20 @@ export default function MatchPage() {
             </ul>
           </div>
 
-          <div className="rounded-2xl border border-border bg-card p-5">
-            <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
-              FROM YOUR BRIEF
-            </p>
-            <dl className="mt-3 space-y-3 text-sm">
-              <div>
-                <dt className="text-muted">Brand</dt>
-                <dd className="font-semibold text-navy">{brief.brandName}</dd>
-              </div>
-              <div>
-                <dt className="text-muted">Want</dt>
-                <dd className="text-navy/85">{brief.want}</dd>
-              </div>
-              <div>
-                <dt className="text-muted">Story</dt>
-                <dd className="line-clamp-4 text-navy/85">{brief.story}</dd>
-              </div>
-            </dl>
-          </div>
+          {match.reel ? (
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+                REEL YOU LIKED
+              </p>
+              <p className="mt-2 text-sm font-bold text-navy">
+                {match.reel.title}
+              </p>
+              <p className="mt-1 text-sm text-muted">
+                {match.reel.influencerName} · {match.reel.influencerHandle}
+              </p>
+              <p className="mt-2 text-xs text-muted">{match.reel.vibe}</p>
+            </div>
+          ) : null}
         </aside>
       </div>
     </PageFrame>

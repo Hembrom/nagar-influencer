@@ -5,8 +5,11 @@ import { getSupabaseEnv } from "./env";
 
 export async function updateSession(request: NextRequest) {
   const env = getSupabaseEnv();
+  const { pathname } = request.nextUrl;
+  const isDashboard = pathname.startsWith("/dashboard");
+  const isAuthRoute =
+    pathname.startsWith("/login") || pathname.startsWith("/auth");
 
-  // Skip auth refresh when Supabase isn't configured yet (e.g. Vercel without env).
   if (!env) {
     return NextResponse.next({ request });
   }
@@ -30,7 +33,23 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (isDashboard && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set("next", pathname);
+    return NextResponse.redirect(url);
+  }
+
+  if (isAuthRoute && user && pathname === "/login") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard/campaigns";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
 
   return supabaseResponse;
 }

@@ -13,8 +13,6 @@ type Msg = {
   text: string;
 };
 
-type Phase = "story" | "want" | "done";
-
 const OPENING: Msg = {
   id: "m0",
   role: "assistant",
@@ -25,8 +23,7 @@ export default function NewCampaignChatPage() {
   const router = useRouter();
   const [messages, setMessages] = useState<Msg[]>([OPENING]);
   const [input, setInput] = useState("");
-  const [phase, setPhase] = useState<Phase>("story");
-  const [story, setStory] = useState("");
+  const [done, setDone] = useState(false);
   const [typing, setTyping] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -34,54 +31,42 @@ export default function NewCampaignChatPage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typing]);
 
-  function pushAssistant(text: string, delay = 600) {
-    setTyping(true);
-    window.setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        { id: `a-${Date.now()}`, role: "assistant", text },
-      ]);
-      setTyping(false);
-    }, delay);
-  }
-
   function send() {
     const text = input.trim();
-    if (!text || typing || phase === "done") return;
+    if (!text || typing || done) return;
 
     setMessages((prev) => [
       ...prev,
       { id: `u-${Date.now()}`, role: "user", text },
     ]);
     setInput("");
+    setDone(true);
+    setTyping(true);
 
-    if (phase === "story") {
-      setStory(text);
-      setPhase("want");
-      pushAssistant(
-        "Got it. What do you want to see influencers create for you — demos, reviews, Reels, unboxing, launch buzz, something else? Be as specific as you like.",
-      );
-      return;
-    }
+    const brief = buildChatBrief(text, text);
+    saveChatBrief(brief);
 
-    if (phase === "want") {
-      setPhase("done");
-      const brief = buildChatBrief(story, text);
-      saveChatBrief(brief);
-      pushAssistant(
-        "Perfect. I’ll pull the best-fit creators from our network and show you up to 5 of their existing reels — pick the style you love.",
-        500,
-      );
-      window.setTimeout(() => {
-        router.push("/dashboard/campaigns/new/reels");
-      }, 1400);
-    }
+    window.setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `a-${Date.now()}`,
+          role: "assistant",
+          text: "Got it. I’ll pull the best-fit creators and show you up to 5 of their existing reels — pick the style you love.",
+        },
+      ]);
+      setTyping(false);
+    }, 500);
+
+    window.setTimeout(() => {
+      router.push("/dashboard/campaigns/new/reels");
+    }, 1400);
   }
 
   return (
     <PageFrame
       title="New campaign"
-      subtitle="Chat with us — share your product story and what you want influencers to create"
+      subtitle="Share your product story — we’ll match influencers and show you reels to like"
     >
       <div className="mx-auto flex h-[min(680px,calc(100dvh-220px))] max-w-3xl flex-col overflow-hidden rounded-2xl border border-border bg-card">
         <div className="flex items-center gap-3 border-b border-border px-5 py-3.5">
@@ -91,9 +76,7 @@ export default function NewCampaignChatPage() {
           <div>
             <p className="text-sm font-bold text-navy">Campaign matcher</p>
             <p className="text-[11px] text-muted">
-              {phase === "done"
-                ? "Finding creators…"
-                : "Usually replies instantly"}
+              {done ? "Finding creators…" : "Usually replies instantly"}
             </p>
           </div>
         </div>
@@ -144,19 +127,13 @@ export default function NewCampaignChatPage() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              disabled={phase === "done" || typing}
-              placeholder={
-                phase === "story"
-                  ? "Describe your product or store…"
-                  : phase === "want"
-                    ? "What should influencers create?"
-                    : "Matching creators…"
-              }
+              disabled={done || typing}
+              placeholder="Describe your product or store…"
               className="flex-1 rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-purple disabled:opacity-60"
             />
             <button
               type="submit"
-              disabled={!input.trim() || typing || phase === "done"}
+              disabled={!input.trim() || typing || done}
               className="rounded-xl bg-orange px-5 py-3 text-sm font-bold text-white transition hover:bg-[#f05f20] disabled:opacity-50"
             >
               Send

@@ -19,12 +19,12 @@ export default function ReelsPickPage() {
 
   useEffect(() => {
     const b = loadChatBrief();
-    if (!b?.story || !b?.want) {
+    if (!b?.story) {
       router.replace("/dashboard/campaigns/new");
       return;
     }
     setBrief(b);
-    setReels(matchReelsFromStory(b.story, b.want));
+    setReels(matchReelsFromStory(b.story, b.want || b.story));
   }, [router]);
 
   if (!brief) {

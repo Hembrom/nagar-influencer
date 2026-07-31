@@ -99,8 +99,10 @@ export function recommendFromSelection(brief: ChatBrief): MatchResult {
     );
     reasons.push(`${reel.influencerName} (${reel.followers}) fits: ${reel.vibe}.`);
   }
-  if (brief.want) {
-    reasons.push(`Aligned to what you asked influencers to create: “${brief.want.slice(0, 120)}${brief.want.length > 120 ? "…" : ""}”`);
+  if (brief.story) {
+    reasons.push(
+      `Matched from your product story: “${brief.story.slice(0, 120)}${brief.story.length > 120 ? "…" : ""}”`,
+    );
   }
 
   return {

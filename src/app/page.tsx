@@ -79,7 +79,7 @@ export default function HomePage() {
             {[
               {
                 title: "New campaign",
-                body: "Pick a format, review samples, reserve with ₹500.",
+                body: "Share your story, like a reel, reserve with ₹500.",
               },
               {
                 title: "All campaigns",

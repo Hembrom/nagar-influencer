@@ -64,7 +64,7 @@ export default function MatchPage() {
             <PrimaryButton
               onClick={() =>
                 router.push(
-                  `/dashboard/campaigns/new/samples?format=${picked}`,
+                  `/dashboard/campaigns/new/confirm?format=${picked}`,
                 )
               }
             >

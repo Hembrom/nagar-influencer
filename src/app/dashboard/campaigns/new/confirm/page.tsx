@@ -22,11 +22,11 @@ function ConfirmContent() {
           <button
             type="button"
             onClick={() =>
-              router.push(`/dashboard/campaigns/new/samples?format=${formatId}`)
+              router.push(`/dashboard/campaigns/new/match`)
             }
             className="text-sm font-semibold text-muted hover:text-navy"
           >
-            ← Back
+            ← Back to match
           </button>
           <div className="w-full max-w-xs">
             <PrimaryButton

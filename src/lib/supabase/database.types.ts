@@ -1,6 +1,45 @@
 export type Database = {
   public: {
     Tables: {
+      profiles: {
+        Row: {
+          id: string;
+          email: string | null;
+          full_name: string | null;
+          avatar_url: string | null;
+          mobile: string | null;
+          linkedin_url: string | null;
+          company_name: string | null;
+          website: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          email?: string | null;
+          full_name?: string | null;
+          avatar_url?: string | null;
+          mobile?: string | null;
+          linkedin_url?: string | null;
+          company_name?: string | null;
+          website?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          email?: string | null;
+          full_name?: string | null;
+          avatar_url?: string | null;
+          mobile?: string | null;
+          linkedin_url?: string | null;
+          company_name?: string | null;
+          website?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       bookings: {
         Row: {
           id: string;

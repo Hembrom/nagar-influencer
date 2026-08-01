@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { getSupabaseEnv } from "@/lib/supabase/env";
+import { upsertProfileFromAuthServer } from "@/lib/profile-server";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 
 export default async function DashboardLayout({
@@ -14,6 +15,13 @@ export default async function DashboardLayout({
       const supabase = await createClient();
       const { data } = await supabase.auth.getUser();
       user = data.user;
+      if (user) {
+        try {
+          await upsertProfileFromAuthServer(supabase, user);
+        } catch {
+          // profile table may not exist yet
+        }
+      }
     } catch {
       user = null;
     }

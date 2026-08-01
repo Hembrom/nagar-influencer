@@ -1,4 +1,4 @@
--- Profiles for brand users (Google fills name/email/avatar; mobile & LinkedIn are manual)
+-- Profiles for brand users (Google fills name/email/avatar; mobile is manual)
 
 create table if not exists public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
@@ -6,7 +6,6 @@ create table if not exists public.profiles (
   full_name text,
   avatar_url text,
   mobile text,
-  linkedin_url text,
   company_name text,
   website text,
   created_at timestamptz not null default now(),
@@ -39,6 +38,3 @@ create policy "Users can update own profile"
   to authenticated
   using (auth.uid() = id)
   with check (auth.uid() = id);
-
--- Also allow anon select/insert for early setup without auth (optional loosen)
--- Prefer authenticated-only above for production.

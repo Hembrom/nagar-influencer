@@ -77,14 +77,13 @@ create policy "Allow anon select payments"
   to anon, authenticated
   using (true);
 
--- Profiles: Google fills name/email/avatar; mobile & LinkedIn are manual
+-- Profiles: Google fills name/email/avatar; mobile is manual
 create table if not exists public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   email text,
   full_name text,
   avatar_url text,
   mobile text,
-  linkedin_url text,
   company_name text,
   website text,
   created_at timestamptz not null default now(),

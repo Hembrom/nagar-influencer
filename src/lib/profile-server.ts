@@ -15,7 +15,7 @@ export async function upsertProfileFromAuthServer(
 
   const { data: existing } = await supabase
     .from("profiles")
-    .select("mobile, linkedin_url, company_name, website, full_name")
+    .select("mobile, company_name, website, full_name")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -26,7 +26,6 @@ export async function upsertProfileFromAuthServer(
       full_name: existing?.full_name || full_name,
       avatar_url,
       mobile: existing?.mobile ?? null,
-      linkedin_url: existing?.linkedin_url ?? null,
       company_name: existing?.company_name ?? null,
       website: existing?.website ?? null,
       updated_at: new Date().toISOString(),

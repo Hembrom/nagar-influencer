@@ -8,7 +8,6 @@ export type Database = {
           full_name: string | null;
           avatar_url: string | null;
           mobile: string | null;
-          linkedin_url: string | null;
           company_name: string | null;
           website: string | null;
           created_at: string;
@@ -20,7 +19,6 @@ export type Database = {
           full_name?: string | null;
           avatar_url?: string | null;
           mobile?: string | null;
-          linkedin_url?: string | null;
           company_name?: string | null;
           website?: string | null;
           created_at?: string;
@@ -32,7 +30,6 @@ export type Database = {
           full_name?: string | null;
           avatar_url?: string | null;
           mobile?: string | null;
-          linkedin_url?: string | null;
           company_name?: string | null;
           website?: string | null;
           created_at?: string;

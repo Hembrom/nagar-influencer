@@ -59,7 +59,7 @@ export default function SettingsPage() {
   return (
     <PageFrame
       title="Settings"
-      subtitle="Your contact details — Google fills name & email; add mobile and LinkedIn here"
+      subtitle="Your contact details — Google fills name & email; add mobile here"
     >
       <form onSubmit={onSave} className="mx-auto grid max-w-3xl gap-6">
         <section className="rounded-2xl border border-border bg-card p-6">
@@ -102,15 +102,6 @@ export default function SettingsPage() {
                 setProfile((p) => (p ? { ...p, mobile: v } : p))
               }
               placeholder="+91 98765 43210"
-              hint="Not provided by Google — add manually"
-            />
-            <Field
-              label="LinkedIn"
-              value={profile?.linkedin_url ?? ""}
-              onChange={(v) =>
-                setProfile((p) => (p ? { ...p, linkedin_url: v } : p))
-              }
-              placeholder="https://linkedin.com/in/you"
               hint="Not provided by Google — add manually"
             />
             <Field
@@ -158,7 +149,6 @@ export default function SettingsPage() {
           <p className="mt-3 font-bold">What you need to fill</p>
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>Mobile number</li>
-            <li>LinkedIn URL</li>
             <li>Company / website</li>
           </ul>
         </section>

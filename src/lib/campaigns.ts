@@ -1,4 +1,6 @@
 import { getFormat } from "@/lib/formats";
+import { niId } from "@/lib/ids";
+import { createDummyPayment } from "@/lib/payments";
 import { loadChatBrief } from "@/lib/recommend";
 import { createClient } from "@/lib/supabase/client";
 import { getSupabaseEnv } from "@/lib/supabase/env";
@@ -18,6 +20,7 @@ export type Campaign = {
   packageName: string;
   tokenAmount: number;
   paymentMethod: "upi" | "card";
+  paymentRef: string;
   status: CampaignStatus;
   productHint?: string;
   createdAt: string;
@@ -52,26 +55,6 @@ function writeLocal(list: Campaign[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 }
 
-function formatCode(formatId: string) {
-  const map: Record<string, string> = {
-    "youtube-video": "YT",
-    "instagram-reel": "IG",
-    "youtube-shorts": "YS",
-    "product-review": "PR",
-    "unboxing-video": "UB",
-    "brand-collaboration": "BC",
-  };
-  return map[formatId] ?? "CM";
-}
-
-export function generateOrderId(formatId: string) {
-  const n = Math.floor(1000 + Math.random() * 9000);
-  return {
-    orderId: `NI-${n}`,
-    orderIdFull: `NI-${n}-${formatCode(formatId)}`,
-  };
-}
-
 export function packageNameFor(formatId: string, productHint?: string) {
   const format = getFormat(formatId);
   const hint = productHint?.trim();
@@ -88,7 +71,11 @@ export function listCampaigns(): Campaign[] {
 }
 
 export function getCampaign(orderId: string): Campaign | null {
-  return readLocal().find((c) => c.orderId === orderId) ?? null;
+  return (
+    readLocal().find(
+      (c) => c.orderId === orderId || c.id === orderId,
+    ) ?? null
+  );
 }
 
 export async function createCampaign(input: {
@@ -96,16 +83,46 @@ export async function createCampaign(input: {
   paymentMethod: "upi" | "card";
 }): Promise<Campaign> {
   const brief = loadChatBrief();
-  const { orderId, orderIdFull } = generateOrderId(input.formatId);
+  const orderId = niId();
   const now = new Date().toISOString();
   const productHint = brief?.productHint;
+  const tokenAmount = 500;
+
+  // Booking first (required before payment FK in Supabase)
+  if (getSupabaseEnv()) {
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.from("bookings").insert({
+        order_id: orderId,
+        format_id: input.formatId,
+        package_name: packageNameFor(input.formatId, productHint),
+        token_amount: tokenAmount,
+        payment_method: input.paymentMethod,
+        status: "order_placed",
+      });
+      if (error) {
+        console.warn("bookings insert failed", error.message);
+      }
+    } catch {
+      // continue with local
+    }
+  }
+
+  // Dummy payment — always success; one new payments row per charge
+  const payment = await createDummyPayment({
+    orderId,
+    method: input.paymentMethod,
+    amount: tokenAmount,
+  });
+
   const campaign: Campaign = {
-    id: orderIdFull,
+    id: orderId,
     orderId,
     formatId: input.formatId,
     packageName: packageNameFor(input.formatId, productHint),
-    tokenAmount: 500,
+    tokenAmount,
     paymentMethod: input.paymentMethod,
+    paymentRef: payment.paymentRef,
     status: "order_placed",
     productHint,
     createdAt: now,
@@ -115,22 +132,6 @@ export async function createCampaign(input: {
   const list = readLocal();
   list.unshift(campaign);
   writeLocal(list);
-
-  if (getSupabaseEnv()) {
-    try {
-      const supabase = createClient();
-      await supabase.from("bookings").insert({
-        order_id: orderId,
-        format_id: input.formatId,
-        package_name: campaign.packageName,
-        token_amount: campaign.tokenAmount,
-        payment_method: input.paymentMethod,
-        status: campaign.status,
-      });
-    } catch {
-      // local list remains source of truth when Supabase fails
-    }
-  }
 
   return campaign;
 }

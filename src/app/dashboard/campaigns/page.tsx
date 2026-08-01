@@ -63,7 +63,9 @@ export default function CampaignsPage() {
                 <tr key={c.orderId} className="border-b border-border last:border-0">
                   <td className="px-5 py-4">
                     <p className="font-bold text-navy">{c.packageName}</p>
-                    <p className="text-xs text-muted">ID: {c.orderId}</p>
+                    <p className="font-mono text-xs text-muted" title={c.orderId}>
+                      {c.orderId}
+                    </p>
                   </td>
                   <td className="px-5 py-4 text-muted">
                     {getFormat(c.formatId).title}

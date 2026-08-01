@@ -99,7 +99,15 @@ function ConfirmedContent() {
               </div>
               <div className="flex justify-between gap-3">
                 <dt className="text-muted">Order ID</dt>
-                <dd className="font-bold text-purple-deep">{campaign.id}</dd>
+                <dd className="max-w-[65%] break-all text-right font-bold text-purple-deep">
+                  {campaign.orderId}
+                </dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted">Payment ID</dt>
+                <dd className="max-w-[65%] break-all text-right font-bold text-navy">
+                  {campaign.paymentRef}
+                </dd>
               </div>
             </dl>
           </div>

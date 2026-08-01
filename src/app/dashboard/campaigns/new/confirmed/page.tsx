@@ -1,15 +1,45 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { PageFrame } from "@/components/dashboard/PageFrame";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { BOOKING } from "@/lib/formats";
+import { getCampaign, type Campaign } from "@/lib/campaigns";
 
 function ConfirmedContent() {
   const params = useSearchParams();
-  const formatId = params.get("format") ?? "youtube-video";
+  const orderId = params.get("order");
+  const [campaign, setCampaign] = useState<Campaign | null>(null);
+
+  useEffect(() => {
+    if (!orderId) return;
+    setCampaign(getCampaign(orderId));
+  }, [orderId]);
+
+  if (!orderId || !campaign) {
+    return (
+      <PageFrame title="Booking secured" subtitle="Looking up your order…">
+        <div className="py-16 text-center text-muted">
+          {orderId ? (
+            <>
+              Order not found.{" "}
+              <Link href="/dashboard/campaigns" className="text-purple underline">
+                View all campaigns
+              </Link>
+            </>
+          ) : (
+            <>
+              No order id.{" "}
+              <Link href="/dashboard/campaigns/new" className="text-purple underline">
+                Start a new campaign
+              </Link>
+            </>
+          )}
+        </div>
+      </PageFrame>
+    );
+  }
 
   return (
     <PageFrame
@@ -20,7 +50,7 @@ function ConfirmedContent() {
           <div className="w-full max-w-xs">
             <PrimaryButton
               variant="purple"
-              href={`/dashboard/campaigns/${BOOKING.orderId}?format=${formatId}`}
+              href={`/dashboard/campaigns/${campaign.orderId}`}
             >
               Track order status
             </PrimaryButton>
@@ -57,17 +87,19 @@ function ConfirmedContent() {
             <dl className="space-y-3 text-sm">
               <div className="flex justify-between gap-3">
                 <dt className="text-muted">Selected Package</dt>
-                <dd className="font-bold text-navy">{BOOKING.packageName}</dd>
+                <dd className="max-w-[60%] text-right font-bold text-navy">
+                  {campaign.packageName}
+                </dd>
               </div>
               <div className="flex justify-between gap-3">
                 <dt className="text-muted">Token Paid</dt>
-                <dd className="font-bold text-green">₹{BOOKING.tokenAmount}</dd>
+                <dd className="font-bold text-green">
+                  ₹{campaign.tokenAmount}
+                </dd>
               </div>
               <div className="flex justify-between gap-3">
                 <dt className="text-muted">Order ID</dt>
-                <dd className="font-bold text-purple-deep">
-                  {BOOKING.orderIdFull}
-                </dd>
+                <dd className="font-bold text-purple-deep">{campaign.id}</dd>
               </div>
             </dl>
           </div>

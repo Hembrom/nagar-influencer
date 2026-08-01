@@ -4,7 +4,7 @@ import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PageFrame } from "@/components/dashboard/PageFrame";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { BOOKING } from "@/lib/formats";
+import { createCampaign } from "@/lib/campaigns";
 
 function SecureContent() {
   const router = useRouter();
@@ -12,14 +12,23 @@ function SecureContent() {
   const formatId = params.get("format") ?? "youtube-video";
   const [method, setMethod] = useState<"upi" | "card">("upi");
   const [paying, setPaying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handlePay = () => {
+  const handlePay = async () => {
     setPaying(true);
-    window.setTimeout(() => {
+    setError(null);
+    try {
+      const campaign = await createCampaign({
+        formatId,
+        paymentMethod: method,
+      });
       router.push(
-        `/dashboard/campaigns/new/confirmed?format=${formatId}`,
+        `/dashboard/campaigns/new/confirmed?order=${campaign.orderId}`,
       );
-    }, 700);
+    } catch {
+      setError("Could not create booking. Try again.");
+      setPaying(false);
+    }
   };
 
   return (
@@ -39,8 +48,11 @@ function SecureContent() {
           </button>
           <div className="w-full max-w-sm">
             <PrimaryButton onClick={handlePay} disabled={paying}>
-              {paying ? "Processing…" : `Pay ₹${BOOKING.tokenAmount} secured`}
+              {paying ? "Creating order…" : "Pay ₹500 secured"}
             </PrimaryButton>
+            {error ? (
+              <p className="mt-2 text-center text-xs text-red-600">{error}</p>
+            ) : null}
           </div>
         </div>
       }
@@ -49,11 +61,12 @@ function SecureContent() {
         <div className="space-y-5">
           <div className="rounded-2xl border border-purple/25 bg-purple-soft p-5">
             <p className="text-base font-bold text-purple">
-              Pay only ₹{BOOKING.tokenAmount} to reserve
+              Pay only ₹500 to reserve
             </p>
             <p className="mt-2 text-sm leading-relaxed text-purple/80">
               The booking fee prevents slots from selling out and is adjusted in
-              your final campaign invoice.
+              your final campaign invoice. Each payment creates a new trackable
+              order.
             </p>
           </div>
 

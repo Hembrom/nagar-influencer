@@ -1,39 +1,102 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { PageFrame } from "@/components/dashboard/PageFrame";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { BOOKING } from "@/lib/formats";
+import {
+  getCampaign,
+  STATUS_LABEL,
+  type Campaign,
+  type CampaignStatus,
+} from "@/lib/campaigns";
 
 type StepState = "done" | "active" | "pending";
 
-const STEPS: { title: string; subtitle: string; state: StepState }[] = [
+const FLOW: {
+  status: CampaignStatus;
+  title: string;
+  subtitle: string;
+}[] = [
   {
+    status: "order_placed",
     title: "Order Placed",
-    subtitle: `Token of ₹${BOOKING.tokenAmount} received`,
-    state: "done",
+    subtitle: "Token of ₹500 received",
   },
   {
+    status: "representative_assigned",
     title: "Representative Assigned",
-    subtitle: "Rahul Sharma joining your dashboard soon",
-    state: "active",
+    subtitle: "Strategist joining your dashboard soon",
   },
   {
+    status: "campaign_finalized",
     title: "Campaign Finalized",
     subtitle: "Video guidelines and delivery dates locked",
-    state: "pending",
   },
   {
+    status: "campaign_live",
     title: "Campaign Live",
     subtitle: "Creator uploads dedicated video content",
-    state: "pending",
   },
 ];
 
+function stepStates(status: CampaignStatus): StepState[] {
+  const idx = FLOW.findIndex((s) => s.status === status);
+  const active = idx < 0 ? 0 : idx;
+  return FLOW.map((_, i) => {
+    if (i < active) return "done";
+    if (i === active) return i === 0 ? "done" : "active";
+    return "pending";
+  }).map((state, i) => {
+    // Fresh orders: step 1 done, step 2 active (awaiting rep)
+    if (status === "order_placed") {
+      if (i === 0) return "done";
+      if (i === 1) return "active";
+      return "pending";
+    }
+    return state;
+  });
+}
+
 function TrackerContent() {
   const params = useParams();
-  const id = String(params.id || BOOKING.orderId);
+  const id = String(params.id || "");
+  const [campaign, setCampaign] = useState<Campaign | null | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    setCampaign(getCampaign(id));
+  }, [id]);
+
+  const states = useMemo(
+    () => (campaign ? stepStates(campaign.status) : []),
+    [campaign],
+  );
+
+  if (campaign === undefined) {
+    return <div className="p-8 text-muted">Loading tracker…</div>;
+  }
+
+  if (!campaign) {
+    return (
+      <PageFrame title="Campaign tracker" subtitle="Order not found">
+        <div className="rounded-2xl border border-border bg-card px-6 py-12 text-center">
+          <p className="font-bold text-navy">No campaign with ID {id}</p>
+          <p className="mt-2 text-sm text-muted">
+            Complete payment on a new campaign to create a trackable order.
+          </p>
+          <Link
+            href="/dashboard/campaigns"
+            className="mt-5 inline-flex text-sm font-semibold text-purple hover:underline"
+          >
+            ← All campaigns
+          </Link>
+        </div>
+      </PageFrame>
+    );
+  }
 
   return (
     <PageFrame
@@ -56,11 +119,14 @@ function TrackerContent() {
               ACTIVE CAMPAIGN
             </p>
             <p className="mt-1 text-lg font-bold text-navy">
-              {BOOKING.packageName}
+              {campaign.packageName}
+            </p>
+            <p className="mt-1 text-xs text-muted">
+              {STATUS_LABEL[campaign.status]}
             </p>
           </div>
           <span className="rounded-full bg-orange-soft px-3 py-1 text-xs font-bold text-orange">
-            ID: {id}
+            ID: {campaign.orderId}
           </span>
         </div>
 
@@ -69,25 +135,29 @@ function TrackerContent() {
             LIVE PROGRESS
           </p>
           <ol>
-            {STEPS.map((step, i) => {
-              const isLast = i === STEPS.length - 1;
+            {FLOW.map((step, i) => {
+              const state = states[i];
+              const isLast = i === FLOW.length - 1;
               const lineColor =
-                step.state === "done" ? "bg-green" : "bg-[#e5e7eb]";
+                state === "done" ? "bg-green" : "bg-[#e5e7eb]";
               const titleColor =
-                step.state === "active"
+                state === "active"
                   ? "text-orange"
-                  : step.state === "done"
+                  : state === "done"
                     ? "text-navy"
                     : "text-muted";
 
               return (
-                <li key={step.title} className="relative flex gap-4 pb-8 last:pb-0">
+                <li
+                  key={step.title}
+                  className="relative flex gap-4 pb-8 last:pb-0"
+                >
                   {!isLast ? (
                     <span
                       className={`absolute top-8 left-[13px] h-[calc(100%-1.5rem)] w-0.5 ${lineColor}`}
                     />
                   ) : null}
-                  {step.state === "done" ? (
+                  {state === "done" ? (
                     <span className="flex h-7 w-7 items-center justify-center rounded-full bg-green text-white">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                         <path
@@ -99,7 +169,7 @@ function TrackerContent() {
                         />
                       </svg>
                     </span>
-                  ) : step.state === "active" ? (
+                  ) : state === "active" ? (
                     <span className="animate-pulse-soft flex h-7 w-7 items-center justify-center rounded-full bg-orange">
                       <span className="h-2 w-2 rounded-full bg-white" />
                     </span>

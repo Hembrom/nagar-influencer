@@ -13,9 +13,21 @@ import { getFormat } from "@/lib/formats";
 
 export default function CampaignsPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setCampaigns(listCampaigns());
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      const list = await listCampaigns();
+      if (!cancelled) {
+        setCampaigns(list);
+        setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
@@ -31,12 +43,16 @@ export default function CampaignsPage() {
         </Link>
       }
     >
-      {campaigns.length === 0 ? (
+      {loading ? (
+        <div className="py-16 text-center text-sm text-muted">
+          Loading your campaigns…
+        </div>
+      ) : campaigns.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-16 text-center">
           <p className="text-base font-bold text-navy">No campaigns yet</p>
           <p className="mt-2 text-sm text-muted">
             Create a campaign and pay the ₹500 token — a new trackable order
-            will show up here.
+            will show up here for this account only.
           </p>
           <Link
             href="/dashboard/campaigns/new"

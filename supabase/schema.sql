@@ -5,6 +5,7 @@ create extension if not exists "pgcrypto";
 create table if not exists public.bookings (
   id uuid primary key default gen_random_uuid(),
   order_id text not null unique,
+  user_id uuid references auth.users (id) on delete set null,
   format_id text not null,
   package_name text not null,
   token_amount integer not null default 500,
@@ -24,21 +25,22 @@ create table if not exists public.bookings (
 );
 
 create index if not exists bookings_order_id_idx on public.bookings (order_id);
+create index if not exists bookings_user_id_idx on public.bookings (user_id);
 create index if not exists bookings_status_idx on public.bookings (status);
 
 alter table public.bookings enable row level security;
 
-create policy "Allow anon insert bookings"
+create policy "Users insert own bookings"
   on public.bookings
   for insert
-  to anon, authenticated
-  with check (true);
+  to authenticated
+  with check (auth.uid() = user_id);
 
-create policy "Allow anon select bookings"
+create policy "Users select own bookings"
   on public.bookings
   for select
-  to anon, authenticated
-  using (true);
+  to authenticated
+  using (auth.uid() = user_id);
 
 -- Payments: every charge is a new row (dummy today, Razorpay later)
 create table if not exists public.payments (

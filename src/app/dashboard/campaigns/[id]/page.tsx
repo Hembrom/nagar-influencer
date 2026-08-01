@@ -67,7 +67,14 @@ function TrackerContent() {
   );
 
   useEffect(() => {
-    setCampaign(getCampaign(id));
+    let cancelled = false;
+    (async () => {
+      const c = await getCampaign(id);
+      if (!cancelled) setCampaign(c);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   const states = useMemo(

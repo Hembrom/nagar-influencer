@@ -10,6 +10,7 @@ export type Payment = {
   id: string;
   paymentRef: string;
   orderId: string;
+  userId: string;
   amount: number;
   currency: string;
   method: PaymentMethod;
@@ -20,12 +21,16 @@ export type Payment = {
   updatedAt: string;
 };
 
-const STORAGE_KEY = "ni_payments";
+const STORAGE_PREFIX = "ni_payments:";
 
-function readLocal(): Payment[] {
+function storageKey(userId: string) {
+  return `${STORAGE_PREFIX}${userId}`;
+}
+
+function readLocal(userId: string): Payment[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(storageKey(userId));
     if (!raw) return [];
     const list = JSON.parse(raw) as Payment[];
     return Array.isArray(list) ? list : [];
@@ -34,9 +39,9 @@ function readLocal(): Payment[] {
   }
 }
 
-function writeLocal(list: Payment[]) {
+function writeLocal(userId: string, list: Payment[]) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  localStorage.setItem(storageKey(userId), JSON.stringify(list));
 }
 
 /**
@@ -45,6 +50,7 @@ function writeLocal(list: Payment[]) {
  */
 export async function createDummyPayment(input: {
   orderId: string;
+  userId: string;
   method: PaymentMethod;
   amount?: number;
 }): Promise<Payment> {
@@ -52,13 +58,13 @@ export async function createDummyPayment(input: {
   const paymentRef = niId();
   const amount = input.amount ?? 500;
 
-  // Simulate async gateway
   await new Promise((r) => setTimeout(r, 400));
 
   const payment: Payment = {
     id: paymentRef,
     paymentRef,
     orderId: input.orderId,
+    userId: input.userId,
     amount,
     currency: "INR",
     method: input.method,
@@ -69,11 +75,11 @@ export async function createDummyPayment(input: {
     updatedAt: now,
   };
 
-  const list = readLocal();
+  const list = readLocal(input.userId);
   list.unshift(payment);
-  writeLocal(list);
+  writeLocal(input.userId, list);
 
-  if (getSupabaseEnv()) {
+  if (getSupabaseEnv() && input.userId !== "demo") {
     try {
       const supabase = createClient();
       await supabase.from("payments").insert({
@@ -94,12 +100,15 @@ export async function createDummyPayment(input: {
   return payment;
 }
 
-export function listPayments(): Payment[] {
-  return readLocal().sort(
+export function listPayments(userId: string): Payment[] {
+  return readLocal(userId).sort(
     (a, b) => +new Date(b.createdAt) - +new Date(a.createdAt),
   );
 }
 
-export function getPaymentByOrder(orderId: string): Payment | null {
-  return readLocal().find((p) => p.orderId === orderId) ?? null;
+export function getPaymentByOrder(
+  userId: string,
+  orderId: string,
+): Payment | null {
+  return readLocal(userId).find((p) => p.orderId === orderId) ?? null;
 }

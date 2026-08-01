@@ -16,6 +16,7 @@ export type CampaignStatus =
 export type Campaign = {
   id: string;
   orderId: string;
+  userId: string;
   formatId: string;
   packageName: string;
   tokenAmount: number;
@@ -27,7 +28,7 @@ export type Campaign = {
   updatedAt: string;
 };
 
-const STORAGE_KEY = "ni_campaigns";
+const STORAGE_PREFIX = "ni_campaigns:";
 
 export const STATUS_LABEL: Record<CampaignStatus, string> = {
   order_placed: "Order Placed",
@@ -38,21 +39,41 @@ export const STATUS_LABEL: Record<CampaignStatus, string> = {
   refunded: "Refunded",
 };
 
-function readLocal(): Campaign[] {
+function storageKey(userId: string) {
+  return `${STORAGE_PREFIX}${userId}`;
+}
+
+function readLocal(userId: string): Campaign[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(storageKey(userId));
     if (!raw) return [];
     const list = JSON.parse(raw) as Campaign[];
-    return Array.isArray(list) ? list : [];
+    return Array.isArray(list) ? list.filter((c) => c.userId === userId) : [];
   } catch {
     return [];
   }
 }
 
-function writeLocal(list: Campaign[]) {
+function writeLocal(userId: string, list: Campaign[]) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  localStorage.setItem(storageKey(userId), JSON.stringify(list));
+}
+
+export async function getCurrentUserId(): Promise<string | null> {
+  if (!getSupabaseEnv()) return null;
+  try {
+    const supabase = createClient();
+    const { data } = await supabase.auth.getUser();
+    return data.user?.id ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** Resolve account key for storage — logged-in user, else demo bucket */
+export async function resolveAccountId(): Promise<string> {
+  return (await getCurrentUserId()) ?? "demo";
 }
 
 export function packageNameFor(formatId: string, productHint?: string) {
@@ -64,38 +85,113 @@ export function packageNameFor(formatId: string, productHint?: string) {
   return `Gold ${format.title} Package`;
 }
 
-export function listCampaigns(): Campaign[] {
-  return readLocal().sort(
+function mapBookingRow(row: {
+  order_id: string;
+  user_id: string | null;
+  format_id: string;
+  package_name: string;
+  token_amount: number;
+  payment_method: "upi" | "card";
+  status: CampaignStatus;
+  created_at: string;
+  updated_at: string;
+}): Campaign {
+  return {
+    id: row.order_id,
+    orderId: row.order_id,
+    userId: row.user_id ?? "unknown",
+    formatId: row.format_id,
+    packageName: row.package_name,
+    tokenAmount: row.token_amount,
+    paymentMethod: row.payment_method,
+    paymentRef: "",
+    status: row.status,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+export async function listCampaigns(): Promise<Campaign[]> {
+  const accountId = await resolveAccountId();
+  const local = readLocal(accountId);
+
+  if (getSupabaseEnv() && accountId !== "demo") {
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("bookings")
+        .select("*")
+        .eq("user_id", accountId)
+        .order("created_at", { ascending: false });
+
+      if (!error && data) {
+        const remote = data.map(mapBookingRow);
+        // Prefer remote as source of truth; keep local-only rows not yet synced
+        const remoteIds = new Set(remote.map((c) => c.orderId));
+        const localOnly = local.filter((c) => !remoteIds.has(c.orderId));
+        const merged = [...remote, ...localOnly].sort(
+          (a, b) => +new Date(b.createdAt) - +new Date(a.createdAt),
+        );
+        writeLocal(accountId, merged);
+        return merged;
+      }
+    } catch {
+      // fall back to local
+    }
+  }
+
+  return local.sort(
     (a, b) => +new Date(b.createdAt) - +new Date(a.createdAt),
   );
 }
 
-export function getCampaign(orderId: string): Campaign | null {
-  return (
-    readLocal().find(
+export async function getCampaign(orderId: string): Promise<Campaign | null> {
+  const accountId = await resolveAccountId();
+  const local =
+    readLocal(accountId).find(
       (c) => c.orderId === orderId || c.id === orderId,
-    ) ?? null
-  );
+    ) ?? null;
+
+  if (local) return local;
+
+  if (getSupabaseEnv() && accountId !== "demo") {
+    try {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("bookings")
+        .select("*")
+        .eq("order_id", orderId)
+        .eq("user_id", accountId)
+        .maybeSingle();
+      if (data) return mapBookingRow(data);
+    } catch {
+      // ignore
+    }
+  }
+
+  return null;
 }
 
 export async function createCampaign(input: {
   formatId: string;
   paymentMethod: "upi" | "card";
 }): Promise<Campaign> {
+  const accountId = await resolveAccountId();
   const brief = loadChatBrief();
   const orderId = niId();
   const now = new Date().toISOString();
   const productHint = brief?.productHint;
   const tokenAmount = 500;
+  const packageName = packageNameFor(input.formatId, productHint);
 
-  // Booking first (required before payment FK in Supabase)
-  if (getSupabaseEnv()) {
+  if (getSupabaseEnv() && accountId !== "demo") {
     try {
       const supabase = createClient();
       const { error } = await supabase.from("bookings").insert({
         order_id: orderId,
+        user_id: accountId,
         format_id: input.formatId,
-        package_name: packageNameFor(input.formatId, productHint),
+        package_name: packageName,
         token_amount: tokenAmount,
         payment_method: input.paymentMethod,
         status: "order_placed",
@@ -108,9 +204,9 @@ export async function createCampaign(input: {
     }
   }
 
-  // Dummy payment — always success; one new payments row per charge
   const payment = await createDummyPayment({
     orderId,
+    userId: accountId,
     method: input.paymentMethod,
     amount: tokenAmount,
   });
@@ -118,8 +214,9 @@ export async function createCampaign(input: {
   const campaign: Campaign = {
     id: orderId,
     orderId,
+    userId: accountId,
     formatId: input.formatId,
-    packageName: packageNameFor(input.formatId, productHint),
+    packageName,
     tokenAmount,
     paymentMethod: input.paymentMethod,
     paymentRef: payment.paymentRef,
@@ -129,9 +226,9 @@ export async function createCampaign(input: {
     updatedAt: now,
   };
 
-  const list = readLocal();
+  const list = readLocal(accountId);
   list.unshift(campaign);
-  writeLocal(list);
+  writeLocal(accountId, list);
 
   return campaign;
 }

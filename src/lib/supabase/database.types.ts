@@ -41,6 +41,7 @@ export type Database = {
         Row: {
           id: string;
           order_id: string;
+          user_id: string | null;
           format_id: string;
           package_name: string;
           token_amount: number;
@@ -58,6 +59,7 @@ export type Database = {
         Insert: {
           id?: string;
           order_id: string;
+          user_id?: string | null;
           format_id: string;
           package_name: string;
           token_amount?: number;
@@ -69,6 +71,7 @@ export type Database = {
         Update: {
           id?: string;
           order_id?: string;
+          user_id?: string | null;
           format_id?: string;
           package_name?: string;
           token_amount?: number;

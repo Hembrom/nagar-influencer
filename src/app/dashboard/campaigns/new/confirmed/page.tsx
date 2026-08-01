@@ -14,7 +14,14 @@ function ConfirmedContent() {
 
   useEffect(() => {
     if (!orderId) return;
-    setCampaign(getCampaign(orderId));
+    let cancelled = false;
+    (async () => {
+      const c = await getCampaign(orderId);
+      if (!cancelled) setCampaign(c);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [orderId]);
 
   if (!orderId || !campaign) {

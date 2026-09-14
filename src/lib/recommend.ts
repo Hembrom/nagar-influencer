@@ -2,10 +2,20 @@ import { CAMPAIGN_FORMATS, getFormat, type CampaignFormat } from "./formats";
 import { getReelById, type MatchedReel } from "./influencers";
 
 export type ChatBrief = {
-  story: string;
-  want: string;
-  productHint: string;
+  story?: string;
+  want?: string;
+  productHint?: string;
   selectedReelId?: string;
+  text?: string;
+  category?: string;
+  goal?: string;
+  location?: string;
+  audience?: string;
+  language?: string;
+  format?: string;
+  numCreators?: string;
+  budget?: string;
+  timeline?: string;
 };
 
 export type MatchResult = {
@@ -51,9 +61,9 @@ function inferProductHint(story: string, want: string) {
 
 export function buildChatBrief(story: string, want: string): ChatBrief {
   return {
-    story: story.trim(),
-    want: want.trim(),
-    productHint: inferProductHint(story, want),
+    story: story.trim() || undefined,
+    want: want.trim() || undefined,
+    productHint: inferProductHint(story, want) || undefined,
   };
 }
 

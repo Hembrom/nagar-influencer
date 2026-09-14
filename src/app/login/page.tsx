@@ -1,36 +1,60 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { getSupabaseEnv } from "@/lib/supabase/env";
+import { isSupabaseAuthReachable } from "@/lib/supabase/health";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 
 function LoginForm() {
   const params = useSearchParams();
   const next = params.get("next") || "/dashboard/campaigns";
+  const env = getSupabaseEnv();
+  const supabaseUrl = env?.url;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const configured = Boolean(getSupabaseEnv());
+  const [configured, setConfigured] = useState(Boolean(env));
+
+  useEffect(() => {
+    if (!supabaseUrl) return;
+    let cancelled = false;
+    isSupabaseAuthReachable(supabaseUrl).then((ok) => {
+      if (cancelled || ok) return;
+      setConfigured(false);
+      setError(
+        "The Supabase project URL on Vercel does not resolve. Google sign-in is paused; you can still open the workspace in demo mode.",
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [supabaseUrl]);
 
   async function signInWithGoogle() {
     setError(null);
     setLoading(true);
     try {
-      if (!configured) {
-        window.location.href = next;
+      if (configured && env) {
+        const reachable = await isSupabaseAuthReachable(env.url);
+        if (!reachable) {
+          setConfigured(false);
+          window.location.href = next;
+          return;
+        }
+        const supabase = createClient();
+        const origin = window.location.origin;
+        const { error: authError } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
+          },
+        });
+        if (authError) throw authError;
         return;
       }
-      const supabase = createClient();
-      const origin = window.location.origin;
-      const { error: authError } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
-        },
-      });
-      if (authError) throw authError;
+      window.location.href = next;
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not start Google login");
       setLoading(false);
@@ -54,10 +78,14 @@ function LoginForm() {
         className="mt-8 flex w-full items-center justify-center gap-3 rounded-2xl border border-border bg-white px-5 py-3.5 text-sm font-bold text-navy transition hover:bg-background disabled:opacity-60"
       >
         <GoogleMark />
-        {loading ? "Redirecting…" : "Continue with Google"}
+        {loading
+          ? "Redirecting…"
+          : configured
+            ? "Continue with Google"
+            : "Open demo workspace"}
       </button>
 
-      {!configured ? (
+      {!env ? (
         <p className="mt-4 rounded-xl bg-orange-soft px-3 py-2 text-xs leading-relaxed text-orange">
           Supabase env not set yet — this will open the dashboard in demo mode.
           Add Google provider in Supabase Auth for real login.

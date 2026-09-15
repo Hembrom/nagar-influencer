@@ -119,7 +119,7 @@ function TrackerContent() {
         </div>
       }
     >
-      <div className="mx-auto grid max-w-5xl lg:grid-cols-[240px_1fr]">
+      <div className="grid gap-0 lg:grid-cols-[240px_1fr]">
         {/* LEFT SIDEBAR - AGENTS */}
         <div className="rounded-2xl border border-border bg-card p-5">
           <p className="mb-4 text-xs font-bold tracking-[0.08em] text-muted-light">

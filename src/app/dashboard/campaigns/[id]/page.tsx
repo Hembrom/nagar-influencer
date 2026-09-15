@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { PageFrame } from "@/components/dashboard/PageFrame";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import {
@@ -60,6 +60,7 @@ function stepStates(status: CampaignStatus): StepState[] {
 }
 
 function TrackerContent() {
+  const router = useRouter();
   const params = useParams();
   const id = String(params.id || "");
   const [campaign, setCampaign] = useState<Campaign | null | undefined>(undefined);
@@ -118,7 +119,7 @@ function TrackerContent() {
         </div>
       }
     >
-      <div className="mx-auto grid max-w-5xl gap-5 lg:grid-cols-[240px_1fr]">
+      <div className="mx-auto grid max-w-5xl lg:grid-cols-[240px_1fr]">
         {/* LEFT SIDEBAR - AGENTS */}
         <div className="rounded-2xl border border-border bg-card p-5">
           <p className="mb-4 text-xs font-bold tracking-[0.08em] text-muted-light">
@@ -126,25 +127,31 @@ function TrackerContent() {
           </p>
           <div className="space-y-3">
             {/* Agent 1 */}
-            <div className="flex items-center gap-3 rounded-lg border border-border bg-background p-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-purple text-xs font-bold text-white">
+            <button
+              onClick={() => router.push("/dashboard/messages")}
+              className="w-full flex items-center gap-3 rounded-lg border border-border bg-background p-3 transition hover:bg-orange-soft hover:border-orange cursor-pointer"
+            >
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-purple text-xs font-bold text-white flex-shrink-0">
                 A
               </div>
-              <div>
+              <div className="text-left">
                 <p className="text-sm font-semibold text-navy">Aisha</p>
                 <p className="text-xs text-muted">Strategist</p>
               </div>
-            </div>
+            </button>
             {/* Agent 2 */}
-            <div className="flex items-center gap-3 rounded-lg border border-border bg-background p-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-orange text-xs font-bold text-white">
+            <button
+              onClick={() => router.push("/dashboard/messages")}
+              className="w-full flex items-center gap-3 rounded-lg border border-border bg-background p-3 transition hover:bg-orange-soft hover:border-orange cursor-pointer"
+            >
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-orange text-xs font-bold text-white flex-shrink-0">
                 R
               </div>
-              <div>
+              <div className="text-left">
                 <p className="text-sm font-semibold text-navy">Rahul</p>
                 <p className="text-xs text-muted">Creator Manager</p>
               </div>
-            </div>
+            </button>
           </div>
 
           {/* TAB TABS */}

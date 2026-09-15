@@ -267,8 +267,73 @@ function TrackerContent() {
             </span>
           </div>
 
-          {/* TAB CONTENT */}
-          {activeTab === "progress" ? (
+          {/* SHOW CHAT OR TABS */}
+          {activeAgent ? (
+            /* CHAT PANEL */
+            <div className="rounded-2xl border border-border bg-card p-6 flex flex-col h-[500px]">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+                  CHAT WITH {activeAgent === "aisha" ? "AISHA" : "RAHUL"}
+                </p>
+                <button
+                  onClick={() => setActiveAgent(null)}
+                  className="text-xs text-muted hover:text-navy transition"
+                >
+                  ✕ Close
+                </button>
+              </div>
+              
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto mb-4 space-y-3">
+                {messages.length === 0 ? (
+                  <p className="text-sm text-muted text-center py-8">
+                    👋 Start a conversation with {activeAgent === "aisha" ? "Aisha" : "Rahul"}
+                  </p>
+                ) : (
+                  messages.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+                    >
+                      <div
+                        className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
+                          msg.sender === "user"
+                            ? "bg-orange text-white rounded-br-none"
+                            : "bg-background text-navy rounded-bl-none border border-border"
+                        }`}
+                      >
+                        {msg.text}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Input */}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
+                  placeholder="Type a message..."
+                  className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-navy text-sm placeholder-muted focus:outline-none focus:border-orange"
+                />
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!inputText.trim()}
+                  className="px-4 py-2 rounded-lg bg-orange text-white font-semibold text-sm transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#f05f20]"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          ) : activeTab === "progress" ? (
             <div className="rounded-2xl border border-border bg-card p-6">
               <p className="mb-6 text-xs font-bold tracking-[0.08em] text-muted-light">
                 LIVE PROGRESS
@@ -371,65 +436,6 @@ function TrackerContent() {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
-
-          {/* CHAT PANEL */}
-          {activeAgent && (
-            <div className="rounded-2xl border border-border bg-card p-6 flex flex-col h-[500px]">
-              <p className="mb-4 text-xs font-bold tracking-[0.08em] text-muted-light">
-                CHAT WITH {activeAgent === "aisha" ? "AISHA" : "RAHUL"}
-              </p>
-              
-              {/* Messages */}
-              <div className="flex-1 overflow-y-auto mb-4 space-y-3">
-                {messages.length === 0 ? (
-                  <p className="text-sm text-muted text-center py-8">
-                    👋 Start a conversation with {activeAgent === "aisha" ? "Aisha" : "Rahul"}
-                  </p>
-                ) : (
-                  messages.map((msg) => (
-                    <div
-                      key={msg.id}
-                      className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
-                    >
-                      <div
-                        className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
-                          msg.sender === "user"
-                            ? "bg-orange text-white rounded-br-none"
-                            : "bg-background text-navy rounded-bl-none border border-border"
-                        }`}
-                      >
-                        {msg.text}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              {/* Input */}
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendMessage();
-                    }
-                  }}
-                  placeholder="Type a message..."
-                  className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-navy text-sm placeholder-muted focus:outline-none focus:border-orange"
-                />
-                <button
-                  onClick={handleSendMessage}
-                  disabled={!inputText.trim()}
-                  className="px-4 py-2 rounded-lg bg-orange text-white font-semibold text-sm transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#f05f20]"
-                >
-                  Send
-                </button>
               </div>
             </div>
           )}

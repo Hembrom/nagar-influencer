@@ -53,10 +53,15 @@ export default function MatchPage() {
 
   async function handleReserve() {
     if (selectedCreators.size === 0) {
-      alert("Please select at least one creator");
+      alert("Please select at least one content type");
       return;
     }
     // TODO: Implement payment and booking
+    const selectedTypes = Array.from(selectedCreators)
+      .map((id) => CAMPAIGN_FORMATS.find((f) => f.id === id)?.title)
+      .filter(Boolean)
+      .join(", ");
+    console.log("Campaign reserved with content types:", selectedTypes);
     router.push(`/dashboard/campaigns/${Math.random().toString(36).slice(2, 9)}`);
   }
 
@@ -196,53 +201,59 @@ export default function MatchPage() {
           </div>
         </div>
 
-        {/* CREATORS SECTION */}
+        {/* CONTENT TYPES SECTION */}
         <div style={{ marginBottom: "28px" }}>
           <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-            Recommended creators (select 2–3)
+            What type of ads work best for you? (select 2–3)
           </label>
           <div style={{ background: "#EFF8F5", borderRadius: "12px", padding: "14px 16px", marginBottom: "16px", borderLeft: "4px solid #1D9E75" }}>
             <div style={{ fontSize: "14px", fontWeight: "700", color: "#1D9E75", marginBottom: "4px" }}>
               ✓ Perfect match found!
             </div>
             <div style={{ fontSize: "13px", color: "#7a7a77" }}>
-              Our team will fine-tune everything with you.
+              We'll match you with creators who excel at these formats.
             </div>
           </div>
 
-          {INFLUENCERS.slice(0, 4).map((inf) => {
-            const isSelected = selectedCreators.has(inf.id);
-            return (
-              <button
-                key={inf.id}
-                onClick={() => toggleCreator(inf.id)}
-                style={{
-                  width: "100%",
-                  border: isSelected ? "2px solid #FF6B35" : "1px solid #d0d0cc",
-                  borderRadius: "12px",
-                  padding: "16px",
-                  marginBottom: "12px",
-                  cursor: "pointer",
-                  background: isSelected ? "#FFF5F0" : "white",
-                  transition: "all 0.2s ease",
-                  textAlign: "left",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", marginBottom: "12px" }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: "700", fontSize: "16px", color: "#1a1a18", marginBottom: "4px" }}>
-                      {inf.name}
-                    </div>
-                    <div style={{ fontSize: "13px", color: "#7a7a77" }}>{inf.handle}</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "12px" }}>
+            {CAMPAIGN_FORMATS.map((fmt) => {
+              const isSelected = selectedCreators.has(fmt.id);
+              return (
+                <button
+                  key={fmt.id}
+                  onClick={() => {
+                    const next = new Set(selectedCreators);
+                    if (next.has(fmt.id)) {
+                      next.delete(fmt.id);
+                    } else {
+                      next.add(fmt.id);
+                    }
+                    setSelectedCreators(next);
+                  }}
+                  style={{
+                    border: isSelected ? "2px solid #FF6B35" : "1px solid #d0d0cc",
+                    borderRadius: "12px",
+                    padding: "16px",
+                    cursor: "pointer",
+                    background: isSelected ? "#FFF5F0" : "white",
+                    transition: "all 0.2s ease",
+                    textAlign: "center",
+                  }}
+                >
+                  <div style={{ fontWeight: "700", fontSize: "16px", color: "#1a1a18", marginBottom: "4px" }}>
+                    {fmt.title}
+                  </div>
+                  <div style={{ fontSize: "12px", color: "#7a7a77", marginBottom: "12px", lineHeight: "1.4" }}>
+                    {fmt.subtitle}
                   </div>
                   <div
                     style={{
-                      width: "22px",
-                      height: "22px",
+                      width: "24px",
+                      height: "24px",
                       border: isSelected ? "none" : "2px solid #d0d0cc",
                       background: isSelected ? "#FF6B35" : "white",
                       borderRadius: "4px",
-                      flexShrink: 0,
+                      margin: "0 auto",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -253,45 +264,10 @@ export default function MatchPage() {
                   >
                     {isSelected && "✓"}
                   </div>
-                </div>
-                <div style={{ marginBottom: "8px" }}>
-                  <span
-                    style={{
-                      display: "inline-block",
-                      padding: "6px 12px",
-                      background: "#EFF8F5",
-                      color: "#1D9E75",
-                      borderRadius: "20px",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      marginRight: "8px",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {inf.followers} followers
-                  </span>
-                  <span
-                    style={{
-                      display: "inline-block",
-                      padding: "6px 12px",
-                      background: "#FFF5F0",
-                      color: "#FF6B35",
-                      borderRadius: "20px",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      marginRight: "8px",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    {inf.niche[0]}
-                  </span>
-                </div>
-                <div style={{ fontSize: "13px", color: "#7a7a77", lineHeight: "1.5" }}>
-                  {inf.vibe}
-                </div>
-              </button>
-            );
-          })}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* PRICING SUMMARY */}
@@ -309,12 +285,12 @@ export default function MatchPage() {
             Your investment
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: "10px", fontSize: "14px" }}>
-            <span style={{ color: "#7a7a77", fontWeight: "500" }}>Platform coordination fee</span>
+            <span style={{ color: "#7a7a77", fontWeight: "500" }}>Booking token</span>
             <span style={{ fontWeight: "700", color: "#1a1a18" }}>₹{platformFee.toLocaleString("en-IN")}</span>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: "10px", fontSize: "14px" }}>
-            <span style={{ color: "#7a7a77", fontWeight: "500" }}>Creator fees (~₹{CREATOR_COST_PER_PERSON.toLocaleString("en-IN")} each)</span>
-            <span style={{ fontWeight: "700", color: "#1a1a18" }}>₹{totalCreatorCost.toLocaleString("en-IN")}</span>
+            <span style={{ color: "#7a7a77", fontWeight: "500" }}>Content types selected</span>
+            <span style={{ fontWeight: "700", color: "#1a1a18" }}>{selectedCreators.size}</span>
           </div>
           <div
             style={{
@@ -325,15 +301,15 @@ export default function MatchPage() {
               paddingTop: "14px",
               marginTop: "10px",
               fontWeight: "700",
-              fontSize: "18px",
+              fontSize: "16px",
               color: "#FF6B35",
             }}
           >
-            <span>Total investment</span>
-            <span>₹{totalCost.toLocaleString("en-IN")}</span>
+            <span>Estimated campaign cost</span>
+            <span>₹{(platformFee * selectedCreators.size || 500).toLocaleString("en-IN")}</span>
           </div>
           <div style={{ fontSize: "12px", color: "#7a7a77", marginTop: "12px", lineHeight: "1.5" }}>
-            Our strategist will contact you to finalize details and creator availability.
+            ₹500 booking token is adjusted against your final invoice. Our strategist will refine the cost based on creator availability and your timeline.
           </div>
         </div>
 

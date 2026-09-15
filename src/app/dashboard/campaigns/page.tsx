@@ -76,7 +76,11 @@ export default function CampaignsPage() {
             </thead>
             <tbody>
               {campaigns.map((c) => (
-                <tr key={c.orderId} className="border-b border-border last:border-0">
+                <tr
+                  key={c.orderId}
+                  className="border-b border-border last:border-0 cursor-pointer transition hover:bg-background"
+                  onClick={() => (window.location.href = `/dashboard/campaigns/${c.id}`)}
+                >
                   <td className="px-5 py-4">
                     <p className="font-bold text-navy">{c.packageName}</p>
                     <p className="font-mono text-xs text-muted" title={c.orderId}>
@@ -98,12 +102,7 @@ export default function CampaignsPage() {
                     {formatRelativeDate(c.updatedAt)}
                   </td>
                   <td className="px-5 py-4 text-right">
-                    <Link
-                      href={`/dashboard/campaigns/${c.orderId}`}
-                      className="font-semibold text-purple hover:underline"
-                    >
-                      Track
-                    </Link>
+                    <span className="font-semibold text-purple">Track →</span>
                   </td>
                 </tr>
               ))}

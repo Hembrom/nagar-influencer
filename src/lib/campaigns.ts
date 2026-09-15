@@ -111,6 +111,21 @@ function mapBookingRow(row: {
   };
 }
 
+const DUMMY_LIVE_CAMPAIGN: Campaign = {
+  id: "demo-live-campaign",
+  orderId: "NI-1689494386602",
+  userId: "demo",
+  formatId: "instagram-reel",
+  packageName: "Product Launch · Instagram Reel",
+  tokenAmount: 500,
+  paymentMethod: "card",
+  paymentRef: "PAY-DUMMY-001",
+  status: "campaign_live",
+  productHint: "E-commerce platform launch",
+  createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days ago
+  updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+};
+
 export async function listCampaigns(): Promise<Campaign[]> {
   const accountId = await resolveAccountId();
   const local = readLocal(accountId);
@@ -140,13 +155,29 @@ export async function listCampaigns(): Promise<Campaign[]> {
     }
   }
 
-  return local.sort(
+  const campaigns = local.sort(
     (a, b) => +new Date(b.createdAt) - +new Date(a.createdAt),
   );
+
+  // For demo mode, add dummy live campaign for testing
+  if (accountId === "demo") {
+    const hasDummyLive = campaigns.some((c) => c.id === "demo-live-campaign");
+    if (!hasDummyLive) {
+      campaigns.unshift(DUMMY_LIVE_CAMPAIGN);
+    }
+  }
+
+  return campaigns;
 }
 
 export async function getCampaign(orderId: string): Promise<Campaign | null> {
   const accountId = await resolveAccountId();
+  
+  // Check dummy live campaign
+  if (accountId === "demo" && orderId === "demo-live-campaign") {
+    return DUMMY_LIVE_CAMPAIGN;
+  }
+  
   const local =
     readLocal(accountId).find(
       (c) => c.orderId === orderId || c.id === orderId,

@@ -13,7 +13,7 @@ import {
 } from "@/lib/campaigns";
 
 type StepState = "done" | "active" | "pending";
-type TabType = "progress" | "videos";
+type TabType = "progress" | "videos" | "dashboard";
 type Agent = "aisha" | "rahul" | null;
 
 type ChatMessage = {
@@ -21,6 +21,17 @@ type ChatMessage = {
   sender: "user" | "agent";
   text: string;
   timestamp: Date;
+};
+
+type VideoStats = {
+  title: string;
+  platform: string;
+  views: number;
+  engagement: number;
+  likes: number;
+  comments: number;
+  shares: number;
+  thumbUrl: string;
 };
 
 const FLOW: {
@@ -81,7 +92,13 @@ function TrackerContent() {
     let cancelled = false;
     (async () => {
       const c = await getCampaign(id);
-      if (!cancelled) setCampaign(c);
+      if (!cancelled) {
+        setCampaign(c);
+        // If campaign is live, default to dashboard tab
+        if (c && c.status === "campaign_live") {
+          setActiveTab("dashboard");
+        }
+      }
     })();
     return () => {
       cancelled = true;
@@ -224,6 +241,21 @@ function TrackerContent() {
 
           {/* TAB TABS */}
           <div className="mt-8 space-y-2 border-t border-border pt-6">
+            {campaign?.status === "campaign_live" && (
+              <button
+                onClick={() => {
+                  setActiveAgent(null);
+                  setActiveTab("dashboard");
+                }}
+                className={`w-full rounded-lg px-3 py-2 text-left text-sm font-semibold transition ${
+                  activeTab === "dashboard" && !activeAgent
+                    ? "bg-orange text-white"
+                    : "bg-background text-navy hover:bg-orange-soft"
+                }`}
+              >
+                Dashboard
+              </button>
+            )}
             <button
               onClick={() => {
                 setActiveAgent(null);
@@ -337,6 +369,111 @@ function TrackerContent() {
                 >
                   Send
                 </button>
+              </div>
+            </div>
+          ) : activeTab === "dashboard" ? (
+            <div className="space-y-5">
+              <div className="rounded-2xl border border-border bg-card p-6">
+                <p className="mb-6 text-xs font-bold tracking-[0.08em] text-muted-light">
+                  CAMPAIGN PERFORMANCE
+                </p>
+                
+                {/* Stats Grid */}
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 mb-8">
+                  <div className="rounded-lg border border-border bg-background p-4">
+                    <p className="text-xs text-muted-light font-semibold">Total Views</p>
+                    <p className="mt-2 text-2xl font-bold text-navy">24.5K</p>
+                    <p className="mt-1 text-xs text-green">↑ 12% vs last week</p>
+                  </div>
+                  <div className="rounded-lg border border-border bg-background p-4">
+                    <p className="text-xs text-muted-light font-semibold">Engagement</p>
+                    <p className="mt-2 text-2xl font-bold text-orange">3.2%</p>
+                    <p className="mt-1 text-xs text-green">↑ 0.8% vs last week</p>
+                  </div>
+                  <div className="rounded-lg border border-border bg-background p-4">
+                    <p className="text-xs text-muted-light font-semibold">Likes</p>
+                    <p className="mt-2 text-2xl font-bold text-purple">842</p>
+                    <p className="mt-1 text-xs text-muted">+120 today</p>
+                  </div>
+                  <div className="rounded-lg border border-border bg-background p-4">
+                    <p className="text-xs text-muted-light font-semibold">Comments</p>
+                    <p className="mt-2 text-2xl font-bold text-teal">156</p>
+                    <p className="mt-1 text-xs text-muted">+32 today</p>
+                  </div>
+                </div>
+
+                {/* Videos Performance */}
+                <p className="mb-4 text-sm font-semibold text-navy">Video Performance</p>
+                <div className="space-y-3">
+                  {[
+                    {
+                      title: "Instagram Reel",
+                      platform: "Instagram",
+                      views: 12400,
+                      engagement: 3.8,
+                      likes: 480,
+                      comments: 92,
+                      shares: 34,
+                    },
+                    {
+                      title: "YouTube Short",
+                      platform: "YouTube",
+                      views: 8200,
+                      engagement: 2.9,
+                      likes: 240,
+                      comments: 48,
+                      shares: 18,
+                    },
+                    {
+                      title: "TikTok Video",
+                      platform: "TikTok",
+                      views: 3900,
+                      engagement: 2.1,
+                      likes: 122,
+                      comments: 16,
+                      shares: 8,
+                    },
+                  ].map((video) => (
+                    <div
+                      key={video.title}
+                      className="rounded-lg border border-border bg-background p-4"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <p className="font-semibold text-navy">{video.title}</p>
+                          <p className="text-xs text-muted">{video.platform}</p>
+                          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-5">
+                            <div>
+                              <p className="text-xs text-muted-light">Views</p>
+                              <p className="mt-1 font-bold text-navy">
+                                {(video.views / 1000).toFixed(1)}K
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-light">Engagement</p>
+                              <p className="mt-1 font-bold text-orange">
+                                {video.engagement}%
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-light">Likes</p>
+                              <p className="mt-1 font-bold text-purple">{video.likes}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-light">Comments</p>
+                              <p className="mt-1 font-bold text-teal">{video.comments}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-light">Shares</p>
+                              <p className="mt-1 font-bold text-green">{video.shares}</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="h-16 w-16 shrink-0 rounded-lg bg-gray-200" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           ) : activeTab === "progress" ? (

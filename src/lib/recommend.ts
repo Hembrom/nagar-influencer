@@ -24,7 +24,7 @@ export type MatchResult = {
   reasons: string[];
   confidence: "high" | "medium";
   reel: MatchedReel | null;
-  productHint: string;
+  productHint?: string;
 };
 
 const BRIEF_KEY = "ni_chat_brief";

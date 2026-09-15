@@ -56,13 +56,40 @@ export default function MatchPage() {
       alert("Please select at least one content type");
       return;
     }
-    // TODO: Implement payment and booking
+
+    // Get selected content type titles
     const selectedTypes = Array.from(selectedCreators)
       .map((id) => CAMPAIGN_FORMATS.find((f) => f.id === id)?.title)
-      .filter(Boolean)
-      .join(", ");
-    console.log("Campaign reserved with content types:", selectedTypes);
-    router.push(`/dashboard/campaigns/${Math.random().toString(36).slice(2, 9)}`);
+      .filter(Boolean);
+
+    // Create campaign record
+    const campaignId = Math.random().toString(36).slice(2, 9);
+    const campaign = {
+      id: campaignId,
+      orderId: `NI-${Date.now()}`,
+      userId: "demo",
+      formatId: Array.from(selectedCreators)[0] || "instagram-reel",
+      packageName: `${brief?.category || "Campaign"} · ${selectedTypes.join(" + ")}`,
+      tokenAmount: 500,
+      paymentMethod: "card" as const,
+      paymentRef: `token-${campaignId}`,
+      status: "order_placed" as const,
+      productHint: brief?.text,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    // Save to localStorage
+    if (typeof window !== "undefined") {
+      const key = `ni_campaigns:demo`;
+      const existing = localStorage.getItem(key);
+      const campaigns = existing ? JSON.parse(existing) : [];
+      campaigns.push(campaign);
+      localStorage.setItem(key, JSON.stringify(campaigns));
+    }
+
+    console.log("Campaign reserved:", campaign);
+    router.push(`/dashboard/campaigns/${campaignId}`);
   }
 
   return (

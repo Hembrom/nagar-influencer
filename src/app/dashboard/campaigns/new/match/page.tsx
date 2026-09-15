@@ -171,36 +171,6 @@ export default function MatchPage() {
           </button>
         </div>
 
-        {/* CONTENT STYLE SECTION */}
-        <div style={{ marginBottom: "28px" }}>
-          <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-            Pick the style you like
-          </label>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "12px", marginBottom: "16px" }}>
-            {CAMPAIGN_FORMATS.map((fmt) => (
-              <button
-                key={fmt.id}
-                onClick={() => setSelectedFormat(fmt.id)}
-                style={{
-                  padding: "12px 14px",
-                  border: selectedFormat === fmt.id ? "2px solid #FF6B35" : "1px solid #d0d0cc",
-                  borderRadius: "8px",
-                  background: selectedFormat === fmt.id ? "#FFF5F0" : "white",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  color: "#1a1a18",
-                  transition: "all 0.2s ease",
-                  textAlign: "left",
-                }}
-              >
-                <div style={{ fontSize: "13px", fontWeight: "700", marginBottom: "4px" }}>{fmt.title}</div>
-                <div style={{ fontSize: "12px", color: "#7a7a77" }}>{fmt.subtitle}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* CONTENT TYPES SECTION */}
         <div style={{ marginBottom: "28px" }}>
           <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>

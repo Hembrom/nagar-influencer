@@ -66,8 +66,6 @@ export default function NewCampaignPage() {
 
   function handleProceed() {
     if (!validate()) return;
-
-    // Save brief and navigate to Step 2
     saveChatBrief({
       text: brief.whatYouPromote,
       category: brief.category,
@@ -83,40 +81,45 @@ export default function NewCampaignPage() {
     router.push("/dashboard/campaigns/new/match");
   }
 
-  const Chip = ({
-    selected,
-    onClick,
-    children,
-  }: {
-    selected: boolean;
-    onClick: () => void;
-    children: React.ReactNode;
-  }) => (
+  const Chip = ({ selected, onClick, children }: { selected: boolean; onClick: () => void; children: React.ReactNode }) => (
     <button
       onClick={onClick}
-      className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-        selected
-          ? "bg-orange text-white"
-          : "border border-border bg-background text-navy hover:border-orange"
-      }`}
+      style={{
+        padding: "12px 16px",
+        border: selected ? "none" : "1px solid #d0d0cc",
+        borderRadius: "8px",
+        background: selected ? "#FF6B35" : "white",
+        cursor: "pointer",
+        fontSize: "14px",
+        fontWeight: "500",
+        color: selected ? "white" : "#1a1a18",
+        transition: "all 0.2s ease",
+      }}
     >
       {children}
     </button>
   );
 
-  const Select = ({
-    value,
-    onChange,
-    options,
-  }: {
-    value: string;
-    onChange: (val: string) => void;
-    options: string[];
-  }) => (
+  const Select = ({ value, onChange, options }: { value: string; onChange: (val: string) => void; options: string[] }) => (
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-navy outline-none focus:border-orange"
+      style={{
+        width: "100%",
+        padding: "12px 14px",
+        border: "1px solid #d0d0cc",
+        borderRadius: "8px",
+        fontSize: "15px",
+        fontFamily: "inherit",
+        background: "white",
+        color: "#1a1a18",
+        cursor: "pointer",
+        appearance: "none",
+        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23FF6B35' d='M1 1l5 5 5-5'/%3E%3C/svg%3E")`,
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "right 12px center",
+        paddingRight: "36px",
+      }}
     >
       <option value="">Select…</option>
       {options.map((opt) => (
@@ -128,43 +131,75 @@ export default function NewCampaignPage() {
   );
 
   return (
-    <PageFrame
-      title="Tell us what you need"
-      subtitle="Share a few details and we'll find the right creators and content style for you."
-    >
-      <div className="mx-auto max-w-2xl space-y-8 py-6">
-        {/* Progress Indicator */}
-        <div className="flex items-center gap-8">
-          <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange text-xs font-bold text-white">
+    <div style={{ background: "#f9f9f7", minHeight: "100vh" }}>
+      <div style={{ maxWidth: "720px", margin: "0 auto", padding: "24px", background: "white" }}>
+        {/* STEP INDICATOR - 2 STEPS */}
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "48px", gap: "8px" }}>
+          <div style={{ textAlign: "center", flex: 1 }}>
+            <div
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                background: "#FF6B35",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 8px",
+                fontWeight: "700",
+                fontSize: "16px",
+                color: "white",
+                boxShadow: "0 2px 8px rgba(255, 107, 53, 0.3)",
+              }}
+            >
               ●
             </div>
-            <span className="text-sm font-semibold text-navy">Tell us what you need</span>
+            <div style={{ fontSize: "12px", color: "#FF6B35", fontWeight: "600" }}>Tell us what you need</div>
           </div>
-          <div className="h-0.5 flex-1 bg-border" />
-          <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-border text-xs font-bold text-muted">
+          <div style={{ textAlign: "center", flex: 1, opacity: 0.5 }}>
+            <div
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                background: "#e0e0e0",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 8px",
+                fontWeight: "700",
+                fontSize: "16px",
+                color: "#7a7a77",
+              }}
+            >
               ○
             </div>
-            <span className="text-sm text-muted">Pick your match & reserve</span>
+            <div style={{ fontSize: "12px", color: "#7a7a77", fontWeight: "500" }}>Pick your match & reserve</div>
           </div>
         </div>
 
-        {/* SECTION 1: What are you promoting? */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-bold text-navy">What are you promoting?</h2>
-          <textarea
-            value={brief.whatYouPromote}
-            onChange={(e) => setBrief({ ...brief, whatYouPromote: e.target.value })}
-            placeholder="Tell us about your shop, product, service, event or offer…"
-            className={`min-h-24 w-full rounded-xl border px-4 py-3 text-sm outline-none focus:border-orange ${
-              errors.whatYouPromote ? "border-red-500 focus:border-red-500" : "border-border bg-background"
-            }`}
-          />
-          {errors.whatYouPromote && (
-            <p className="text-xs text-red-600">{errors.whatYouPromote}</p>
-          )}
-          <div className="flex flex-wrap gap-2">
+        {/* HEADER */}
+        <div style={{ marginBottom: "32px" }}>
+          <div style={{ fontSize: "12px", fontWeight: "600", color: "#FF6B35", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "8px" }}>
+            Step 1 of 2
+          </div>
+          <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "8px", color: "#1a1a18" }}>
+            What are you promoting?
+          </h1>
+          <p style={{ fontSize: "14px", color: "#7a7a77", marginBottom: "16px" }}>
+            Share a few details and we'll find the right creators and content style for you.
+          </p>
+          <div style={{ height: "4px", background: "#e0e0e0", borderRadius: "2px", overflow: "hidden" }}>
+            <div style={{ height: "100%", background: "#FF6B35", width: "50%" }} />
+          </div>
+        </div>
+
+        {/* SECTION 1 */}
+        <div style={{ marginBottom: "28px" }}>
+          <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
+            Which category best fits?
+          </label>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "12px", marginBottom: "16px" }}>
             {CATEGORIES.map((cat) => (
               <Chip
                 key={cat}
@@ -175,47 +210,82 @@ export default function NewCampaignPage() {
               </Chip>
             ))}
           </div>
+          <textarea
+            value={brief.whatYouPromote}
+            onChange={(e) => setBrief({ ...brief, whatYouPromote: e.target.value })}
+            placeholder="Tell us about your shop, product, service, event or offer…"
+            style={{
+              width: "100%",
+              minHeight: "110px",
+              padding: "12px 14px",
+              border: errors.whatYouPromote ? "1px solid #E24B4A" : "1px solid #d0d0cc",
+              borderRadius: "8px",
+              fontSize: "15px",
+              fontFamily: "inherit",
+              background: "white",
+              color: "#1a1a18",
+              resize: "vertical",
+              lineHeight: "1.5",
+              outline: "none",
+            }}
+          />
+          {errors.whatYouPromote && <p style={{ fontSize: "13px", color: "#E24B4A", marginTop: "6px" }}>{errors.whatYouPromote}</p>}
         </div>
 
-        {/* SECTION 2: What's your goal? */}
-        <div className="space-y-3">
-          <h2 className="text-lg font-bold text-navy">What's your goal?</h2>
-          <div className="flex flex-wrap gap-2">
+        {/* SECTION 2 */}
+        <div style={{ marginBottom: "28px" }}>
+          <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
+            What's your goal?
+          </label>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "12px" }}>
             {GOALS.map((g) => (
-              <Chip
+              <button
                 key={g}
-                selected={brief.goal === g}
                 onClick={() => setBrief({ ...brief, goal: g })}
+                style={{
+                  padding: "14px 16px",
+                  border: brief.goal === g ? "2px solid #FF6B35" : "1px solid #d0d0cc",
+                  borderRadius: "8px",
+                  background: brief.goal === g ? "#FFF5F0" : "white",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  color: "#1a1a18",
+                  transition: "all 0.2s ease",
+                  textAlign: "left",
+                }}
               >
-                {g}
-              </Chip>
+                <div style={{ fontWeight: "600", fontSize: "14px" }}>{g}</div>
+              </button>
             ))}
           </div>
-          {errors.goal && <p className="text-xs text-red-600">{errors.goal}</p>}
+          {errors.goal && <p style={{ fontSize: "13px", color: "#E24B4A", marginTop: "6px" }}>{errors.goal}</p>}
         </div>
 
-        {/* SECTION 3: Who should we reach? */}
-        <div className="space-y-3">
-          <h2 className="text-lg font-bold text-navy">Who should we reach?</h2>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-muted">Location</label>
+        {/* SECTION 3 */}
+        <div style={{ marginBottom: "28px" }}>
+          <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
+            Who should we reach?
+          </label>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
+            <div>
+              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Location</div>
               <Select
                 value={brief.location}
                 onChange={(val) => setBrief({ ...brief, location: val })}
                 options={["Kolkata", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Pan-India"]}
               />
             </div>
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-muted">Audience age</label>
+            <div>
+              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Age group</div>
               <Select
                 value={brief.audience}
                 onChange={(val) => setBrief({ ...brief, audience: val })}
                 options={["18–25", "18–35", "25–45", "35–55", "18+", "All ages"]}
               />
             </div>
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-muted">Language</label>
+            <div>
+              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Language</div>
               <Select
                 value={brief.language}
                 onChange={(val) => setBrief({ ...brief, language: val })}
@@ -225,10 +295,12 @@ export default function NewCampaignPage() {
           </div>
         </div>
 
-        {/* SECTION 4: Content format */}
-        <div className="space-y-3">
-          <h2 className="text-lg font-bold text-navy">What kind of content do you want?</h2>
-          <div className="flex flex-wrap gap-2">
+        {/* SECTION 4 */}
+        <div style={{ marginBottom: "28px" }}>
+          <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
+            What kind of content do you want?
+          </label>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "12px" }}>
             {FORMATS.map((fmt) => (
               <Chip
                 key={fmt}
@@ -239,34 +311,34 @@ export default function NewCampaignPage() {
               </Chip>
             ))}
           </div>
-          {errors.contentFormat && (
-            <p className="text-xs text-red-600">{errors.contentFormat}</p>
-          )}
+          {errors.contentFormat && <p style={{ fontSize: "13px", color: "#E24B4A", marginTop: "6px" }}>{errors.contentFormat}</p>}
         </div>
 
-        {/* SECTION 5: Campaign preferences */}
-        <div className="space-y-3">
-          <h2 className="text-lg font-bold text-navy">Campaign preferences</h2>
-          <p className="text-xs text-muted">(Optional — we'll recommend defaults)</p>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-muted">Creators</label>
+        {/* SECTION 5 */}
+        <div style={{ marginBottom: "28px" }}>
+          <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
+            Campaign preferences
+          </label>
+          <p style={{ fontSize: "13px", color: "#7a7a77", marginBottom: "12px" }}>(Optional — we'll recommend defaults)</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
+            <div>
+              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Creators</div>
               <Select
                 value={brief.numCreators}
                 onChange={(val) => setBrief({ ...brief, numCreators: val })}
                 options={CREATOR_COUNTS}
               />
             </div>
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-muted">Budget</label>
+            <div>
+              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Budget</div>
               <Select
                 value={brief.budget}
                 onChange={(val) => setBrief({ ...brief, budget: val })}
                 options={BUDGETS}
               />
             </div>
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-muted">Timeline</label>
+            <div>
+              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Timeline</div>
               <Select
                 value={brief.timeline}
                 onChange={(val) => setBrief({ ...brief, timeline: val })}
@@ -276,19 +348,40 @@ export default function NewCampaignPage() {
           </div>
         </div>
 
-        {/* CTA Section */}
-        <div className="flex items-center justify-between border-t border-border pt-6">
-          <div className="text-xs text-muted">
-            Need help? Our campaign matcher can recommend everything for you.
-          </div>
+        {/* CTA SECTION */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #e0e0e0", paddingTop: "24px" }}>
+          <div style={{ fontSize: "13px", color: "#7a7a77" }}>Need help? Our campaign matcher can recommend everything for you.</div>
           <button
             onClick={handleProceed}
-            className="flex items-center gap-2 rounded-xl bg-orange px-6 py-3 text-sm font-bold text-white transition hover:bg-[#f05f20]"
+            style={{
+              background: "#FF6B35",
+              color: "white",
+              border: "none",
+              padding: "14px 24px",
+              borderRadius: "8px",
+              fontSize: "15px",
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              boxShadow: "0 2px 8px rgba(255, 107, 53, 0.2)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#E55A2B";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(255, 107, 53, 0.3)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "#FF6B35";
+              e.currentTarget.style.boxShadow = "0 2px 8px rgba(255, 107, 53, 0.2)";
+            }}
           >
             Find my matches →
           </button>
         </div>
+
+        <div style={{ fontSize: "13px", color: "#7a7a77", textAlign: "center", marginTop: "20px", paddingTop: "20px", borderTop: "1px solid #e0e0e0" }}>
+          We only use your info to reach you. No spam, ever.
+        </div>
       </div>
-    </PageFrame>
+    </div>
   );
 }

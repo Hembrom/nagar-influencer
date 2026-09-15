@@ -14,11 +14,19 @@ import {
 
 type StepState = "done" | "active" | "pending";
 type TabType = "progress" | "videos" | "dashboard";
-type Agent = "aisha" | "rahul" | null;
+type ViewMode = "tabs" | "group-chat";
+
+type TeamMember = {
+  id: string;
+  name: string;
+  role: string;
+  avatar: string;
+};
 
 type ChatMessage = {
   id: string;
-  sender: "user" | "agent";
+  sender: "user" | "team";
+  senderName?: string;
   text: string;
   timestamp: Date;
 };
@@ -78,13 +86,34 @@ function stepStates(status: CampaignStatus): StepState[] {
   });
 }
 
+const TEAM_MEMBERS: TeamMember[] = [
+  {
+    id: "aisha",
+    name: "Aisha",
+    role: "Strategist",
+    avatar: "A",
+  },
+  {
+    id: "rahul",
+    name: "Rahul",
+    role: "Creator Manager",
+    avatar: "R",
+  },
+  {
+    id: "priya",
+    name: "Priya",
+    role: "Content Lead",
+    avatar: "P",
+  },
+];
+
 function TrackerContent() {
   const router = useRouter();
   const params = useParams();
   const id = String(params.id || "");
   const [campaign, setCampaign] = useState<Campaign | null | undefined>(undefined);
   const [activeTab, setActiveTab] = useState<TabType>("progress");
-  const [activeAgent, setActiveAgent] = useState<Agent>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("tabs");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState("");
 
@@ -111,11 +140,12 @@ function TrackerContent() {
   );
 
   const handleSendMessage = () => {
-    if (!inputText.trim() || !activeAgent) return;
+    if (!inputText.trim()) return;
     
     const newMessage: ChatMessage = {
       id: Date.now().toString(),
       sender: "user",
+      senderName: "You",
       text: inputText,
       timestamp: new Date(),
     };
@@ -123,33 +153,38 @@ function TrackerContent() {
     setMessages((prev) => [...prev, newMessage]);
     setInputText("");
     
-    // Simulate agent response after 1 second
+    // Simulate team response after 1 second
     setTimeout(() => {
-      const agentName = activeAgent === "aisha" ? "Aisha" : "Rahul";
-      const responses = {
-        aisha: [
+      const teamResponses = [
+        { name: "Aisha", messages: [
           "Got it! I'm reviewing your campaign brief now.",
           "Your brief looks great. I think we can find perfect creators for this.",
           "Let me check creator availability for your timeline.",
-        ],
-        rahul: [
+        ]},
+        { name: "Rahul", messages: [
           "Thanks for the message! I'm here to help with creator coordination.",
           "I'll make sure we get the best creators for your campaign.",
           "Let me check our creator roster for your needs.",
-        ],
-      };
+        ]},
+        { name: "Priya", messages: [
+          "Great! I can help refine the content strategy.",
+          "Based on your message, here are some content ideas...",
+          "Let's discuss the creative direction for this campaign.",
+        ]},
+      ];
       
-      const agentResponses = responses[activeAgent];
-      const randomResponse = agentResponses[Math.floor(Math.random() * agentResponses.length)];
+      const randomTeam = teamResponses[Math.floor(Math.random() * teamResponses.length)];
+      const randomMessage = randomTeam.messages[Math.floor(Math.random() * randomTeam.messages.length)];
       
-      const agentMessage: ChatMessage = {
+      const teamMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
-        sender: "agent",
-        text: randomResponse,
+        sender: "team",
+        senderName: randomTeam.name,
+        text: randomMessage,
         timestamp: new Date(),
       };
       
-      setMessages((prev) => [...prev, agentMessage]);
+      setMessages((prev) => [...prev, teamMessage]);
     }, 1000);
   };
 
@@ -191,52 +226,44 @@ function TrackerContent() {
       }
     >
       <div className="grid gap-0 lg:grid-cols-[240px_1fr]">
-        {/* LEFT SIDEBAR - AGENTS */}
-        <div className="rounded-2xl border border-border bg-card p-5">
-          <p className="mb-4 text-xs font-bold tracking-[0.08em] text-muted-light">
-            WORKING ON THIS
-          </p>
-          <div className="space-y-3">
-            {/* Agent 1 */}
-            <button
-              onClick={() => {
-                setActiveAgent("aisha");
-                setMessages([]);
-              }}
-              className={`w-full flex items-center gap-3 rounded-lg border p-3 transition cursor-pointer ${
-                activeAgent === "aisha"
-                  ? "border-orange bg-orange-soft"
-                  : "border-border bg-background hover:bg-orange-soft hover:border-orange"
-              }`}
-            >
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-purple text-xs font-bold text-white flex-shrink-0">
-                A
-              </div>
-              <div className="text-left">
-                <p className="text-sm font-semibold text-navy">Aisha</p>
-                <p className="text-xs text-muted">Strategist</p>
-              </div>
-            </button>
-            {/* Agent 2 */}
-            <button
-              onClick={() => {
-                setActiveAgent("rahul");
-                setMessages([]);
-              }}
-              className={`w-full flex items-center gap-3 rounded-lg border p-3 transition cursor-pointer ${
-                activeAgent === "rahul"
-                  ? "border-orange bg-orange-soft"
-                  : "border-border bg-background hover:bg-orange-soft hover:border-orange"
-              }`}
-            >
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-orange text-xs font-bold text-white flex-shrink-0">
-                R
-              </div>
-              <div className="text-left">
-                <p className="text-sm font-semibold text-navy">Rahul</p>
-                <p className="text-xs text-muted">Creator Manager</p>
-              </div>
-            </button>
+        {/* LEFT SIDEBAR - GROUP CHAT */}
+        <div className="rounded-2xl border border-border bg-card p-5 flex flex-col h-full">
+          <button
+            onClick={() => {
+              setViewMode("group-chat");
+              setMessages([]);
+            }}
+            className={`mb-4 pb-4 border-b border-border transition ${
+              viewMode === "group-chat" ? "opacity-100" : "opacity-60 hover:opacity-100"
+            }`}
+          >
+            <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+              WORKING ON THIS
+            </p>
+            <p className="mt-2 text-xs font-semibold text-navy">
+              Team Chat
+            </p>
+          </button>
+
+          {/* Team Members List */}
+          <div className="flex-1 overflow-y-auto">
+            <p className="mb-2 text-[10px] font-bold text-muted-light">TEAM MEMBERS</p>
+            <div className="space-y-2">
+              {TEAM_MEMBERS.map((member) => (
+                <div
+                  key={member.id}
+                  className="flex items-center gap-2 rounded-lg border border-border bg-background p-2"
+                >
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple text-[10px] font-bold text-white">
+                    {member.avatar}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-navy truncate">{member.name}</p>
+                    <p className="text-[10px] text-muted truncate">{member.role}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* TAB TABS */}
@@ -244,11 +271,11 @@ function TrackerContent() {
             {campaign?.status === "campaign_live" && (
               <button
                 onClick={() => {
-                  setActiveAgent(null);
+                  setViewMode("tabs");
                   setActiveTab("dashboard");
                 }}
                 className={`w-full rounded-lg px-3 py-2 text-left text-sm font-semibold transition ${
-                  activeTab === "dashboard" && !activeAgent
+                  activeTab === "dashboard" && viewMode === "tabs"
                     ? "bg-orange text-white"
                     : "bg-background text-navy hover:bg-orange-soft"
                 }`}
@@ -258,11 +285,11 @@ function TrackerContent() {
             )}
             <button
               onClick={() => {
-                setActiveAgent(null);
+                setViewMode("tabs");
                 setActiveTab("progress");
               }}
               className={`w-full rounded-lg px-3 py-2 text-left text-sm font-semibold transition ${
-                activeTab === "progress" && !activeAgent
+                activeTab === "progress" && viewMode === "tabs"
                   ? "bg-orange text-white"
                   : "bg-background text-navy hover:bg-orange-soft"
               }`}
@@ -271,11 +298,11 @@ function TrackerContent() {
             </button>
             <button
               onClick={() => {
-                setActiveAgent(null);
+                setViewMode("tabs");
                 setActiveTab("videos");
               }}
               className={`w-full rounded-lg px-3 py-2 text-left text-sm font-semibold transition ${
-                activeTab === "videos" && !activeAgent
+                activeTab === "videos" && viewMode === "tabs"
                   ? "bg-orange text-white"
                   : "bg-background text-navy hover:bg-orange-soft"
               }`}
@@ -305,16 +332,16 @@ function TrackerContent() {
             </span>
           </div>
 
-          {/* SHOW CHAT OR TABS */}
-          {activeAgent ? (
-            /* CHAT PANEL */
+          {/* SHOW GROUP CHAT OR TABS */}
+          {viewMode === "group-chat" ? (
+            /* GROUP CHAT PANEL */
             <div className="rounded-2xl border border-border bg-card p-6 flex flex-col h-[500px]">
               <div className="flex items-center justify-between mb-4">
                 <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
-                  CHAT WITH {activeAgent === "aisha" ? "AISHA" : "RAHUL"}
+                  TEAM CHAT
                 </p>
                 <button
-                  onClick={() => setActiveAgent(null)}
+                  onClick={() => setViewMode("tabs")}
                   className="text-xs text-muted hover:text-navy transition"
                 >
                   ✕ Close
@@ -325,22 +352,34 @@ function TrackerContent() {
               <div className="flex-1 overflow-y-auto mb-4 space-y-3">
                 {messages.length === 0 ? (
                   <p className="text-sm text-muted text-center py-8">
-                    👋 Start a conversation with {activeAgent === "aisha" ? "Aisha" : "Rahul"}
+                    👋 Start chatting with your team
                   </p>
                 ) : (
                   messages.map((msg) => (
                     <div
                       key={msg.id}
-                      className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+                      className={`flex gap-2 ${msg.sender === "user" ? "flex-row-reverse" : ""}`}
                     >
                       <div
-                        className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
-                          msg.sender === "user"
-                            ? "bg-orange text-white rounded-br-none"
-                            : "bg-background text-navy rounded-bl-none border border-border"
+                        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white ${
+                          msg.sender === "user" ? "bg-orange" : "bg-purple"
                         }`}
                       >
-                        {msg.text}
+                        {msg.sender === "user" ? "Y" : msg.senderName?.slice(0, 1) || "T"}
+                      </div>
+                      <div className={`${msg.sender === "user" ? "text-right" : ""}`}>
+                        <p className="text-xs font-semibold text-muted">
+                          {msg.senderName}
+                        </p>
+                        <div
+                          className={`mt-1 rounded-lg px-3 py-2 text-sm ${
+                            msg.sender === "user"
+                              ? "bg-orange text-white rounded-tr-none"
+                              : "bg-background text-navy rounded-tl-none border border-border"
+                          }`}
+                        >
+                          {msg.text}
+                        </div>
                       </div>
                     </div>
                   ))

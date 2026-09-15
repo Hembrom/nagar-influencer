@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { loadChatBrief, type ChatBrief } from "@/lib/recommend";
+import { createCampaign } from "@/lib/campaigns";
 import { INFLUENCERS } from "@/lib/influencers";
 import { CAMPAIGN_FORMATS } from "@/lib/formats";
 
@@ -57,39 +58,21 @@ export default function MatchPage() {
       return;
     }
 
-    // Get selected content type titles
-    const selectedTypes = Array.from(selectedCreators)
-      .map((id) => CAMPAIGN_FORMATS.find((f) => f.id === id)?.title)
-      .filter(Boolean);
+    try {
+      const formatId = Array.from(selectedCreators)[0] || "instagram-reel";
+      
+      // Use the proper campaign creation function
+      const campaign = await createCampaign({
+        formatId,
+        paymentMethod: "card",
+      });
 
-    // Create campaign record
-    const campaignId = Math.random().toString(36).slice(2, 9);
-    const campaign = {
-      id: campaignId,
-      orderId: `NI-${Date.now()}`,
-      userId: "demo",
-      formatId: Array.from(selectedCreators)[0] || "instagram-reel",
-      packageName: `${brief?.category || "Campaign"} · ${selectedTypes.join(" + ")}`,
-      tokenAmount: 500,
-      paymentMethod: "card" as const,
-      paymentRef: `token-${campaignId}`,
-      status: "order_placed" as const,
-      productHint: brief?.text,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    // Save to localStorage
-    if (typeof window !== "undefined") {
-      const key = `ni_campaigns:demo`;
-      const existing = localStorage.getItem(key);
-      const campaigns = existing ? JSON.parse(existing) : [];
-      campaigns.push(campaign);
-      localStorage.setItem(key, JSON.stringify(campaigns));
+      console.log("Campaign reserved:", campaign);
+      router.push(`/dashboard/campaigns/${campaign.orderId}`);
+    } catch (error) {
+      console.error("Failed to create campaign:", error);
+      alert("Failed to create campaign. Please try again.");
     }
-
-    console.log("Campaign reserved:", campaign);
-    router.push(`/dashboard/campaigns/${campaignId}`);
   }
 
   return (

@@ -225,9 +225,12 @@ function TrackerContent() {
           {/* TAB TABS */}
           <div className="mt-8 space-y-2 border-t border-border pt-6">
             <button
-              onClick={() => setActiveTab("progress")}
+              onClick={() => {
+                setActiveAgent(null);
+                setActiveTab("progress");
+              }}
               className={`w-full rounded-lg px-3 py-2 text-left text-sm font-semibold transition ${
-                activeTab === "progress"
+                activeTab === "progress" && !activeAgent
                   ? "bg-orange text-white"
                   : "bg-background text-navy hover:bg-orange-soft"
               }`}
@@ -235,9 +238,12 @@ function TrackerContent() {
               Progress
             </button>
             <button
-              onClick={() => setActiveTab("videos")}
+              onClick={() => {
+                setActiveAgent(null);
+                setActiveTab("videos");
+              }}
               className={`w-full rounded-lg px-3 py-2 text-left text-sm font-semibold transition ${
-                activeTab === "videos"
+                activeTab === "videos" && !activeAgent
                   ? "bg-orange text-white"
                   : "bg-background text-navy hover:bg-orange-soft"
               }`}

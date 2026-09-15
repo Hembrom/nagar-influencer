@@ -14,6 +14,14 @@ import {
 
 type StepState = "done" | "active" | "pending";
 type TabType = "progress" | "videos";
+type Agent = "aisha" | "rahul" | null;
+
+type ChatMessage = {
+  id: string;
+  sender: "user" | "agent";
+  text: string;
+  timestamp: Date;
+};
 
 const FLOW: {
   status: CampaignStatus;
@@ -65,6 +73,9 @@ function TrackerContent() {
   const id = String(params.id || "");
   const [campaign, setCampaign] = useState<Campaign | null | undefined>(undefined);
   const [activeTab, setActiveTab] = useState<TabType>("progress");
+  const [activeAgent, setActiveAgent] = useState<Agent>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [inputText, setInputText] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -81,6 +92,49 @@ function TrackerContent() {
     () => (campaign ? stepStates(campaign.status) : []),
     [campaign],
   );
+
+  const handleSendMessage = () => {
+    if (!inputText.trim() || !activeAgent) return;
+    
+    const newMessage: ChatMessage = {
+      id: Date.now().toString(),
+      sender: "user",
+      text: inputText,
+      timestamp: new Date(),
+    };
+    
+    setMessages((prev) => [...prev, newMessage]);
+    setInputText("");
+    
+    // Simulate agent response after 1 second
+    setTimeout(() => {
+      const agentName = activeAgent === "aisha" ? "Aisha" : "Rahul";
+      const responses = {
+        aisha: [
+          "Got it! I'm reviewing your campaign brief now.",
+          "Your brief looks great. I think we can find perfect creators for this.",
+          "Let me check creator availability for your timeline.",
+        ],
+        rahul: [
+          "Thanks for the message! I'm here to help with creator coordination.",
+          "I'll make sure we get the best creators for your campaign.",
+          "Let me check our creator roster for your needs.",
+        ],
+      };
+      
+      const agentResponses = responses[activeAgent];
+      const randomResponse = agentResponses[Math.floor(Math.random() * agentResponses.length)];
+      
+      const agentMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        sender: "agent",
+        text: randomResponse,
+        timestamp: new Date(),
+      };
+      
+      setMessages((prev) => [...prev, agentMessage]);
+    }, 1000);
+  };
 
   if (campaign === undefined) {
     return <div className="p-8 text-muted">Loading tracker…</div>;
@@ -128,8 +182,15 @@ function TrackerContent() {
           <div className="space-y-3">
             {/* Agent 1 */}
             <button
-              onClick={() => router.push("/dashboard/messages")}
-              className="w-full flex items-center gap-3 rounded-lg border border-border bg-background p-3 transition hover:bg-orange-soft hover:border-orange cursor-pointer"
+              onClick={() => {
+                setActiveAgent("aisha");
+                setMessages([]);
+              }}
+              className={`w-full flex items-center gap-3 rounded-lg border p-3 transition cursor-pointer ${
+                activeAgent === "aisha"
+                  ? "border-orange bg-orange-soft"
+                  : "border-border bg-background hover:bg-orange-soft hover:border-orange"
+              }`}
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-purple text-xs font-bold text-white flex-shrink-0">
                 A
@@ -141,8 +202,15 @@ function TrackerContent() {
             </button>
             {/* Agent 2 */}
             <button
-              onClick={() => router.push("/dashboard/messages")}
-              className="w-full flex items-center gap-3 rounded-lg border border-border bg-background p-3 transition hover:bg-orange-soft hover:border-orange cursor-pointer"
+              onClick={() => {
+                setActiveAgent("rahul");
+                setMessages([]);
+              }}
+              className={`w-full flex items-center gap-3 rounded-lg border p-3 transition cursor-pointer ${
+                activeAgent === "rahul"
+                  ? "border-orange bg-orange-soft"
+                  : "border-border bg-background hover:bg-orange-soft hover:border-orange"
+              }`}
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-orange text-xs font-bold text-white flex-shrink-0">
                 R
@@ -303,6 +371,65 @@ function TrackerContent() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* CHAT PANEL */}
+          {activeAgent && (
+            <div className="rounded-2xl border border-border bg-card p-6 flex flex-col h-[500px]">
+              <p className="mb-4 text-xs font-bold tracking-[0.08em] text-muted-light">
+                CHAT WITH {activeAgent === "aisha" ? "AISHA" : "RAHUL"}
+              </p>
+              
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto mb-4 space-y-3">
+                {messages.length === 0 ? (
+                  <p className="text-sm text-muted text-center py-8">
+                    👋 Start a conversation with {activeAgent === "aisha" ? "Aisha" : "Rahul"}
+                  </p>
+                ) : (
+                  messages.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+                    >
+                      <div
+                        className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
+                          msg.sender === "user"
+                            ? "bg-orange text-white rounded-br-none"
+                            : "bg-background text-navy rounded-bl-none border border-border"
+                        }`}
+                      >
+                        {msg.text}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Input */}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
+                  placeholder="Type a message..."
+                  className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-navy text-sm placeholder-muted focus:outline-none focus:border-orange"
+                />
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!inputText.trim()}
+                  className="px-4 py-2 rounded-lg bg-orange text-white font-semibold text-sm transition disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#f05f20]"
+                >
+                  Send
+                </button>
               </div>
             </div>
           )}

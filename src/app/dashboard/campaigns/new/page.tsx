@@ -396,22 +396,6 @@ export default function NewCampaignPage() {
           </p>
         </div>
 
-        {/* STATS CARD */}
-        <div style={{ background: "#f9f9f7", borderRadius: "12px", padding: "16px", border: "1px solid #e0e0e0" }}>
-          <p style={{ fontSize: "11px", fontWeight: "700", color: "#7a7a77", textTransform: "uppercase", margin: "0 0 12px 0", letterSpacing: "0.5px" }}>
-            Avg Campaign Stats
-          </p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-            <div>
-              <p style={{ fontSize: "18px", fontWeight: "700", color: "#FF6B35", margin: "0" }}>3-5</p>
-              <p style={{ fontSize: "11px", color: "#7a7a77", margin: "4px 0 0 0" }}>Creators per brief</p>
-            </div>
-            <div>
-              <p style={{ fontSize: "18px", fontWeight: "700", color: "#1D9E75", margin: "0" }}>48hrs</p>
-              <p style={{ fontSize: "11px", color: "#7a7a77", margin: "4px 0 0 0" }}>Avg match time</p>
-            </div>
-          </div>
-        </div>
       </div>
       </div>
     </div>

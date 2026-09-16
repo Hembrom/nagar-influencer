@@ -77,8 +77,8 @@ export default function MatchPage() {
 
   return (
     <div style={{ background: "#f9f9f7", minHeight: "100vh" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: "24px", maxWidth: "1200px", margin: "0 auto", padding: "24px" }}>
-      <div style={{ background: "white", borderRadius: "12px", padding: "24px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: "24px", maxWidth: "1400px", margin: "0 auto", padding: "24px" }}>
+      <div style={{ background: "white", borderRadius: "12px", padding: "32px" }}>
         
         {/* STEP INDICATOR - 2 STEPS */}
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "48px", gap: "8px" }}>

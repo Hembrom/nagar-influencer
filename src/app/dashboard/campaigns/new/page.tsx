@@ -5,6 +5,78 @@ import { useRouter } from "next/navigation";
 import { PageFrame } from "@/components/dashboard/PageFrame";
 import { saveChatBrief } from "@/lib/recommend";
 
+// Mobile responsive styles
+const styles = `
+  @media (max-width: 768px) {
+    .responsive-grid {
+      grid-template-columns: 1fr !important;
+    }
+    
+    .sidebar {
+      order: 10;
+      margin-top: 20px;
+    }
+    
+    .main-content {
+      order: 1;
+    }
+    
+    .card-grid {
+      grid-template-columns: 1fr !important;
+    }
+    
+    .preferences-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .container {
+      padding: 16px !important;
+    }
+    
+    .card {
+      padding: 16px !important;
+    }
+    
+    h1 {
+      font-size: 22px !important;
+    }
+    
+    .step-indicator {
+      gap: 4px !important;
+    }
+    
+    .step-circle {
+      width: 36px !important;
+      height: 36px !important;
+      font-size: 14px !important;
+    }
+    
+    .cta-section {
+      flex-direction: column !important;
+      gap: 16px !important;
+      align-items: stretch !important;
+    }
+    
+    .cta-section > div:first-child {
+      font-size: 12px !important;
+    }
+    
+    .cta-button {
+      width: 100% !important;
+      padding: 12px 16px !important;
+      font-size: 14px !important;
+    }
+  }
+`;
+
+if (typeof window !== "undefined") {
+  const styleSheet = document.createElement("style");
+  styleSheet.textContent = styles;
+  document.head.appendChild(styleSheet);
+}
+
 type CampaignBrief = {
   whatYouPromote: string;
   category: string;
@@ -132,8 +204,17 @@ export default function NewCampaignPage() {
 
   return (
     <div style={{ background: "#f9f9f7", minHeight: "100vh" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: "24px", maxWidth: "1400px", margin: "0 auto", padding: "24px" }}>
-      <div style={{ background: "white", borderRadius: "12px", padding: "32px" }}>
+      <div style={{ 
+        display: "grid", 
+        gridTemplateColumns: "1fr 280px", 
+        gap: "24px", 
+        maxWidth: "1400px", 
+        margin: "0 auto", 
+        padding: "24px",
+      }}
+      className="responsive-grid"
+      >
+      <div className="main-content" style={{ background: "white", borderRadius: "12px", padding: "32px" }}>
         {/* STEP INDICATOR - 2 STEPS */}
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "48px", gap: "8px" }}>
           <div style={{ textAlign: "center", flex: 1 }}>
@@ -189,7 +270,7 @@ export default function NewCampaignPage() {
         </div>
 
         {/* UNIFORM CARD GRID - 2x2 */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", marginBottom: "32px" }}>
+        <div className="card-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", marginBottom: "32px" }}>
           {/* CARD 1 - What are you promoting */}
           <div style={{ background: "#f9f9f7", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
             <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18", textTransform: "uppercase", letterSpacing: "0.5px" }}>
@@ -282,7 +363,7 @@ export default function NewCampaignPage() {
           <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "14px", color: "#1a1a18", textTransform: "uppercase", letterSpacing: "0.5px" }}>
             Campaign preferences (optional)
           </label>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px" }}>
+          <div className="preferences-grid" style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px" }}>
             <div>
               <div style={{ fontSize: "12px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Location</div>
               <Select
@@ -327,10 +408,11 @@ export default function NewCampaignPage() {
         </div>
 
         {/* CTA SECTION */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ fontSize: "13px", color: "#7a7a77" }}>Need help? Our campaign matcher can recommend everything for you.</div>
+        <div className="cta-section" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
+          <div style={{ fontSize: "13px", color: "#7a7a77", minWidth: "200px" }}>Need help? Our campaign matcher can recommend everything for you.</div>
           <button
             onClick={handleProceed}
+            className="cta-button"
             style={{
               background: "#FF6B35",
               color: "white",
@@ -342,6 +424,7 @@ export default function NewCampaignPage() {
               cursor: "pointer",
               transition: "all 0.2s ease",
               boxShadow: "0 2px 8px rgba(255, 107, 53, 0.2)",
+              whiteSpace: "nowrap",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = "#E55A2B";
@@ -362,7 +445,7 @@ export default function NewCampaignPage() {
       </div>
 
       {/* SIDEBAR */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      <div className="sidebar" style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         {/* TIP CARD 1 */}
         <div style={{ background: "white", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
           <div style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a18", marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>

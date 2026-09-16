@@ -236,95 +236,98 @@ function TrackerContent() {
         }
       >
         {/* DESKTOP LAYOUT */}
-        <div className="hidden lg:grid gap-0 lg:grid-cols-[240px_1fr]">
-          {/* LEFT SIDEBAR - GROUP CHAT */}
-          <div className="rounded-2xl border border-border bg-card p-5 flex flex-col h-full">
-          <button
-            onClick={() => {
-              setViewMode("group-chat");
-              setMessages([]);
-            }}
-            className={`mb-4 pb-4 border-b border-border transition ${
-              viewMode === "group-chat" ? "opacity-100" : "opacity-60 hover:opacity-100"
-            }`}
-          >
-            <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
-              WORKING ON THIS
-            </p>
-            <p className="mt-2 text-xs font-semibold text-navy">
-              Team Chat
-            </p>
-          </button>
+        <div className="hidden lg:grid gap-0 lg:grid-cols-[240px_200px_1fr]">
+          {/* FIRST SIDEBAR - TEAM MEMBERS */}
+          <div className="sticky top-0 h-dvh border-r border-border bg-card p-5 flex flex-col overflow-y-auto">
+            <button
+              onClick={() => {
+                setViewMode("group-chat");
+                setMessages([]);
+              }}
+              className={`mb-4 pb-4 border-b border-border transition ${
+                viewMode === "group-chat" ? "opacity-100" : "opacity-60 hover:opacity-100"
+              }`}
+            >
+              <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+                WORKING ON THIS
+              </p>
+              <p className="mt-2 text-xs font-semibold text-navy">
+                Team Chat
+              </p>
+            </button>
 
-          {/* Team Members List */}
-          <div className="flex-1 overflow-y-auto">
-            <p className="mb-2 text-[10px] font-bold text-muted-light">TEAM MEMBERS</p>
-            <div className="space-y-2">
-              {TEAM_MEMBERS.map((member) => (
-                <div
-                  key={member.id}
-                  className="flex items-center gap-2 rounded-lg border border-border bg-background p-2"
-                >
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple text-[10px] font-bold text-white">
-                    {member.avatar}
+            {/* Team Members List */}
+            <div className="flex-1 overflow-y-auto mb-8">
+              <p className="mb-2 text-[10px] font-bold text-muted-light">TEAM MEMBERS</p>
+              <div className="space-y-2">
+                {TEAM_MEMBERS.map((member) => (
+                  <div
+                    key={member.id}
+                    className="flex items-center gap-2 rounded-lg border border-border bg-background p-2"
+                  >
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple text-[10px] font-bold text-white">
+                      {member.avatar}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-navy truncate">{member.name}</p>
+                      <p className="text-[10px] text-muted truncate">{member.role}</p>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold text-navy truncate">{member.name}</p>
-                    <p className="text-[10px] text-muted truncate">{member.role}</p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* TAB TABS */}
-          <div className="mt-8 space-y-2 border-t border-border pt-6">
-            {campaign?.status === "campaign_live" && (
+          {/* SECOND SIDEBAR - TABS */}
+          <div className="sticky top-0 h-dvh border-r border-border bg-background p-4 flex flex-col">
+            <p className="text-[10px] font-bold text-muted-light mb-4">SECTIONS</p>
+            <div className="space-y-2 flex flex-col">
+              {campaign?.status === "campaign_live" && (
+                <button
+                  onClick={() => {
+                    setViewMode("tabs");
+                    setActiveTab("dashboard");
+                  }}
+                  className={`rounded-lg px-3 py-2 text-left text-xs font-semibold transition ${
+                    activeTab === "dashboard" && viewMode === "tabs"
+                      ? "bg-orange text-white"
+                      : "bg-card text-navy hover:bg-orange-soft"
+                  }`}
+                >
+                  Dashboard
+                </button>
+              )}
               <button
                 onClick={() => {
                   setViewMode("tabs");
-                  setActiveTab("dashboard");
+                  setActiveTab("progress");
                 }}
-                className={`w-full rounded-lg px-3 py-2 text-left text-sm font-semibold transition ${
-                  activeTab === "dashboard" && viewMode === "tabs"
+                className={`rounded-lg px-3 py-2 text-left text-xs font-semibold transition ${
+                  activeTab === "progress" && viewMode === "tabs"
                     ? "bg-orange text-white"
-                    : "bg-background text-navy hover:bg-orange-soft"
+                    : "bg-card text-navy hover:bg-orange-soft"
                 }`}
               >
-                Dashboard
+                Progress
               </button>
-            )}
-            <button
-              onClick={() => {
-                setViewMode("tabs");
-                setActiveTab("progress");
-              }}
-              className={`w-full rounded-lg px-3 py-2 text-left text-sm font-semibold transition ${
-                activeTab === "progress" && viewMode === "tabs"
-                  ? "bg-orange text-white"
-                  : "bg-background text-navy hover:bg-orange-soft"
-              }`}
-            >
-              Progress
-            </button>
-            <button
-              onClick={() => {
-                setViewMode("tabs");
-                setActiveTab("videos");
-              }}
-              className={`w-full rounded-lg px-3 py-2 text-left text-sm font-semibold transition ${
-                activeTab === "videos" && viewMode === "tabs"
-                  ? "bg-orange text-white"
-                  : "bg-background text-navy hover:bg-orange-soft"
-              }`}
-            >
-              Videos
-            </button>
+              <button
+                onClick={() => {
+                  setViewMode("tabs");
+                  setActiveTab("videos");
+                }}
+                className={`rounded-lg px-3 py-2 text-left text-xs font-semibold transition ${
+                  activeTab === "videos" && viewMode === "tabs"
+                    ? "bg-orange text-white"
+                    : "bg-card text-navy hover:bg-orange-soft"
+                }`}
+              >
+                Videos
+              </button>
+            </div>
           </div>
-        </div>
 
         {/* MAIN CONTENT - Desktop */}
-        <div className="hidden lg:block space-y-5">
+        <div className="hidden lg:block space-y-5 overflow-y-auto">
           {/* CAMPAIGN HEADER */}
           <div className="flex items-start justify-between gap-4 rounded-2xl border border-border bg-card p-5">
             <div>

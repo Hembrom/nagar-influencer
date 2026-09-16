@@ -226,36 +226,6 @@ export default function NewCampaignPage() {
               {errors.whatYouPromote && <p style={{ fontSize: "13px", color: "#E24B4A", marginTop: "6px" }}>{errors.whatYouPromote}</p>}
             </div>
 
-            {/* SECTION 3 - Who should we reach */}
-            <div style={{ marginBottom: "28px" }}>
-              <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-                Who should we reach?
-              </label>
-              <div style={{ marginBottom: "12px" }}>
-                <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Location</div>
-                <Select
-                  value={brief.location}
-                  onChange={(val) => setBrief({ ...brief, location: val })}
-                  options={["Kolkata", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Pan-India"]}
-                />
-              </div>
-              <div style={{ marginBottom: "12px" }}>
-                <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Age group</div>
-                <Select
-                  value={brief.audience}
-                  onChange={(val) => setBrief({ ...brief, audience: val })}
-                  options={["18–25", "18–35", "25–45", "35–55", "18+", "All ages"]}
-                />
-              </div>
-              <div>
-                <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Language</div>
-                <Select
-                  value={brief.language}
-                  onChange={(val) => setBrief({ ...brief, language: val })}
-                  options={["English only", "Bengali + English", "Hindi + English", "Multiple languages"]}
-                />
-              </div>
-            </div>
           </div>
 
           {/* COLUMN 2 */}
@@ -334,13 +304,29 @@ export default function NewCampaignPage() {
           <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "8px", color: "#1a1a18" }}>
             Campaign preferences (optional)
           </label>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px" }}>
             <div>
-              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Creators</div>
+              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Location</div>
               <Select
-                value={brief.numCreators}
-                onChange={(val) => setBrief({ ...brief, numCreators: val })}
-                options={CREATOR_COUNTS}
+                value={brief.location}
+                onChange={(val) => setBrief({ ...brief, location: val })}
+                options={["Kolkata", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Pan-India"]}
+              />
+            </div>
+            <div>
+              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Age group</div>
+              <Select
+                value={brief.audience}
+                onChange={(val) => setBrief({ ...brief, audience: val })}
+                options={["18–25", "18–35", "25–45", "35–55", "18+", "All ages"]}
+              />
+            </div>
+            <div>
+              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Language</div>
+              <Select
+                value={brief.language}
+                onChange={(val) => setBrief({ ...brief, language: val })}
+                options={["English only", "Bengali + English", "Hindi + English", "Multiple languages"]}
               />
             </div>
             <div>

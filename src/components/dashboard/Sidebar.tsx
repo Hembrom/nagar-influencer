@@ -73,8 +73,8 @@ export function Sidebar({ user }: Props) {
   }
 
   return (
-    <aside className="flex md:h-dvh md:w-[260px] h-auto w-full shrink-0 flex-col md:flex-col flex-row md:border-r border-r-0 md:border-t border-t border-border bg-[#0f0a1f] text-white md:border-b-0">
-      <div className="hidden md:block border-b border-white/10 px-5 py-5">
+    <aside className="flex lg:h-dvh lg:w-[260px] h-auto w-full shrink-0 flex-col lg:flex-col flex-row lg:border-r border-r-0 lg:border-t border-t border-border bg-[#0f0a1f] text-white lg:border-b-0">
+      <div className="hidden lg:block border-b border-white/10 px-5 py-5">
         <Link href="/dashboard/campaigns" className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange text-xs font-extrabold text-white">
             NI
@@ -86,7 +86,7 @@ export function Sidebar({ user }: Props) {
         </Link>
       </div>
 
-      <nav className="flex md:flex-1 flex-row md:flex-col gap-1 md:gap-1 px-2 md:px-3 py-2 md:py-4 overflow-x-auto md:overflow-x-visible">
+      <nav className="flex lg:flex-1 flex-row lg:flex-col gap-1 lg:gap-1 px-2 lg:px-3 py-2 lg:py-4 overflow-x-auto lg:overflow-x-visible">
         {NAV.map((item) => {
           const active = isActive(pathname, item.href, "exact" in item ? item.exact : false);
           const Icon = item.icon;
@@ -107,7 +107,7 @@ export function Sidebar({ user }: Props) {
         })}
       </nav>
 
-      <div className="hidden md:block border-t border-white/10 p-4">
+      <div className="hidden lg:block border-t border-white/10 p-4">
         <div className="mb-3 flex items-center gap-3">
           {avatar ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -136,7 +136,7 @@ export function Sidebar({ user }: Props) {
       </div>
 
       {/* Mobile user menu */}
-      <div className="md:hidden border-l border-white/10 p-3 flex items-center gap-2">
+      <div className="lg:hidden border-l border-white/10 p-3 flex items-center gap-2">
         {avatar ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

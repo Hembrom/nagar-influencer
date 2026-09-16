@@ -132,7 +132,8 @@ export default function NewCampaignPage() {
 
   return (
     <div style={{ background: "#f9f9f7", minHeight: "100vh" }}>
-      <div style={{ maxWidth: "720px", margin: "0", padding: "24px", background: "white" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: "24px", maxWidth: "1200px", margin: "0 auto", padding: "24px" }}>
+      <div style={{ background: "white", borderRadius: "12px", padding: "24px" }}>
         {/* STEP INDICATOR - 2 STEPS */}
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "48px", gap: "8px" }}>
           <div style={{ textAlign: "center", flex: 1 }}>
@@ -381,6 +382,60 @@ export default function NewCampaignPage() {
         <div style={{ fontSize: "13px", color: "#7a7a77", textAlign: "center", marginTop: "20px", paddingTop: "20px", borderTop: "1px solid #e0e0e0" }}>
           We only use your info to reach you. No spam, ever.
         </div>
+      </div>
+
+      {/* SIDEBAR */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        {/* TIP CARD 1 */}
+        <div style={{ background: "white", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
+          <div style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a18", marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ fontSize: "20px" }}>💡</span> Pro Tip
+          </div>
+          <p style={{ fontSize: "13px", color: "#7a7a77", margin: "0", lineHeight: "1.6" }}>
+            The more details you share, the better creators we'll match with your campaign.
+          </p>
+        </div>
+
+        {/* TIP CARD 2 */}
+        <div style={{ background: "white", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
+          <div style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a18", marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ fontSize: "20px" }}>⚡</span> Quick Start
+          </div>
+          <ul style={{ fontSize: "13px", color: "#7a7a77", margin: "0", paddingLeft: "20px", lineHeight: "1.8" }}>
+            <li>Tell us what you're promoting</li>
+            <li>Pick your campaign goal</li>
+            <li>Select content format</li>
+            <li>Get matched creators</li>
+          </ul>
+        </div>
+
+        {/* TIP CARD 3 */}
+        <div style={{ background: "#FFF5F0", borderRadius: "12px", padding: "20px", border: "1px solid #FFD9C8" }}>
+          <div style={{ fontSize: "14px", fontWeight: "700", color: "#FF6B35", marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ fontSize: "20px" }}>✨</span> What Happens Next
+          </div>
+          <p style={{ fontSize: "13px", color: "#7a7a77", margin: "0", lineHeight: "1.6" }}>
+            After you complete your brief, you'll see recommended creators matched to your goals. Reserve with a ₹500 token and we'll handle the rest!
+          </p>
+        </div>
+
+        {/* STATS CARD */}
+        <div style={{ background: "#f9f9f7", borderRadius: "12px", padding: "16px", border: "1px solid #e0e0e0" }}>
+          <p style={{ fontSize: "11px", fontWeight: "700", color: "#7a7a77", textTransform: "uppercase", margin: "0 0 12px 0", letterSpacing: "0.5px" }}>
+            Avg Campaign Stats
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div>
+              <p style={{ fontSize: "18px", fontWeight: "700", color: "#FF6B35", margin: "0" }}>3-5</p>
+              <p style={{ fontSize: "11px", color: "#7a7a77", margin: "4px 0 0 0" }}>Creators per brief</p>
+            </div>
+            <div>
+              <p style={{ fontSize: "18px", fontWeight: "700", color: "#1D9E75", margin: "0" }}>48hrs</p>
+              <p style={{ fontSize: "11px", color: "#7a7a77", margin: "4px 0 0 0" }}>Avg match time</p>
+            </div>
+          </div>
+        </div>
+      </div>
       </div>
     </div>
   );

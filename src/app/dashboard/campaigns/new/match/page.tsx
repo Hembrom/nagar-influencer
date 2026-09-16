@@ -77,7 +77,8 @@ export default function MatchPage() {
 
   return (
     <div style={{ background: "#f9f9f7", minHeight: "100vh" }}>
-      <div style={{ maxWidth: "720px", margin: "0", padding: "24px", background: "white" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: "24px", maxWidth: "1200px", margin: "0 auto", padding: "24px" }}>
+      <div style={{ background: "white", borderRadius: "12px", padding: "24px" }}>
         
         {/* STEP INDICATOR - 2 STEPS */}
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "48px", gap: "8px" }}>
@@ -374,6 +375,80 @@ export default function MatchPage() {
         <div style={{ fontSize: "13px", color: "#7a7a77", textAlign: "center", marginTop: "20px", paddingTop: "20px", borderTop: "1px solid #e0e0e0" }}>
           By clicking "Reserve campaign", you agree to our terms. You'll receive an invoice and our team will contact you within 2 hours.
         </div>
+      </div>
+
+      {/* SIDEBAR */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        {/* BOOKING SUMMARY */}
+        <div style={{ background: "white", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
+          <div style={{ fontSize: "12px", fontWeight: "700", color: "#7a7a77", textTransform: "uppercase", margin: "0 0 12px 0", letterSpacing: "0.5px" }}>
+            What You'll Get
+          </div>
+          <ul style={{ fontSize: "13px", color: "#7a7a77", margin: "0", paddingLeft: "20px", lineHeight: "2" }}>
+            <li>3-5 matched creators</li>
+            <li>Verified audiences</li>
+            <li>Contract handling</li>
+            <li>Campaign tracking</li>
+          </ul>
+        </div>
+
+        {/* TIMELINE CARD */}
+        <div style={{ background: "#FFF5F0", borderRadius: "12px", padding: "20px", border: "1px solid #FFD9C8" }}>
+          <div style={{ fontSize: "14px", fontWeight: "700", color: "#FF6B35", marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ fontSize: "20px" }}>📅</span> Timeline
+          </div>
+          <div style={{ fontSize: "12px", color: "#7a7a77", lineHeight: "1.8" }}>
+            <p style={{ margin: "0 0 8px 0" }}><strong>Today:</strong> Reserve</p>
+            <p style={{ margin: "0 0 8px 0" }}><strong>2 hrs:</strong> Team contacts</p>
+            <p style={{ margin: "0 0 8px 0" }}><strong>48 hrs:</strong> Creators finalized</p>
+            <p style={{ margin: "0" }}><strong>5-7 days:</strong> Campaign live</p>
+          </div>
+        </div>
+
+        {/* SUPPORT CARD */}
+        <div style={{ background: "white", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
+          <div style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a18", marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ fontSize: "20px" }}>🎯</span> Need Help?
+          </div>
+          <p style={{ fontSize: "13px", color: "#7a7a77", margin: "0 0 12px 0", lineHeight: "1.6" }}>
+            Our team is ready to guide you through the process.
+          </p>
+          <button style={{
+            width: "100%",
+            padding: "10px",
+            background: "#f9f9f7",
+            border: "1px solid #e0e0e0",
+            borderRadius: "8px",
+            fontSize: "13px",
+            fontWeight: "600",
+            color: "#FF6B35",
+            cursor: "pointer",
+          }}>
+            Message us →
+          </button>
+        </div>
+
+        {/* TRUST BADGES */}
+        <div style={{ background: "#f9f9f7", borderRadius: "12px", padding: "16px", border: "1px solid #e0e0e0" }}>
+          <p style={{ fontSize: "11px", fontWeight: "700", color: "#7a7a77", textTransform: "uppercase", margin: "0 0 12px 0", letterSpacing: "0.5px" }}>
+            Why Choose Us
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <div style={{ display: "flex", gap: "8px", alignItems: "flex-start" }}>
+              <span style={{ fontSize: "14px" }}>✓</span>
+              <p style={{ fontSize: "12px", color: "#7a7a77", margin: "0" }}>Verified creators</p>
+            </div>
+            <div style={{ display: "flex", gap: "8px", alignItems: "flex-start" }}>
+              <span style={{ fontSize: "14px" }}>✓</span>
+              <p style={{ fontSize: "12px", color: "#7a7a77", margin: "0" }}>Best rates</p>
+            </div>
+            <div style={{ display: "flex", gap: "8px", alignItems: "flex-start" }}>
+              <span style={{ fontSize: "14px" }}>✓</span>
+              <p style={{ fontSize: "12px", color: "#7a7a77", margin: "0" }}>Full support</p>
+            </div>
+          </div>
+        </div>
+      </div>
       </div>
     </div>
   );

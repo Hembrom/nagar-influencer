@@ -86,7 +86,7 @@ export function Sidebar({ user }: Props) {
         </Link>
       </div>
 
-      <nav className="flex lg:flex-1 flex-row lg:flex-col gap-1 lg:gap-1 px-2 lg:px-3 py-2 lg:py-4 overflow-x-auto lg:overflow-x-visible">
+      <nav className="flex lg:flex-1 flex-row lg:flex-col gap-0 lg:gap-1 px-0 lg:px-3 py-0 lg:py-4 justify-around lg:justify-start lg:overflow-x-visible">
         {NAV.map((item) => {
           const active = isActive(pathname, item.href, "exact" in item ? item.exact : false);
           const Icon = item.icon;
@@ -94,14 +94,16 @@ export function Sidebar({ user }: Props) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
+              className={`flex flex-col lg:flex-row lg:items-center lg:gap-3 rounded-xl lg:px-3 lg:py-2.5 px-3 py-2 text-sm font-semibold transition items-center justify-center ${
                 active
                   ? "bg-white/12 text-white"
                   : "text-white/60 hover:bg-white/6 hover:text-white"
               }`}
+              title={item.label}
             >
               <Icon active={active} />
-              {item.label}
+              <span className="hidden lg:inline text-sm">{item.label}</span>
+              <span className="lg:hidden text-xs mt-1">{item.label.split(" ")[0]}</span>
             </Link>
           );
         })}
@@ -135,32 +137,6 @@ export function Sidebar({ user }: Props) {
         </button>
       </div>
 
-      {/* Mobile user menu */}
-      <div className="lg:hidden border-l border-white/10 p-3 flex items-center gap-2">
-        {avatar ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={avatar}
-            alt=""
-            className="h-8 w-8 rounded-full object-cover"
-          />
-        ) : (
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple text-xs font-bold">
-            {name.slice(0, 1).toUpperCase()}
-          </div>
-        )}
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-semibold">{name}</p>
-          <p className="truncate text-[10px] text-white/45">{email}</p>
-        </div>
-        <button
-          type="button"
-          onClick={signOut}
-          className="rounded-lg px-2 py-1 text-[10px] font-semibold text-white/55 transition hover:bg-white/8 hover:text-white"
-        >
-          Sign out
-        </button>
-      </div>
     </aside>
   );
 }

@@ -195,132 +195,145 @@ export default function NewCampaignPage() {
           </div>
         </div>
 
-        {/* SECTION 1 */}
-        <div style={{ marginBottom: "28px" }}>
-          <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-            Which category best fits?
-          </label>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "12px", marginBottom: "16px" }}>
-            {CATEGORIES.map((cat) => (
-              <Chip
-                key={cat}
-                selected={brief.category === cat}
-                onClick={() => setBrief({ ...brief, category: cat })}
-              >
-                {cat}
-              </Chip>
-            ))}
-          </div>
-          <textarea
-            value={brief.whatYouPromote}
-            onChange={(e) => setBrief({ ...brief, whatYouPromote: e.target.value })}
-            placeholder="Tell us about your shop, product, service, event or offer…"
-            style={{
-              width: "100%",
-              minHeight: "110px",
-              padding: "12px 14px",
-              border: errors.whatYouPromote ? "1px solid #E24B4A" : "1px solid #d0d0cc",
-              borderRadius: "8px",
-              fontSize: "15px",
-              fontFamily: "inherit",
-              background: "white",
-              color: "#1a1a18",
-              resize: "vertical",
-              lineHeight: "1.5",
-              outline: "none",
-            }}
-          />
-          {errors.whatYouPromote && <p style={{ fontSize: "13px", color: "#E24B4A", marginTop: "6px" }}>{errors.whatYouPromote}</p>}
-        </div>
-
-        {/* SECTION 2 */}
-        <div style={{ marginBottom: "28px" }}>
-          <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-            What's your goal?
-          </label>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "12px" }}>
-            {GOALS.map((g) => (
-              <button
-                key={g}
-                onClick={() => setBrief({ ...brief, goal: g })}
+        {/* 2-COLUMN FORM LAYOUT */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "28px", marginBottom: "28px" }}>
+          {/* COLUMN 1 */}
+          <div>
+            {/* SECTION 1 - What are you promoting */}
+            <div style={{ marginBottom: "28px" }}>
+              <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
+                What are you promoting? *
+              </label>
+              <textarea
+                value={brief.whatYouPromote}
+                onChange={(e) => setBrief({ ...brief, whatYouPromote: e.target.value })}
+                placeholder="Tell us about your shop, product, service, event or offer…"
                 style={{
-                  padding: "14px 16px",
-                  border: brief.goal === g ? "2px solid #FF6B35" : "1px solid #d0d0cc",
+                  width: "100%",
+                  minHeight: "110px",
+                  padding: "12px 14px",
+                  border: errors.whatYouPromote ? "1px solid #E24B4A" : "1px solid #d0d0cc",
                   borderRadius: "8px",
-                  background: brief.goal === g ? "#FFF5F0" : "white",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                  fontWeight: "500",
+                  fontSize: "15px",
+                  fontFamily: "inherit",
+                  background: "white",
                   color: "#1a1a18",
-                  transition: "all 0.2s ease",
-                  textAlign: "left",
+                  resize: "vertical",
+                  lineHeight: "1.5",
+                  outline: "none",
                 }}
-              >
-                <div style={{ fontWeight: "600", fontSize: "14px" }}>{g}</div>
-              </button>
-            ))}
-          </div>
-          {errors.goal && <p style={{ fontSize: "13px", color: "#E24B4A", marginTop: "6px" }}>{errors.goal}</p>}
-        </div>
+              />
+              {errors.whatYouPromote && <p style={{ fontSize: "13px", color: "#E24B4A", marginTop: "6px" }}>{errors.whatYouPromote}</p>}
+            </div>
 
-        {/* SECTION 3 */}
-        <div style={{ marginBottom: "28px" }}>
-          <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-            Who should we reach?
-          </label>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
-            <div>
-              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Location</div>
-              <Select
-                value={brief.location}
-                onChange={(val) => setBrief({ ...brief, location: val })}
-                options={["Kolkata", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Pan-India"]}
-              />
-            </div>
-            <div>
-              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Age group</div>
-              <Select
-                value={brief.audience}
-                onChange={(val) => setBrief({ ...brief, audience: val })}
-                options={["18–25", "18–35", "25–45", "35–55", "18+", "All ages"]}
-              />
-            </div>
-            <div>
-              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Language</div>
-              <Select
-                value={brief.language}
-                onChange={(val) => setBrief({ ...brief, language: val })}
-                options={["English only", "Bengali + English", "Hindi + English", "Multiple languages"]}
-              />
+            {/* SECTION 3 - Who should we reach */}
+            <div style={{ marginBottom: "28px" }}>
+              <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
+                Who should we reach?
+              </label>
+              <div style={{ marginBottom: "12px" }}>
+                <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Location</div>
+                <Select
+                  value={brief.location}
+                  onChange={(val) => setBrief({ ...brief, location: val })}
+                  options={["Kolkata", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Pan-India"]}
+                />
+              </div>
+              <div style={{ marginBottom: "12px" }}>
+                <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Age group</div>
+                <Select
+                  value={brief.audience}
+                  onChange={(val) => setBrief({ ...brief, audience: val })}
+                  options={["18–25", "18–35", "25–45", "35–55", "18+", "All ages"]}
+                />
+              </div>
+              <div>
+                <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Language</div>
+                <Select
+                  value={brief.language}
+                  onChange={(val) => setBrief({ ...brief, language: val })}
+                  options={["English only", "Bengali + English", "Hindi + English", "Multiple languages"]}
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* SECTION 4 */}
-        <div style={{ marginBottom: "28px" }}>
-          <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-            What kind of content do you want?
-          </label>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "12px" }}>
-            {FORMATS.map((fmt) => (
-              <Chip
-                key={fmt}
-                selected={brief.contentFormat === fmt}
-                onClick={() => setBrief({ ...brief, contentFormat: fmt })}
-              >
-                {fmt}
-              </Chip>
-            ))}
+          {/* COLUMN 2 */}
+          <div>
+            {/* SECTION 2 - Category & Goal */}
+            <div style={{ marginBottom: "28px" }}>
+              <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
+                Which category best fits?
+              </label>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px", marginBottom: "12px" }}>
+                {CATEGORIES.map((cat) => (
+                  <Chip
+                    key={cat}
+                    selected={brief.category === cat}
+                    onClick={() => setBrief({ ...brief, category: cat })}
+                  >
+                    {cat}
+                  </Chip>
+                ))}
+              </div>
+            </div>
+
+            {/* SECTION 4 - Goal */}
+            <div style={{ marginBottom: "28px" }}>
+              <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
+                What's your goal? *
+              </label>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "10px" }}>
+                {GOALS.map((g) => (
+                  <button
+                    key={g}
+                    onClick={() => setBrief({ ...brief, goal: g })}
+                    style={{
+                      padding: "12px 14px",
+                      border: brief.goal === g ? "2px solid #FF6B35" : "1px solid #d0d0cc",
+                      borderRadius: "8px",
+                      background: brief.goal === g ? "#FFF5F0" : "white",
+                      cursor: "pointer",
+                      fontSize: "13px",
+                      fontWeight: "500",
+                      color: "#1a1a18",
+                      transition: "all 0.2s ease",
+                      textAlign: "left",
+                    }}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
+              {errors.goal && <p style={{ fontSize: "13px", color: "#E24B4A", marginTop: "6px" }}>{errors.goal}</p>}
+            </div>
+
+            {/* SECTION 5 - Content & Preferences */}
+            <div style={{ marginBottom: "28px" }}>
+              <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
+                What kind of content do you want? *
+              </label>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px" }}>
+                {FORMATS.map((fmt) => (
+                  <Chip
+                    key={fmt}
+                    selected={brief.contentFormat === fmt}
+                    onClick={() => setBrief({ ...brief, contentFormat: fmt })}
+                  >
+                    {fmt}
+                  </Chip>
+                ))}
+              </div>
+              {errors.contentFormat && <p style={{ fontSize: "13px", color: "#E24B4A", marginTop: "6px" }}>{errors.contentFormat}</p>}
+            </div>
           </div>
-          {errors.contentFormat && <p style={{ fontSize: "13px", color: "#E24B4A", marginTop: "6px" }}>{errors.contentFormat}</p>}
         </div>
 
-        {/* SECTION 5 */}
+        {/* PREFERENCES - FULL WIDTH */}
         <div style={{ marginBottom: "28px" }}>
-          <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-            Campaign preferences
+          <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "8px", color: "#1a1a18" }}>
+            Campaign preferences (optional)
           </label>
-          <p style={{ fontSize: "13px", color: "#7a7a77", marginBottom: "12px" }}>(Optional — we'll recommend defaults)</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
             <div>
               <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Creators</div>

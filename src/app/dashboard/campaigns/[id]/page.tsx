@@ -212,22 +212,33 @@ function TrackerContent() {
   }
 
   return (
-    <PageFrame
-      title="Campaign tracker"
-      subtitle="Live tracking of your slot reservation & callback"
-      footer={
-        <div className="flex justify-end">
-          <div className="w-full max-w-xs">
-            <PrimaryButton variant="purple" href="/dashboard/messages">
-              Need help? Message us
-            </PrimaryButton>
+    <div>
+      {/* STICKY HEADER */}
+      <div className="sticky top-0 z-40 bg-card border-b border-border p-4 lg:hidden">
+        <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+          CAMPAIGN
+        </p>
+        <h2 className="text-lg font-bold text-navy mt-1">{campaign.packageName}</h2>
+        <p className="text-xs text-muted mt-1">{STATUS_LABEL[campaign.status]}</p>
+      </div>
+
+      <PageFrame
+        title="Campaign tracker"
+        subtitle="Live tracking of your slot reservation & callback"
+        footer={
+          <div className="flex justify-end">
+            <div className="w-full max-w-xs">
+              <PrimaryButton variant="purple" href="/dashboard/messages">
+                Need help? Message us
+              </PrimaryButton>
+            </div>
           </div>
-        </div>
-      }
-    >
-      <div className="grid gap-0 lg:grid-cols-[240px_1fr]">
-        {/* LEFT SIDEBAR - GROUP CHAT */}
-        <div className="rounded-2xl border border-border bg-card p-5 flex flex-col h-full">
+        }
+      >
+        {/* DESKTOP LAYOUT */}
+        <div className="hidden lg:grid gap-0 lg:grid-cols-[240px_1fr]">
+          {/* LEFT SIDEBAR - GROUP CHAT */}
+          <div className="rounded-2xl border border-border bg-card p-5 flex flex-col h-full">
           <button
             onClick={() => {
               setViewMode("group-chat");
@@ -622,8 +633,95 @@ function TrackerContent() {
             </div>
           )}
         </div>
-      </div>
-    </PageFrame>
+        </div>
+
+        {/* MOBILE LAYOUT - Card-based */}
+        <div className="lg:hidden space-y-4">
+          {/* TEAM CHAT CARD */}
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <button
+              onClick={() => setViewMode("group-chat")}
+              className="w-full text-left"
+            >
+              <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+                WORKING ON THIS
+              </p>
+              <p className="mt-2 text-sm font-semibold text-navy">
+                Team Chat
+              </p>
+              <p className="text-xs text-muted mt-2">
+                {TEAM_MEMBERS.length} team members
+              </p>
+            </button>
+          </div>
+
+          {/* DASHBOARD CARD (if live) */}
+          {campaign?.status === "campaign_live" && (
+            <div className="rounded-2xl border border-border bg-card p-4">
+              <button
+                onClick={() => {
+                  setViewMode("tabs");
+                  setActiveTab("dashboard");
+                }}
+                className="w-full text-left"
+              >
+                <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+                  PERFORMANCE
+                </p>
+                <p className="mt-2 text-sm font-semibold text-navy">
+                  Dashboard
+                </p>
+                <p className="text-xs text-muted mt-2">
+                  View live video performance
+                </p>
+              </button>
+            </div>
+          )}
+
+          {/* PROGRESS CARD */}
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <button
+              onClick={() => {
+                setViewMode("tabs");
+                setActiveTab("progress");
+              }}
+              className="w-full text-left"
+            >
+              <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+                WORKFLOW
+              </p>
+              <p className="mt-2 text-sm font-semibold text-navy">
+                Progress
+              </p>
+              <p className="text-xs text-muted mt-2">
+                Campaign status & timeline
+              </p>
+            </button>
+          </div>
+
+          {/* VIDEOS CARD */}
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <button
+              onClick={() => {
+                setViewMode("tabs");
+                setActiveTab("videos");
+              }}
+              className="w-full text-left"
+            >
+              <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+                DELIVERABLES
+              </p>
+              <p className="mt-2 text-sm font-semibold text-navy">
+                Videos
+              </p>
+              <p className="text-xs text-muted mt-2">
+                Delivered & pending content
+              </p>
+            </button>
+          </div>
+        </div>
+      </PageFrame>
+    </div>
   );
 }
 

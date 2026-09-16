@@ -444,32 +444,36 @@ export default function NewCampaignPage() {
         </div>
       </div>
 
-      {/* SIDEBAR */}
+      {/* SIDEBAR - Hidden on mobile */}
       <div className="sidebar" style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-        {/* TIP CARD 1 */}
-        <div style={{ background: "white", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
-          <div style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a18", marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ fontSize: "20px" }}>💡</span> Pro Tip
+        {/* TIP CARD 1 - Hidden on mobile */}
+        <div style={{ display: "none" }} className="hidden md:block">
+          <div style={{ background: "white", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
+            <div style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a18", marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontSize: "20px" }}>💡</span> Pro Tip
+            </div>
+            <p style={{ fontSize: "13px", color: "#7a7a77", margin: "0", lineHeight: "1.6" }}>
+              The more details you share, the better creators we'll match with your campaign.
+            </p>
           </div>
-          <p style={{ fontSize: "13px", color: "#7a7a77", margin: "0", lineHeight: "1.6" }}>
-            The more details you share, the better creators we'll match with your campaign.
-          </p>
         </div>
 
-        {/* TIP CARD 2 */}
-        <div style={{ background: "white", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
-          <div style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a18", marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ fontSize: "20px" }}>⚡</span> Quick Start
+        {/* TIP CARD 2 - Hidden on mobile */}
+        <div style={{ display: "none" }} className="hidden md:block">
+          <div style={{ background: "white", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
+            <div style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a18", marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontSize: "20px" }}>⚡</span> Quick Start
+            </div>
+            <ul style={{ fontSize: "13px", color: "#7a7a77", margin: "0", paddingLeft: "20px", lineHeight: "1.8" }}>
+              <li>Tell us what you're promoting</li>
+              <li>Pick your campaign goal</li>
+              <li>Select content format</li>
+              <li>Get matched creators</li>
+            </ul>
           </div>
-          <ul style={{ fontSize: "13px", color: "#7a7a77", margin: "0", paddingLeft: "20px", lineHeight: "1.8" }}>
-            <li>Tell us what you're promoting</li>
-            <li>Pick your campaign goal</li>
-            <li>Select content format</li>
-            <li>Get matched creators</li>
-          </ul>
         </div>
 
-        {/* TIP CARD 3 */}
+        {/* TIP CARD 3 - Visible on all */}
         <div style={{ background: "#FFF5F0", borderRadius: "12px", padding: "20px", border: "1px solid #FFD9C8" }}>
           <div style={{ fontSize: "14px", fontWeight: "700", color: "#FF6B35", marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
             <span style={{ fontSize: "20px" }}>✨</span> What Happens Next

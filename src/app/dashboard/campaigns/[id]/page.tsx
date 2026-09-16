@@ -236,34 +236,78 @@ function TrackerContent() {
         }
       >
         {/* DESKTOP LAYOUT */}
-        <div className="hidden lg:grid gap-0 lg:grid-cols-[240px_200px_1fr]">
-          {/* FIRST SIDEBAR - TEAM MEMBERS */}
+        <div className="hidden lg:grid gap-0 lg:grid-cols-[280px_1fr]">
+          {/* MERGED SIDEBAR - SECTIONS + TEAM CHAT */}
           <div className="sticky top-0 h-dvh border-r border-border bg-card p-5 flex flex-col overflow-y-auto">
-            <button
-              onClick={() => {
-                setViewMode("group-chat");
-                setMessages([]);
-              }}
-              className={`mb-4 pb-4 border-b border-border transition ${
-                viewMode === "group-chat" ? "opacity-100" : "opacity-60 hover:opacity-100"
-              }`}
-            >
-              <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
-                WORKING ON THIS
-              </p>
-              <p className="mt-2 text-xs font-semibold text-navy">
-                Team Chat
-              </p>
-            </button>
+            {/* SECTIONS */}
+            <div className="mb-6">
+              <p className="text-[10px] font-bold text-muted-light mb-3 uppercase tracking-wider">Sections</p>
+              <div className="space-y-2 flex flex-col">
+                <button
+                  onClick={() => {
+                    setViewMode("group-chat");
+                    setMessages([]);
+                  }}
+                  className={`rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition ${
+                    viewMode === "group-chat"
+                      ? "bg-orange text-white"
+                      : "bg-background text-navy hover:bg-orange-soft"
+                  }`}
+                >
+                  💬 Chat
+                </button>
+                {campaign?.status === "campaign_live" && (
+                  <button
+                    onClick={() => {
+                      setViewMode("tabs");
+                      setActiveTab("dashboard");
+                    }}
+                    className={`rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition ${
+                      activeTab === "dashboard" && viewMode === "tabs"
+                        ? "bg-orange text-white"
+                        : "bg-background text-navy hover:bg-orange-soft"
+                    }`}
+                  >
+                    📊 Dashboard
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setViewMode("tabs");
+                    setActiveTab("progress");
+                  }}
+                  className={`rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition ${
+                    activeTab === "progress" && viewMode === "tabs"
+                      ? "bg-orange text-white"
+                      : "bg-background text-navy hover:bg-orange-soft"
+                  }`}
+                >
+                  📈 Progress
+                </button>
+                <button
+                  onClick={() => {
+                    setViewMode("tabs");
+                    setActiveTab("videos");
+                  }}
+                  className={`rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition ${
+                    activeTab === "videos" && viewMode === "tabs"
+                      ? "bg-orange text-white"
+                      : "bg-background text-navy hover:bg-orange-soft"
+                  }`}
+                >
+                  🎬 Videos
+                </button>
+              </div>
+            </div>
 
-            {/* Team Members List */}
-            <div className="flex-1 overflow-y-auto mb-8">
-              <p className="mb-2 text-[10px] font-bold text-muted-light">TEAM MEMBERS</p>
+            {/* TEAM CHAT / TEAM MEMBERS */}
+            <div className="flex-1 border-t border-border pt-6">
+              <p className="text-[10px] font-bold text-muted-light mb-3 uppercase tracking-wider">Team</p>
               <div className="space-y-2">
                 {TEAM_MEMBERS.map((member) => (
                   <div
                     key={member.id}
-                    className="flex items-center gap-2 rounded-lg border border-border bg-background p-2"
+                    className="flex items-center gap-2 rounded-lg border border-border bg-background p-2 hover:bg-orange-soft transition cursor-pointer"
                   >
                     <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple text-[10px] font-bold text-white">
                       {member.avatar}
@@ -275,54 +319,6 @@ function TrackerContent() {
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-
-          {/* SECOND SIDEBAR - TABS */}
-          <div className="sticky top-0 h-dvh border-r border-border bg-background p-4 flex flex-col">
-            <p className="text-[10px] font-bold text-muted-light mb-4">SECTIONS</p>
-            <div className="space-y-2 flex flex-col">
-              {campaign?.status === "campaign_live" && (
-                <button
-                  onClick={() => {
-                    setViewMode("tabs");
-                    setActiveTab("dashboard");
-                  }}
-                  className={`rounded-lg px-3 py-2 text-left text-xs font-semibold transition ${
-                    activeTab === "dashboard" && viewMode === "tabs"
-                      ? "bg-orange text-white"
-                      : "bg-card text-navy hover:bg-orange-soft"
-                  }`}
-                >
-                  Dashboard
-                </button>
-              )}
-              <button
-                onClick={() => {
-                  setViewMode("tabs");
-                  setActiveTab("progress");
-                }}
-                className={`rounded-lg px-3 py-2 text-left text-xs font-semibold transition ${
-                  activeTab === "progress" && viewMode === "tabs"
-                    ? "bg-orange text-white"
-                    : "bg-card text-navy hover:bg-orange-soft"
-                }`}
-              >
-                Progress
-              </button>
-              <button
-                onClick={() => {
-                  setViewMode("tabs");
-                  setActiveTab("videos");
-                }}
-                className={`rounded-lg px-3 py-2 text-left text-xs font-semibold transition ${
-                  activeTab === "videos" && viewMode === "tabs"
-                    ? "bg-orange text-white"
-                    : "bg-card text-navy hover:bg-orange-soft"
-                }`}
-              >
-                Videos
-              </button>
             </div>
           </div>
 

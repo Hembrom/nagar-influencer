@@ -132,7 +132,7 @@ export default function NewCampaignPage() {
 
   return (
     <div style={{ background: "#f9f9f7", minHeight: "100vh" }}>
-      <div style={{ maxWidth: "720px", margin: "0 auto", padding: "24px", background: "white" }}>
+      <div style={{ maxWidth: "720px", margin: "0", padding: "24px", background: "white" }}>
         {/* STEP INDICATOR - 2 STEPS */}
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "48px", gap: "8px" }}>
           <div style={{ textAlign: "center", flex: 1 }}>

@@ -62,53 +62,105 @@ export default function CampaignsPage() {
           </Link>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-border bg-card">
-          <table className="w-full text-left text-sm">
-            <thead className="border-b border-border bg-background text-[11px] font-bold tracking-wider text-muted-light uppercase">
-              <tr>
-                <th className="px-5 py-3.5">Campaign</th>
-                <th className="px-5 py-3.5">Format</th>
-                <th className="px-5 py-3.5">Status</th>
-                <th className="px-5 py-3.5">Token</th>
-                <th className="px-5 py-3.5">Updated</th>
-                <th className="px-5 py-3.5" />
-              </tr>
-            </thead>
-            <tbody>
-              {campaigns.map((c) => (
-                <tr
-                  key={c.orderId}
-                  className="border-b border-border last:border-0 cursor-pointer transition hover:bg-background"
-                  onClick={() => (window.location.href = `/dashboard/campaigns/${c.id}`)}
-                >
-                  <td className="px-5 py-4">
-                    <p className="font-bold text-navy">{c.packageName}</p>
-                    <p className="font-mono text-xs text-muted" title={c.orderId}>
-                      {c.orderId}
-                    </p>
-                  </td>
-                  <td className="px-5 py-4 text-muted">
-                    {getFormat(c.formatId).title}
-                  </td>
-                  <td className="px-5 py-4">
-                    <span className="rounded-full bg-orange-soft px-2.5 py-1 text-xs font-bold text-orange">
+        <>
+          {/* DESKTOP TABLE - Hidden on mobile */}
+          <div className="hidden md:block overflow-hidden rounded-2xl border border-border bg-card">
+            <table className="w-full text-left text-sm">
+              <thead className="border-b border-border bg-background text-[11px] font-bold tracking-wider text-muted-light uppercase">
+                <tr>
+                  <th className="px-5 py-3.5">Campaign</th>
+                  <th className="px-5 py-3.5">Format</th>
+                  <th className="px-5 py-3.5">Status</th>
+                  <th className="px-5 py-3.5">Token</th>
+                  <th className="px-5 py-3.5">Updated</th>
+                  <th className="px-5 py-3.5" />
+                </tr>
+              </thead>
+              <tbody>
+                {campaigns.map((c) => (
+                  <tr
+                    key={c.orderId}
+                    className="border-b border-border last:border-0 cursor-pointer transition hover:bg-background"
+                    onClick={() => (window.location.href = `/dashboard/campaigns/${c.id}`)}
+                  >
+                    <td className="px-5 py-4">
+                      <p className="font-bold text-navy">{c.packageName}</p>
+                      <p className="font-mono text-xs text-muted" title={c.orderId}>
+                        {c.orderId}
+                      </p>
+                    </td>
+                    <td className="px-5 py-4 text-muted">
+                      {getFormat(c.formatId).title}
+                    </td>
+                    <td className="px-5 py-4">
+                      <span className="rounded-full bg-orange-soft px-2.5 py-1 text-xs font-bold text-orange">
+                        {STATUS_LABEL[c.status]}
+                      </span>
+                    </td>
+                    <td className="px-5 py-4 font-semibold text-green">
+                      ₹{c.tokenAmount}
+                    </td>
+                    <td className="px-5 py-4 text-muted">
+                      {formatRelativeDate(c.updatedAt)}
+                    </td>
+                    <td className="px-5 py-4 text-right">
+                      <span className="font-semibold text-purple">Track →</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* MOBILE CARDS - Visible only on mobile */}
+          <div className="md:hidden space-y-3">
+            {campaigns.map((c) => (
+              <div
+                key={c.orderId}
+                className="rounded-xl border border-border bg-card p-4 cursor-pointer transition hover:bg-background"
+                onClick={() => (window.location.href = `/dashboard/campaigns/${c.id}`)}
+              >
+                <div className="space-y-3">
+                  {/* Header */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <p className="font-bold text-navy">{c.packageName}</p>
+                      <p className="font-mono text-xs text-muted mt-1" title={c.orderId}>
+                        {c.orderId.slice(0, 8)}...
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-orange-soft px-2.5 py-1 text-xs font-bold text-orange whitespace-nowrap ml-2">
                       {STATUS_LABEL[c.status]}
                     </span>
-                  </td>
-                  <td className="px-5 py-4 font-semibold text-green">
-                    ₹{c.tokenAmount}
-                  </td>
-                  <td className="px-5 py-4 text-muted">
-                    {formatRelativeDate(c.updatedAt)}
-                  </td>
-                  <td className="px-5 py-4 text-right">
-                    <span className="font-semibold text-purple">Track →</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  </div>
+
+                  {/* Details Grid */}
+                  <div className="grid grid-cols-3 gap-3 py-2 border-t border-border pt-3">
+                    <div>
+                      <p className="text-xs text-muted font-semibold uppercase">Format</p>
+                      <p className="text-sm font-semibold text-navy mt-1">
+                        {getFormat(c.formatId).title.split(" ")[0]}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted font-semibold uppercase">Token</p>
+                      <p className="text-sm font-bold text-green mt-1">₹{c.tokenAmount}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted font-semibold uppercase">Updated</p>
+                      <p className="text-sm text-muted mt-1">{formatRelativeDate(c.updatedAt)}</p>
+                    </div>
+                  </div>
+
+                  {/* Track Button */}
+                  <div className="pt-2 border-t border-border">
+                    <p className="text-right text-sm font-semibold text-purple">Track →</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </PageFrame>
   );

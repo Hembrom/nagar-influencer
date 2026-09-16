@@ -105,10 +105,21 @@ export default function InfluencerSetupPage() {
       audienceSize,
       collaborationInterests: Array.from(collaborationInterests),
       portfolioLinks: portfolioLinks.filter(link => link.trim()),
+      createdAt: new Date().toISOString(),
     };
 
-    console.log("Influencer profile saved:", profile);
-    // TODO: Save to Supabase
+    // Save to localStorage (demo mode) or Supabase (production)
+    try {
+      const demoMode = sessionStorage.getItem("demo_mode");
+      if (demoMode) {
+        localStorage.setItem("influencer_profile", JSON.stringify(profile));
+      }
+      // TODO: Save to Supabase in production
+      console.log("Influencer profile saved:", profile);
+    } catch (e) {
+      console.error("Error saving profile:", e);
+    }
+    
     router.push("/influencer/dashboard");
   };
 

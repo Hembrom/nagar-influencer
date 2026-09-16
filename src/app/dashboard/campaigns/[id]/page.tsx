@@ -300,26 +300,28 @@ function TrackerContent() {
               </div>
             </div>
 
-            {/* TEAM CHAT / TEAM MEMBERS */}
-            <div className="flex-1 border-t border-border pt-6">
-              <p className="text-[10px] font-bold text-muted-light mb-3 uppercase tracking-wider">Team</p>
-              <div className="space-y-2">
-                {TEAM_MEMBERS.map((member) => (
-                  <div
-                    key={member.id}
-                    className="flex items-center gap-2 rounded-lg border border-border bg-background p-2 hover:bg-orange-soft transition cursor-pointer"
-                  >
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple text-[10px] font-bold text-white">
-                      {member.avatar}
+            {/* TEAM MEMBERS - Show only when Chat is selected */}
+            {viewMode === "group-chat" && (
+              <div className="flex-1 border-t border-border pt-6">
+                <p className="text-[10px] font-bold text-muted-light mb-3 uppercase tracking-wider">Team</p>
+                <div className="space-y-2">
+                  {TEAM_MEMBERS.map((member) => (
+                    <div
+                      key={member.id}
+                      className="flex items-center gap-2 rounded-lg border border-border bg-background p-2 hover:bg-orange-soft transition cursor-pointer"
+                    >
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple text-[10px] font-bold text-white">
+                        {member.avatar}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold text-navy truncate">{member.name}</p>
+                        <p className="text-[10px] text-muted truncate">{member.role}</p>
+                      </div>
                     </div>
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold text-navy truncate">{member.name}</p>
-                      <p className="text-[10px] text-muted truncate">{member.role}</p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
         {/* MAIN CONTENT - Desktop */}

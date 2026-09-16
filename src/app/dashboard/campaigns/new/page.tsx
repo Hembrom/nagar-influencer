@@ -184,129 +184,107 @@ export default function NewCampaignPage() {
           <div style={{ fontSize: "12px", fontWeight: "600", color: "#FF6B35", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "8px" }}>
             Step 1 of 2
           </div>
-          <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "8px", color: "#1a1a18" }}>
-            What are you promoting?
-          </h1>
-          <p style={{ fontSize: "14px", color: "#7a7a77", marginBottom: "16px" }}>
-            Share a few details and we'll find the right creators and content style for you.
-          </p>
-          <div style={{ height: "4px", background: "#e0e0e0", borderRadius: "2px", overflow: "hidden" }}>
-            <div style={{ height: "100%", background: "#FF6B35", width: "50%" }} />
+          <h1 style={{ fontSize: "28px", fontWeight: "700", margin: "0 0 8px 0", color: "#1a1a18" }}>What are you promoting?</h1>
+          <p style={{ fontSize: "14px", color: "#7a7a77", margin: "0" }}>Share a few details and we'll find the right creators and content style for you.</p>
+        </div>
+
+        {/* UNIFORM CARD GRID - 2x2 */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", marginBottom: "32px" }}>
+          {/* CARD 1 - What are you promoting */}
+          <div style={{ background: "#f9f9f7", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
+            <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+              What are you promoting? *
+            </label>
+            <textarea
+              value={brief.whatYouPromote}
+              onChange={(e) => setBrief({ ...brief, whatYouPromote: e.target.value })}
+              placeholder="Tell us about your shop, product, service, event or offer…"
+              style={{
+                width: "100%",
+                minHeight: "120px",
+                padding: "12px 14px",
+                border: errors.whatYouPromote ? "1px solid #E24B4A" : "1px solid #d0d0cc",
+                borderRadius: "8px",
+                fontSize: "14px",
+                fontFamily: "inherit",
+                background: "white",
+                color: "#1a1a18",
+                resize: "vertical",
+                lineHeight: "1.5",
+                outline: "none",
+              }}
+            />
+            {errors.whatYouPromote && <p style={{ fontSize: "12px", color: "#E24B4A", marginTop: "8px" }}>{errors.whatYouPromote}</p>}
+          </div>
+
+          {/* CARD 2 - Category */}
+          <div style={{ background: "#f9f9f7", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
+            <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+              Which category best fits?
+            </label>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px" }}>
+              {CATEGORIES.map((cat) => (
+                <Chip key={cat} selected={brief.category === cat} onClick={() => setBrief({ ...brief, category: cat })}>
+                  {cat}
+                </Chip>
+              ))}
+            </div>
+          </div>
+
+          {/* CARD 3 - Goal */}
+          <div style={{ background: "#f9f9f7", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
+            <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+              What's your goal? *
+            </label>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "8px" }}>
+              {GOALS.map((g) => (
+                <button
+                  key={g}
+                  onClick={() => setBrief({ ...brief, goal: g })}
+                  style={{
+                    padding: "10px 12px",
+                    border: brief.goal === g ? "2px solid #FF6B35" : "1px solid #d0d0cc",
+                    borderRadius: "8px",
+                    background: brief.goal === g ? "#FFF5F0" : "white",
+                    cursor: "pointer",
+                    fontSize: "13px",
+                    fontWeight: "500",
+                    color: "#1a1a18",
+                    transition: "all 0.2s ease",
+                    textAlign: "left",
+                  }}
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
+            {errors.goal && <p style={{ fontSize: "12px", color: "#E24B4A", marginTop: "8px" }}>{errors.goal}</p>}
+          </div>
+
+          {/* CARD 4 - Content Format */}
+          <div style={{ background: "#f9f9f7", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0" }}>
+            <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+              What kind of content do you want? *
+            </label>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px" }}>
+              {FORMATS.map((fmt) => (
+                <Chip key={fmt} selected={brief.contentFormat === fmt} onClick={() => setBrief({ ...brief, contentFormat: fmt })}>
+                  {fmt}
+                </Chip>
+              ))}
+            </div>
+            {errors.contentFormat && <p style={{ fontSize: "12px", color: "#E24B4A", marginTop: "8px" }}>{errors.contentFormat}</p>}
           </div>
         </div>
 
-        {/* 2-COLUMN FORM LAYOUT */}
-        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1.2fr", gap: "40px", marginBottom: "28px" }}>
-          {/* COLUMN 1 */}
-          <div>
-            {/* SECTION 1 - What are you promoting */}
-            <div style={{ marginBottom: "28px" }}>
-              <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-                What are you promoting? *
-              </label>
-              <textarea
-                value={brief.whatYouPromote}
-                onChange={(e) => setBrief({ ...brief, whatYouPromote: e.target.value })}
-                placeholder="Tell us about your shop, product, service, event or offer…"
-                style={{
-                  width: "100%",
-                  minHeight: "110px",
-                  padding: "12px 14px",
-                  border: errors.whatYouPromote ? "1px solid #E24B4A" : "1px solid #d0d0cc",
-                  borderRadius: "8px",
-                  fontSize: "15px",
-                  fontFamily: "inherit",
-                  background: "white",
-                  color: "#1a1a18",
-                  resize: "vertical",
-                  lineHeight: "1.5",
-                  outline: "none",
-                }}
-              />
-              {errors.whatYouPromote && <p style={{ fontSize: "13px", color: "#E24B4A", marginTop: "6px" }}>{errors.whatYouPromote}</p>}
-            </div>
-
-          </div>
-
-          {/* COLUMN 2 */}
-          <div>
-            {/* SECTION 2 - Category & Goal */}
-            <div style={{ marginBottom: "28px" }}>
-              <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-                Which category best fits?
-              </label>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px", marginBottom: "12px" }}>
-                {CATEGORIES.map((cat) => (
-                  <Chip
-                    key={cat}
-                    selected={brief.category === cat}
-                    onClick={() => setBrief({ ...brief, category: cat })}
-                  >
-                    {cat}
-                  </Chip>
-                ))}
-              </div>
-            </div>
-
-            {/* SECTION 4 - Goal */}
-            <div style={{ marginBottom: "28px" }}>
-              <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-                What's your goal? *
-              </label>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "10px" }}>
-                {GOALS.map((g) => (
-                  <button
-                    key={g}
-                    onClick={() => setBrief({ ...brief, goal: g })}
-                    style={{
-                      padding: "12px 14px",
-                      border: brief.goal === g ? "2px solid #FF6B35" : "1px solid #d0d0cc",
-                      borderRadius: "8px",
-                      background: brief.goal === g ? "#FFF5F0" : "white",
-                      cursor: "pointer",
-                      fontSize: "13px",
-                      fontWeight: "500",
-                      color: "#1a1a18",
-                      transition: "all 0.2s ease",
-                      textAlign: "left",
-                    }}
-                  >
-                    {g}
-                  </button>
-                ))}
-              </div>
-              {errors.goal && <p style={{ fontSize: "13px", color: "#E24B4A", marginTop: "6px" }}>{errors.goal}</p>}
-            </div>
-
-            {/* SECTION 5 - Content & Preferences */}
-            <div style={{ marginBottom: "28px" }}>
-              <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-                What kind of content do you want? *
-              </label>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px" }}>
-                {FORMATS.map((fmt) => (
-                  <Chip
-                    key={fmt}
-                    selected={brief.contentFormat === fmt}
-                    onClick={() => setBrief({ ...brief, contentFormat: fmt })}
-                  >
-                    {fmt}
-                  </Chip>
-                ))}
-              </div>
-              {errors.contentFormat && <p style={{ fontSize: "13px", color: "#E24B4A", marginTop: "6px" }}>{errors.contentFormat}</p>}
-            </div>
-          </div>
-        </div>
-
-        {/* PREFERENCES - FULL WIDTH */}
-        <div style={{ marginBottom: "28px" }}>
-          <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "8px", color: "#1a1a18" }}>
+        {/* PREFERENCES - FULL WIDTH CARD */}
+        <div style={{ background: "#f9f9f7", borderRadius: "12px", padding: "20px", border: "1px solid #e0e0e0", marginBottom: "32px" }}>
+          <label style={{ display: "block", fontSize: "13px", fontWeight: "600", marginBottom: "14px", color: "#1a1a18", textTransform: "uppercase", letterSpacing: "0.5px" }}>
             Campaign preferences (optional)
           </label>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px" }}>
             <div>
-              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Location</div>
+              <div style={{ fontSize: "12px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Location</div>
               <Select
                 value={brief.location}
                 onChange={(val) => setBrief({ ...brief, location: val })}
@@ -314,7 +292,7 @@ export default function NewCampaignPage() {
               />
             </div>
             <div>
-              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Age group</div>
+              <div style={{ fontSize: "12px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Age group</div>
               <Select
                 value={brief.audience}
                 onChange={(val) => setBrief({ ...brief, audience: val })}
@@ -322,7 +300,7 @@ export default function NewCampaignPage() {
               />
             </div>
             <div>
-              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Language</div>
+              <div style={{ fontSize: "12px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Language</div>
               <Select
                 value={brief.language}
                 onChange={(val) => setBrief({ ...brief, language: val })}
@@ -330,7 +308,7 @@ export default function NewCampaignPage() {
               />
             </div>
             <div>
-              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Budget</div>
+              <div style={{ fontSize: "12px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Budget</div>
               <Select
                 value={brief.budget}
                 onChange={(val) => setBrief({ ...brief, budget: val })}
@@ -338,7 +316,7 @@ export default function NewCampaignPage() {
               />
             </div>
             <div>
-              <div style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Timeline</div>
+              <div style={{ fontSize: "12px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px" }}>Timeline</div>
               <Select
                 value={brief.timeline}
                 onChange={(val) => setBrief({ ...brief, timeline: val })}
@@ -349,7 +327,7 @@ export default function NewCampaignPage() {
         </div>
 
         {/* CTA SECTION */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid #e0e0e0", paddingTop: "24px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ fontSize: "13px", color: "#7a7a77" }}>Need help? Our campaign matcher can recommend everything for you.</div>
           <button
             onClick={handleProceed}

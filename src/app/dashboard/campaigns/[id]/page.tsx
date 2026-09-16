@@ -323,8 +323,8 @@ function TrackerContent() {
           </div>
         </div>
 
-        {/* MAIN CONTENT */}
-        <div className="space-y-5">
+        {/* MAIN CONTENT - Desktop */}
+        <div className="hidden lg:block space-y-5">
           {/* CAMPAIGN HEADER */}
           <div className="flex items-start justify-between gap-4 rounded-2xl border border-border bg-card p-5">
             <div>
@@ -343,7 +343,7 @@ function TrackerContent() {
             </span>
           </div>
 
-          {/* SHOW GROUP CHAT OR TABS */}
+          {/* SHOW GROUP CHAT OR TABS - Desktop and Mobile */}
           {viewMode === "group-chat" ? (
             /* GROUP CHAT PANEL */
             <div className="rounded-2xl border border-border bg-card p-6 flex flex-col h-[500px]">
@@ -635,90 +635,259 @@ function TrackerContent() {
         </div>
         </div>
 
-        {/* MOBILE LAYOUT - Card-based */}
-        <div className="lg:hidden space-y-4">
-          {/* TEAM CHAT CARD */}
-          <div className="rounded-2xl border border-border bg-card p-4">
-            <button
-              onClick={() => setViewMode("group-chat")}
-              className="w-full text-left"
-            >
-              <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
-                WORKING ON THIS
-              </p>
-              <p className="mt-2 text-sm font-semibold text-navy">
-                Team Chat
-              </p>
-              <p className="text-xs text-muted mt-2">
-                {TEAM_MEMBERS.length} team members
-              </p>
-            </button>
-          </div>
+        {/* MOBILE LAYOUT */}
+        <div className="lg:hidden">
+          {/* Show card menu if no content selected */}
+          {viewMode === "tabs" && !activeTab && (
+            <div className="space-y-3">
+              {/* TEAM CHAT CARD */}
+              <div className="rounded-2xl border border-border bg-card p-4">
+                <button
+                  onClick={() => setViewMode("group-chat")}
+                  className="w-full text-left"
+                >
+                  <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+                    WORKING ON THIS
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-navy">
+                    Team Chat
+                  </p>
+                  <p className="text-xs text-muted mt-2">
+                    {TEAM_MEMBERS.length} team members
+                  </p>
+                </button>
+              </div>
 
-          {/* DASHBOARD CARD (if live) */}
-          {campaign?.status === "campaign_live" && (
-            <div className="rounded-2xl border border-border bg-card p-4">
-              <button
-                onClick={() => {
-                  setViewMode("tabs");
-                  setActiveTab("dashboard");
-                }}
-                className="w-full text-left"
-              >
-                <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
-                  PERFORMANCE
-                </p>
-                <p className="mt-2 text-sm font-semibold text-navy">
-                  Dashboard
-                </p>
-                <p className="text-xs text-muted mt-2">
-                  View live video performance
-                </p>
-              </button>
+              {/* DASHBOARD CARD (if live) */}
+              {campaign?.status === "campaign_live" && (
+                <div className="rounded-2xl border border-border bg-card p-4">
+                  <button
+                    onClick={() => {
+                      setViewMode("tabs");
+                      setActiveTab("dashboard");
+                    }}
+                    className="w-full text-left"
+                  >
+                    <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+                      PERFORMANCE
+                    </p>
+                    <p className="mt-2 text-sm font-semibold text-navy">
+                      Dashboard
+                    </p>
+                    <p className="text-xs text-muted mt-2">
+                      View live video performance
+                    </p>
+                  </button>
+                </div>
+              )}
+
+              {/* PROGRESS CARD */}
+              <div className="rounded-2xl border border-border bg-card p-4">
+                <button
+                  onClick={() => {
+                    setViewMode("tabs");
+                    setActiveTab("progress");
+                  }}
+                  className="w-full text-left"
+                >
+                  <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+                    WORKFLOW
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-navy">
+                    Progress
+                  </p>
+                  <p className="text-xs text-muted mt-2">
+                    Campaign status & timeline
+                  </p>
+                </button>
+              </div>
+
+              {/* VIDEOS CARD */}
+              <div className="rounded-2xl border border-border bg-card p-4">
+                <button
+                  onClick={() => {
+                    setViewMode("tabs");
+                    setActiveTab("videos");
+                  }}
+                  className="w-full text-left"
+                >
+                  <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+                    DELIVERABLES
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-navy">
+                    Videos
+                  </p>
+                  <p className="text-xs text-muted mt-2">
+                    Delivered & pending content
+                  </p>
+                </button>
+              </div>
             </div>
           )}
 
-          {/* PROGRESS CARD */}
-          <div className="rounded-2xl border border-border bg-card p-4">
-            <button
-              onClick={() => {
-                setViewMode("tabs");
-                setActiveTab("progress");
-              }}
-              className="w-full text-left"
-            >
-              <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
-                WORKFLOW
-              </p>
-              <p className="mt-2 text-sm font-semibold text-navy">
-                Progress
-              </p>
-              <p className="text-xs text-muted mt-2">
-                Campaign status & timeline
-              </p>
-            </button>
-          </div>
+          {/* Show content when selected */}
+          {viewMode === "group-chat" && (
+            <div className="rounded-2xl border border-border bg-card p-6 flex flex-col h-[500px]">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
+                  TEAM CHAT
+                </p>
+                <button
+                  onClick={() => setViewMode("tabs")}
+                  className="text-xs text-muted hover:text-navy transition"
+                >
+                  ✕ Back
+                </button>
+              </div>
+              
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto mb-4 space-y-3">
+                {messages.length === 0 ? (
+                  <p className="text-sm text-muted text-center py-8">
+                    👋 Start chatting with your team
+                  </p>
+                ) : (
+                  messages.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className={`flex gap-2 ${msg.sender === "user" ? "flex-row-reverse" : ""}`}
+                    >
+                      <div
+                        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white ${
+                          msg.sender === "user" ? "bg-orange" : "bg-purple"
+                        }`}
+                      >
+                        {msg.sender === "user" ? "Y" : msg.senderName?.slice(0, 1) || "T"}
+                      </div>
+                      <div className={`flex-1 rounded-lg px-3 py-2 ${msg.sender === "user" ? "bg-orange text-white" : "bg-background text-navy"}`}>
+                        <p className="text-xs font-semibold mb-1">{msg.senderName}</p>
+                        <p className="text-sm">{msg.text}</p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
 
-          {/* VIDEOS CARD */}
-          <div className="rounded-2xl border border-border bg-card p-4">
-            <button
-              onClick={() => {
-                setViewMode("tabs");
-                setActiveTab("videos");
-              }}
-              className="w-full text-left"
-            >
-              <p className="text-xs font-bold tracking-[0.08em] text-muted-light">
-                DELIVERABLES
-              </p>
-              <p className="mt-2 text-sm font-semibold text-navy">
-                Videos
-              </p>
-              <p className="text-xs text-muted mt-2">
-                Delivered & pending content
-              </p>
-            </button>
-          </div>
+              {/* Input */}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Type a message…"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      handleSendMessage();
+                    }
+                  }}
+                />
+                <button 
+                  onClick={handleSendMessage}
+                  className="rounded-lg bg-orange px-3 py-2 text-xs font-semibold text-white"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Show tabs content */}
+          {viewMode === "tabs" && activeTab && (
+            <div>
+              <div className="flex gap-2 mb-4">
+                <button
+                  onClick={() => setViewMode("tabs")}
+                  className="text-sm font-semibold text-muted hover:text-navy"
+                >
+                  ← Back
+                </button>
+              </div>
+              
+              {activeTab === "dashboard" && (
+                <div className="rounded-2xl border border-border bg-card p-5 space-y-5">
+                  {/* Dashboard content */}
+                  <div>
+                    <p className="text-sm font-bold text-navy mb-3">Campaign Performance</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="rounded-lg border border-border p-3 text-center">
+                        <p className="text-xs text-muted">Total Views</p>
+                        <p className="text-lg font-bold text-navy mt-1">2.4K</p>
+                      </div>
+                      <div className="rounded-lg border border-border p-3 text-center">
+                        <p className="text-xs text-muted">Engagement</p>
+                        <p className="text-lg font-bold text-orange mt-1">8.2%</p>
+                      </div>
+                      <div className="rounded-lg border border-border p-3 text-center">
+                        <p className="text-xs text-muted">Likes</p>
+                        <p className="text-lg font-bold text-purple mt-1">156</p>
+                      </div>
+                      <div className="rounded-lg border border-border p-3 text-center">
+                        <p className="text-xs text-muted">Comments</p>
+                        <p className="text-lg font-bold text-green mt-1">42</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "progress" && (
+                <div className="rounded-2xl border border-border bg-card p-5 space-y-5">
+                  {stepStates(campaign.status).map((state, i) => (
+                    <div key={i} className="flex gap-3 items-start">
+                      <div className="flex-1">
+                        <p className={`text-sm font-semibold ${
+                          state === "done" ? "text-green" : state === "active" ? "text-orange" : "text-muted"
+                        }`}>
+                          {FLOW[i].title}
+                        </p>
+                        <p className="text-xs text-muted mt-1">{FLOW[i].subtitle}</p>
+                      </div>
+                      <div className="mt-1">
+                        {state === "done" && <span className="text-green font-bold">✓</span>}
+                        {state === "active" && <span className="text-orange font-bold">●</span>}
+                        {state === "pending" && <span className="text-muted font-bold">○</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {activeTab === "videos" && (
+                <div className="rounded-2xl border border-border bg-card p-5 space-y-5">
+                  {/* Delivered Videos */}
+                  <div>
+                    <p className="text-sm font-semibold text-green mb-3">Delivered</p>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3 rounded-lg border border-green/30 bg-green/5 p-3">
+                        <div className="h-10 w-10 rounded-lg bg-gray-200" />
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-navy">Instagram Reel</p>
+                          <p className="text-xs text-muted">Delivered today</p>
+                        </div>
+                        <span className="text-xs font-bold text-green">✓</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Pending Videos */}
+                  <div>
+                    <p className="text-sm font-semibold text-orange mb-3">Pending</p>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3 rounded-lg border border-orange/30 bg-orange/5 p-3">
+                        <div className="h-10 w-10 rounded-lg bg-gray-200" />
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-navy">YouTube Video</p>
+                          <p className="text-xs text-muted">Expected Sep 20</p>
+                        </div>
+                        <span className="text-xs font-bold text-orange">●</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </PageFrame>
     </div>

@@ -28,7 +28,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-dvh bg-background">
+    <div className="flex flex-col-reverse md:flex-row min-h-dvh bg-background">
       <Sidebar user={user} />
       <main className="flex min-h-dvh min-w-0 flex-1 flex-col">{children}</main>
     </div>

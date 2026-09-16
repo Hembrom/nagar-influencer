@@ -73,8 +73,8 @@ export function Sidebar({ user }: Props) {
   }
 
   return (
-    <aside className="flex h-dvh w-[260px] shrink-0 flex-col border-r border-border bg-[#0f0a1f] text-white">
-      <div className="border-b border-white/10 px-5 py-5">
+    <aside className="flex md:h-dvh md:w-[260px] h-auto w-full shrink-0 flex-col md:flex-col flex-row md:border-r border-r-0 md:border-t border-t border-border bg-[#0f0a1f] text-white md:border-b-0">
+      <div className="hidden md:block border-b border-white/10 px-5 py-5">
         <Link href="/dashboard/campaigns" className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange text-xs font-extrabold text-white">
             NI
@@ -86,7 +86,7 @@ export function Sidebar({ user }: Props) {
         </Link>
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
+      <nav className="flex md:flex-1 flex-row md:flex-col gap-1 md:gap-1 px-2 md:px-3 py-2 md:py-4 overflow-x-auto md:overflow-x-visible">
         {NAV.map((item) => {
           const active = isActive(pathname, item.href, "exact" in item ? item.exact : false);
           const Icon = item.icon;
@@ -107,7 +107,7 @@ export function Sidebar({ user }: Props) {
         })}
       </nav>
 
-      <div className="border-t border-white/10 p-4">
+      <div className="hidden md:block border-t border-white/10 p-4">
         <div className="mb-3 flex items-center gap-3">
           {avatar ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -130,6 +130,33 @@ export function Sidebar({ user }: Props) {
           type="button"
           onClick={signOut}
           className="w-full rounded-lg px-3 py-2 text-left text-xs font-semibold text-white/55 transition hover:bg-white/8 hover:text-white"
+        >
+          Sign out
+        </button>
+      </div>
+
+      {/* Mobile user menu */}
+      <div className="md:hidden border-l border-white/10 p-3 flex items-center gap-2">
+        {avatar ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={avatar}
+            alt=""
+            className="h-8 w-8 rounded-full object-cover"
+          />
+        ) : (
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple text-xs font-bold">
+            {name.slice(0, 1).toUpperCase()}
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-xs font-semibold">{name}</p>
+          <p className="truncate text-[10px] text-white/45">{email}</p>
+        </div>
+        <button
+          type="button"
+          onClick={signOut}
+          className="rounded-lg px-2 py-1 text-[10px] font-semibold text-white/55 transition hover:bg-white/8 hover:text-white"
         >
           Sign out
         </button>

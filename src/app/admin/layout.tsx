@@ -20,23 +20,33 @@ export default function AdminLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Don't protect the login page
+  const isLoginPage = pathname === "/admin/login";
 
   useEffect(() => {
     // Check if user is logged in
     const adminSession = localStorage.getItem("admin_session");
-    if (!adminSession) {
+    if (!adminSession && !isLoginPage) {
       router.push("/admin/login");
     } else {
       setIsAuthenticated(true);
     }
-  }, [router]);
+    setIsLoading(false);
+  }, [router, isLoginPage]);
 
   const handleLogout = () => {
     localStorage.removeItem("admin_session");
     router.push("/admin/login");
   };
 
-  if (!isAuthenticated) {
+  // Show login page without sidebar
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
+
+  if (isLoading || !isAuthenticated) {
     return null;
   }
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 interface InfluencerProfile {
   displayName: string;
@@ -24,14 +25,31 @@ export default function InfluencerDashboardPage() {
   const [userName, setUserName] = useState<string>("Creator");
   const [isDemo, setIsDemo] = useState(false);
   const [activeSection, setActiveSection] = useState<ActiveSection>("profile");
+  const [userEmail, setUserEmail] = useState<string>("");
 
   useEffect(() => {
-    console.log("Dashboard mount - loading profile...");
+    console.log("Dashboard mount - loading profile and auth...");
     
     // Check if in demo mode
     const demoMode = sessionStorage.getItem("demo_mode");
     if (demoMode) {
       setIsDemo(true);
+      // Get email from sessionStorage for demo mode
+      const email = sessionStorage.getItem("influencer_email");
+      if (email) {
+        setUserEmail(email);
+      }
+    } else {
+      // Try to get authenticated user from Supabase
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data: { user } }) => {
+        if (user?.email) {
+          setUserEmail(user.email);
+          console.log("Got user email from Supabase:", user.email);
+        }
+      }).catch((err) => {
+        console.error("Error getting user from Supabase:", err);
+      });
     }
 
     // Load profile from localStorage - ALWAYS check fresh
@@ -377,7 +395,7 @@ export default function InfluencerDashboardPage() {
                     Google Account Email
                   </p>
                   <p style={{ fontSize: "14px", color: "#1a1a1a", fontWeight: "500", margin: "0", paddingBottom: "8px", borderBottom: "1px solid #bfdbfe" }}>
-                    {sessionStorage.getItem("influencer_email") || profile?.displayName ? `${profile?.displayName?.toLowerCase()}@creator.local` : "creator@example.com"}
+                    {userEmail || "Loading..."}
                   </p>
                   <p style={{ fontSize: "12px", color: "#666", margin: "8px 0 0 0" }}>
                     🔒 Google Login (Read-only)

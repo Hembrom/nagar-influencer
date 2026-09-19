@@ -473,65 +473,44 @@ export default function InfluencerSetupPage() {
               <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "12px", color: "#1a1a1a" }}>
                 Portfolio / Sample Work
               </label>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "10px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 {portfolioLinks.map((link, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      aspectRatio: "1",
-                      borderRadius: "8px",
-                      border: "2px dashed #e9e5ff",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      background: link ? "transparent" : "#f9f7ff",
-                      cursor: "pointer",
-                      position: "relative",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {link ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={link}
-                        alt={`Portfolio ${i + 1}`}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : (
-                      <span style={{ fontSize: "24px" }}>+</span>
-                    )}
+                  <div key={i} style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                     <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onload = (event) => {
-                            handlePortfolioLinkChange(i, event.target?.result as string);
-                          };
-                          reader.readAsDataURL(file);
-                        }
-                      }}
+                      type="url"
+                      value={link}
+                      onChange={(e) => handlePortfolioLinkChange(i, e.target.value)}
+                      placeholder="Paste link to your portfolio item (e.g., Instagram, YouTube, website)"
                       style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        opacity: 0,
-                        cursor: "pointer",
+                        flex: 1,
+                        padding: "10px 12px",
+                        border: "1px solid #e9e5ff",
+                        borderRadius: "8px",
+                        fontSize: "13px",
+                        background: "white",
+                        boxSizing: "border-box",
                       }}
                     />
+                    {link && (
+                      <button
+                        onClick={() => handlePortfolioLinkChange(i, "")}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          color: "#999",
+                          cursor: "pointer",
+                          fontSize: "16px",
+                          padding: "4px 8px",
+                        }}
+                      >
+                        ✕
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
               <p style={{ fontSize: "12px", color: "#999", marginTop: "8px" }}>
-                Add images or links to showcase your best work (up to 5)
+                Add links to your portfolio items (Instagram, YouTube, website, etc.) - up to 5 links
               </p>
             </div>
           </div>

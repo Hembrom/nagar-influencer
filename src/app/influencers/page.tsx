@@ -25,7 +25,7 @@ export default function InfluencersPage() {
           email: "creator@example.com",
           role: "influencer",
         }));
-        router.push("/influencer/setup");
+        router.push("/influencer-home");
         return;
       }
 
@@ -37,7 +37,7 @@ export default function InfluencersPage() {
           email: "creator@example.com",
           role: "influencer",
         }));
-        router.push("/influencer/setup");
+        router.push("/influencer-home");
         return;
       }
 
@@ -47,7 +47,7 @@ export default function InfluencersPage() {
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${origin}/auth/callback?next=${encodeURIComponent("/influencer/setup")}`,
+          redirectTo: `${origin}/auth/callback?next=${encodeURIComponent("/influencer-home")}`,
         },
       });
       if (authError) throw authError;

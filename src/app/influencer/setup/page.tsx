@@ -89,10 +89,10 @@ export default function InfluencerSetupPage() {
 
   const handleSaveProfile = () => {
     if (!displayName.trim() || !bio.trim() || selectedCategories.size === 0) {
-      alert("Please fill in all required fields on this page");
+      alert("Please fill in all required fields");
       return;
     }
-
+    
     const profile = {
       displayName,
       bio,
@@ -106,18 +106,16 @@ export default function InfluencerSetupPage() {
       createdAt: new Date().toISOString(),
     };
 
+    // ALWAYS save to localStorage (not just in demo mode)
     try {
-      const demoMode = sessionStorage.getItem("demo_mode");
-      if (demoMode) {
-        localStorage.setItem("influencer_profile", JSON.stringify(profile));
-        console.log("Profile saved to localStorage:", profile);
-      }
+      localStorage.setItem("influencer_profile", JSON.stringify(profile));
+      console.log("✓ Profile saved to localStorage:", profile);
     } catch (e) {
       console.error("Error saving profile:", e);
       alert("Error saving profile. Please try again.");
       return;
     }
-
+    
     router.push("/influencer/dashboard");
   };
 

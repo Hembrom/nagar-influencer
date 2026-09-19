@@ -67,17 +67,17 @@ export default function InfluencerDashboardPage() {
   };
 
   return (
-    <div style={{ background: "#f9f9f7", minHeight: "100vh", padding: "24px" }}>
+    <div style={{ background: "#f5f3ff", minHeight: "100vh", padding: "24px" }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
         {/* HEADER */}
         <div style={{ marginBottom: "32px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
             <div>
-              <h1 style={{ fontSize: "28px", fontWeight: "700", margin: "0", color: "#1a1a18" }}>
+              <h1 style={{ fontSize: "28px", fontWeight: "700", margin: "0", color: "#1a1a1a" }}>
                 Welcome, {userName}! 👋
               </h1>
               {isDemo && (
-                <p style={{ fontSize: "12px", color: "#FF6B35", fontWeight: "600", margin: "6px 0 0 0" }}>
+                <p style={{ fontSize: "12px", color: "#6366f1", fontWeight: "600", margin: "6px 0 0 0" }}>
                   Demo Mode
                 </p>
               )}
@@ -86,19 +86,28 @@ export default function InfluencerDashboardPage() {
               onClick={handleSignOut}
               style={{
                 padding: "10px 16px",
-                border: "1px solid #d0d0cc",
+                border: "1px solid #c7d2fe",
                 borderRadius: "8px",
                 fontSize: "14px",
                 fontWeight: "600",
-                color: "#1a1a18",
+                color: "#6366f1",
                 background: "white",
                 cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#f0f9ff";
+                e.currentTarget.style.borderColor = "#6366f1";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "white";
+                e.currentTarget.style.borderColor = "#c7d2fe";
               }}
             >
               Sign Out
             </button>
           </div>
-          <p style={{ fontSize: "14px", color: "#7a7a77", margin: "0" }}>
+          <p style={{ fontSize: "14px", color: "#666", margin: "0" }}>
             {profile 
               ? "Complete your profile and start getting brand collaboration offers."
               : "Let's set up your profile to start getting brand collaboration offers."}
@@ -108,8 +117,8 @@ export default function InfluencerDashboardPage() {
         {/* PROFILE SETUP PROMPT */}
         {!profile && (
           <div style={{
-            background: "#FFF5F0",
-            border: "1px solid #FFD9C8",
+            background: "#f0f9ff",
+            border: "1px solid #bfdbfe",
             borderRadius: "12px",
             padding: "20px",
             marginBottom: "32px",
@@ -118,10 +127,10 @@ export default function InfluencerDashboardPage() {
             alignItems: "center",
           }}>
             <div>
-              <p style={{ fontSize: "15px", fontWeight: "600", color: "#FF6B35", margin: "0 0 4px 0" }}>
+              <p style={{ fontSize: "15px", fontWeight: "600", color: "#6366f1", margin: "0 0 4px 0" }}>
                 Complete your profile to attract brands! ✨
               </p>
-              <p style={{ fontSize: "13px", color: "#7a7a77", margin: "0" }}>
+              <p style={{ fontSize: "13px", color: "#666", margin: "0" }}>
                 Add your bio, categories, and portfolio links to get started.
               </p>
             </div>
@@ -135,7 +144,7 @@ export default function InfluencerDashboardPage() {
               }}
               style={{
                 padding: "10px 16px",
-                background: "#FF6B35",
+                background: "#6366f1",
                 color: "white",
                 borderRadius: "8px",
                 fontSize: "14px",
@@ -144,6 +153,13 @@ export default function InfluencerDashboardPage() {
                 cursor: "pointer",
                 border: "none",
                 whiteSpace: "nowrap",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#4f46e5";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#6366f1";
               }}
             >
               Complete Profile →
@@ -165,13 +181,22 @@ export default function InfluencerDashboardPage() {
               background: "white",
               borderRadius: "12px",
               padding: "24px",
-              border: "1px solid #e0e0e0",
+              border: "1px solid #e0dcff",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "#c7d2fe";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "#e0dcff";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
-            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a18" }}>
+            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
               📋 Your Profile
             </h2>
-            <p style={{ fontSize: "14px", color: "#7a7a77", marginBottom: "16px", margin: "0 0 16px 0" }}>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px", margin: "0 0 16px 0" }}>
               View and update your influencer profile information.
             </p>
             <button
@@ -179,7 +204,7 @@ export default function InfluencerDashboardPage() {
               style={{
                 display: "inline-block",
                 padding: "10px 16px",
-                background: "#FF6B35",
+                background: "#6366f1",
                 color: "white",
                 borderRadius: "8px",
                 fontSize: "14px",
@@ -187,6 +212,13 @@ export default function InfluencerDashboardPage() {
                 textDecoration: "none",
                 cursor: "pointer",
                 border: "none",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#4f46e5";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#6366f1";
               }}
             >
               View Profile →
@@ -199,26 +231,42 @@ export default function InfluencerDashboardPage() {
               background: "white",
               borderRadius: "12px",
               padding: "24px",
-              border: "1px solid #e0e0e0",
+              border: "1px solid #e0dcff",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "#c7d2fe";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "#e0dcff";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
-            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a18" }}>
+            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
               🎯 Brand Opportunities
             </h2>
-            <p style={{ fontSize: "14px", color: "#7a7a77", marginBottom: "16px", margin: "0 0 16px 0" }}>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px", margin: "0 0 16px 0" }}>
               Browse and apply for brand collaboration opportunities.
             </p>
             <button
               style={{
                 display: "inline-block",
                 padding: "10px 16px",
-                background: "#FF6B35",
+                background: "#6366f1",
                 color: "white",
                 borderRadius: "8px",
                 fontSize: "14px",
                 fontWeight: "600",
                 border: "none",
                 cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#4f46e5";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#6366f1";
               }}
             >
               Browse Opportunities →
@@ -231,26 +279,42 @@ export default function InfluencerDashboardPage() {
               background: "white",
               borderRadius: "12px",
               padding: "24px",
-              border: "1px solid #e0e0e0",
+              border: "1px solid #e0dcff",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "#c7d2fe";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "#e0dcff";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
-            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a18" }}>
+            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
               💬 Messages
             </h2>
-            <p style={{ fontSize: "14px", color: "#7a7a77", marginBottom: "16px", margin: "0 0 16px 0" }}>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px", margin: "0 0 16px 0" }}>
               Chat with brands about partnership details.
             </p>
             <button
               style={{
                 display: "inline-block",
                 padding: "10px 16px",
-                background: "#FF6B35",
+                background: "#6366f1",
                 color: "white",
                 borderRadius: "8px",
                 fontSize: "14px",
                 fontWeight: "600",
                 border: "none",
                 cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#4f46e5";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#6366f1";
               }}
             >
               Check Messages →
@@ -263,26 +327,42 @@ export default function InfluencerDashboardPage() {
               background: "white",
               borderRadius: "12px",
               padding: "24px",
-              border: "1px solid #e0e0e0",
+              border: "1px solid #e0dcff",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "#c7d2fe";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "#e0dcff";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
-            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a18" }}>
+            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
               📊 Analytics
             </h2>
-            <p style={{ fontSize: "14px", color: "#7a7a77", marginBottom: "16px", margin: "0 0 16px 0" }}>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px", margin: "0 0 16px 0" }}>
               Track your profile views and collaboration performance.
             </p>
             <button
               style={{
                 display: "inline-block",
                 padding: "10px 16px",
-                background: "#FF6B35",
+                background: "#6366f1",
                 color: "white",
                 borderRadius: "8px",
                 fontSize: "14px",
                 fontWeight: "600",
                 border: "none",
                 cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#4f46e5";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#6366f1";
               }}
             >
               View Analytics →
@@ -295,26 +375,42 @@ export default function InfluencerDashboardPage() {
               background: "white",
               borderRadius: "12px",
               padding: "24px",
-              border: "1px solid #e0e0e0",
+              border: "1px solid #e0dcff",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "#c7d2fe";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "#e0dcff";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
-            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a18" }}>
+            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
               ✅ Active Collaborations
             </h2>
-            <p style={{ fontSize: "14px", color: "#7a7a77", marginBottom: "16px", margin: "0 0 16px 0" }}>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px", margin: "0 0 16px 0" }}>
               Manage your ongoing brand partnerships and deliverables.
             </p>
             <button
               style={{
                 display: "inline-block",
                 padding: "10px 16px",
-                background: "#FF6B35",
+                background: "#6366f1",
                 color: "white",
                 borderRadius: "8px",
                 fontSize: "14px",
                 fontWeight: "600",
                 border: "none",
                 cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#4f46e5";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#6366f1";
               }}
             >
               View Collaborations →
@@ -327,26 +423,42 @@ export default function InfluencerDashboardPage() {
               background: "white",
               borderRadius: "12px",
               padding: "24px",
-              border: "1px solid #e0e0e0",
+              border: "1px solid #e0dcff",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "#c7d2fe";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "#e0dcff";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
-            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a18" }}>
+            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
               ⚙️ Settings
             </h2>
-            <p style={{ fontSize: "14px", color: "#7a7a77", marginBottom: "16px", margin: "0 0 16px 0" }}>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px", margin: "0 0 16px 0" }}>
               Update your account settings and preferences.
             </p>
             <button
               style={{
                 display: "inline-block",
                 padding: "10px 16px",
-                background: "#FF6B35",
+                background: "#6366f1",
                 color: "white",
                 borderRadius: "8px",
                 fontSize: "14px",
                 fontWeight: "600",
                 border: "none",
                 cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#4f46e5";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#6366f1";
               }}
             >
               Go to Settings →

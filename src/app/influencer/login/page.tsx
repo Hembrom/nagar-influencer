@@ -75,19 +75,10 @@ export default function InfluencerLoginPage() {
     }
   };
 
-  const handleDemoMode = () => {
-    sessionStorage.setItem("demo_mode", "true");
-    sessionStorage.setItem("influencer_demo_user", JSON.stringify({
-      email: "demo@creator.com",
-      role: "influencer",
-    }));
-    router.push("/influencer/setup");
-  };
-
   return (
     <div
       style={{
-        background: "linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%)",
+        background: "#f5f3ff",
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
@@ -97,13 +88,13 @@ export default function InfluencerLoginPage() {
     >
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px", maxWidth: "1000px", width: "100%" }}>
         {/* LEFT - BRANDING */}
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", color: "white" }}>
-          <h1 style={{ fontSize: "48px", fontWeight: "700", margin: "0 0 16px 0" }}>
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+          <h1 style={{ fontSize: "48px", fontWeight: "700", margin: "0 0 16px 0", color: "#1a1a1a" }}>
             Your Story<br />
             Creates<br />
-            <span style={{ color: "rgba(255,255,255,0.9)" }}>Opportunities</span>
+            <span style={{ color: "#6366f1" }}>Opportunities</span>
           </h1>
-          <p style={{ fontSize: "16px", margin: "0 0 32px 0", opacity: "0.9", lineHeight: "1.6" }}>
+          <p style={{ fontSize: "16px", margin: "0 0 32px 0", color: "#666", lineHeight: "1.6" }}>
             Tell brands who you are, what you love and what you create. Connect with exciting partnership opportunities.
           </p>
 
@@ -111,45 +102,51 @@ export default function InfluencerLoginPage() {
             <div style={{ display: "flex", alignItems: "flex-start", gap: "12px", marginBottom: "20px" }}>
               <span style={{ fontSize: "24px" }}>👤</span>
               <div>
-                <p style={{ fontWeight: "600", margin: "0 0 4px 0" }}>Showcase Your Identity</p>
-                <p style={{ fontSize: "14px", margin: "0", opacity: "0.9" }}>Let brands get to know you</p>
+                <p style={{ fontWeight: "600", margin: "0 0 4px 0", color: "#1a1a1a" }}>Showcase Your Identity</p>
+                <p style={{ fontSize: "14px", margin: "0", color: "#666" }}>Let brands get to know you</p>
               </div>
             </div>
             <div style={{ display: "flex", alignItems: "flex-start", gap: "12px", marginBottom: "20px" }}>
               <span style={{ fontSize: "24px" }}>🎯</span>
               <div>
-                <p style={{ fontWeight: "600", margin: "0 0 4px 0" }}>Highlight Your Niche</p>
-                <p style={{ fontSize: "14px", margin: "0", opacity: "0.9" }}>Tell us what you create</p>
+                <p style={{ fontWeight: "600", margin: "0 0 4px 0", color: "#1a1a1a" }}>Highlight Your Niche</p>
+                <p style={{ fontSize: "14px", margin: "0", color: "#666" }}>Tell us what you create</p>
               </div>
             </div>
             <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
               <span style={{ fontSize: "24px" }}>⭐</span>
               <div>
-                <p style={{ fontWeight: "600", margin: "0 0 4px 0" }}>Share Your Best Work</p>
-                <p style={{ fontSize: "14px", margin: "0", opacity: "0.9" }}>Add your portfolio to attract collaborations</p>
+                <p style={{ fontWeight: "600", margin: "0 0 4px 0", color: "#1a1a1a" }}>Share Your Best Work</p>
+                <p style={{ fontSize: "14px", margin: "0", color: "#666" }}>Add your portfolio to attract collaborations</p>
               </div>
             </div>
           </div>
 
-          <p style={{ fontSize: "13px", marginTop: "40px", opacity: "0.8", fontStyle: "italic" }}>
+          <p style={{ fontSize: "13px", marginTop: "40px", color: "#999", fontStyle: "italic" }}>
             Creators Make It Happen
           </p>
         </div>
 
         {/* RIGHT - LOGIN FORM */}
-        <div style={{ background: "white", borderRadius: "12px", padding: "48px", boxShadow: "0 10px 40px rgba(0,0,0,0.1)" }}>
-          <h2 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "8px", color: "#1a1a18" }}>
+        <div style={{ 
+          background: "white", 
+          borderRadius: "12px", 
+          padding: "48px", 
+          border: "1px solid #e0dcff",
+          boxShadow: "0 4px 16px rgba(99, 102, 241, 0.08)"
+        }}>
+          <h2 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "8px", color: "#1a1a1a" }}>
             Creator Login
           </h2>
-          <p style={{ fontSize: "14px", color: "#7a7a77", marginBottom: "32px", margin: "0 0 32px 0" }}>
+          <p style={{ fontSize: "14px", color: "#666", marginBottom: "32px", margin: "0 0 32px 0" }}>
             Sign in to access your influencer workspace
           </p>
 
           {error && (
             <div style={{
-              background: "#FFE5D9",
-              border: "1px solid #FFD9C8",
-              color: "#E24B4A",
+              background: "#fee2e2",
+              border: "1px solid #fecaca",
+              color: "#991b1b",
               padding: "12px 14px",
               borderRadius: "8px",
               fontSize: "13px",
@@ -161,9 +158,9 @@ export default function InfluencerLoginPage() {
 
           {!configured && (
             <div style={{
-              background: "#FFF5F0",
-              border: "1px solid #FFD9C8",
-              color: "#FF6B35",
+              background: "#f0f9ff",
+              border: "1px solid #bfdbfe",
+              color: "#1e40af",
               padding: "12px 14px",
               borderRadius: "8px",
               fontSize: "13px",
@@ -180,54 +177,30 @@ export default function InfluencerLoginPage() {
             style={{
               width: "100%",
               padding: "14px 24px",
-              background: "#FF6B35",
+              background: "#6366f1",
               color: "white",
-              border: "none",
+              border: "1px solid #6366f1",
               borderRadius: "8px",
               fontSize: "15px",
               fontWeight: "600",
               cursor: loading ? "not-allowed" : "pointer",
               opacity: loading ? 0.7 : 1,
-              marginBottom: "20px",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#4f46e5";
+              e.currentTarget.style.borderColor = "#4f46e5";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "#6366f1";
+              e.currentTarget.style.borderColor = "#6366f1";
             }}
           >
             {loading ? "Signing in..." : "Continue with Google"}
           </button>
 
-          {/* DIVIDER */}
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", margin: "24px 0", opacity: "0.5" }}>
-            <div style={{ flex: 1, height: "1px", background: "#d0d0cc" }} />
-            <span style={{ fontSize: "13px" }}>or</span>
-            <div style={{ flex: 1, height: "1px", background: "#d0d0cc" }} />
-          </div>
-
-          {/* DEMO WORKSPACE */}
-          <button
-            onClick={handleDemoMode}
-            style={{
-              width: "100%",
-              padding: "12px 24px",
-              background: "transparent",
-              color: "#FF6B35",
-              border: "1px solid #FF6B35",
-              borderRadius: "8px",
-              fontSize: "14px",
-              fontWeight: "600",
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#FFF5F0";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "transparent";
-            }}
-          >
-            Open Demo Workspace
-          </button>
-
           {/* TERMS */}
-          <p style={{ fontSize: "12px", color: "#7a7a77", textAlign: "center", marginTop: "20px" }}>
+          <p style={{ fontSize: "12px", color: "#999", textAlign: "center", marginTop: "24px" }}>
             By continuing you agree to NagarInfluence terms.
           </p>
         </div>

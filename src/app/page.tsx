@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
+import { Footer } from "@/components/Footer";
 
 export default function HomePage() {
   return (
@@ -93,6 +94,8 @@ export default function HomePage() {
           </div>
         </main>
       </div>
+
+      <Footer />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { getSupabaseEnv } from "@/lib/supabase/env";
 import { isSupabaseAuthReachable } from "@/lib/supabase/health";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
+import { Footer } from "@/components/Footer";
 
 function LoginForm() {
   const params = useSearchParams();
@@ -135,6 +136,8 @@ export default function LoginPage() {
           <LoginForm />
         </Suspense>
       </div>
+
+      <Footer />
     </div>
   );
 }

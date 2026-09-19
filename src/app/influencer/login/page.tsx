@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getSupabaseEnv } from "@/lib/supabase/env";
 import { isSupabaseAuthReachable } from "@/lib/supabase/health";
+import { Footer } from "@/components/Footer";
 
 export default function InfluencerLoginPage() {
   const router = useRouter();
@@ -225,6 +226,8 @@ export default function InfluencerLoginPage() {
           </p>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

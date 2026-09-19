@@ -187,15 +187,17 @@ export default function InfluencerDashboardPage() {
               border: "1px solid #bfdbfe",
               borderRadius: "12px",
               padding: "24px",
-              marginBottom: "24px",
+              marginBottom: "32px",
             }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "20px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "24px" }}>
                 <div>
                   <p style={{ fontSize: "12px", color: "#666", fontWeight: "600", margin: "0 0 8px 0" }}>
-                    📱 Format (Last 28 Days)
+                    📱 Content Formats
                   </p>
-                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a1a", margin: "0" }}>
-                    Instagram Reel, YouTube, TikTok
+                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a1a", margin: "0", lineHeight: "1.6" }}>
+                    Instagram Reel<br />
+                    YouTube Video<br />
+                    TikTok
                   </p>
                 </div>
                 <div>
@@ -203,177 +205,86 @@ export default function InfluencerDashboardPage() {
                     💰 Budget Range
                   </p>
                   <p style={{ fontSize: "14px", fontWeight: "700", color: "#6366f1", margin: "0" }}>
-                    ₹40K - ₹75K
+                    ₹40K - ₹75K per task
                   </p>
                 </div>
                 <div>
                   <p style={{ fontSize: "12px", color: "#666", fontWeight: "600", margin: "0 0 8px 0" }}>
-                    🎯 Top Niches
+                    🎯 Niches Being Worked On
                   </p>
-                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a1a", margin: "0" }}>
-                    Fashion, Food, Tech, Lifestyle
-                  </p>
-                </div>
-                <div>
-                  <p style={{ fontSize: "12px", color: "#666", fontWeight: "600", margin: "0 0 8px 0" }}>
-                    📊 Total Opportunities
-                  </p>
-                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a1a", margin: "0" }}>
-                    4 Available Now
-                  </p>
+                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                    {["Fashion", "Food", "Tech", "Lifestyle"].map((niche) => (
+                      <span
+                        key={niche}
+                        style={{
+                          display: "inline-block",
+                          padding: "4px 10px",
+                          background: "#6366f1",
+                          color: "white",
+                          borderRadius: "16px",
+                          fontSize: "12px",
+                          fontWeight: "600",
+                        }}
+                      >
+                        {niche}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* Tasks */}
-            <div style={{ display: "grid", gap: "16px" }}>
-              {AVAILABLE_TASKS.map((task) => (
-                <div
-                  key={task.id}
-                  style={{
-                    background: "white",
-                    border: "1px solid #e0dcff",
-                    borderRadius: "12px",
-                    padding: "20px",
-                    transition: "all 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = "#6366f1";
-                    e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.1)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = "#e0dcff";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "12px" }}>
-                    <div>
-                      <h3 style={{ fontSize: "16px", fontWeight: "700", color: "#1a1a1a", margin: "0 0 4px 0" }}>
-                        {task.brand}
-                      </h3>
-                      <p style={{ fontSize: "14px", color: "#666", margin: "0" }}>
-                        {task.campaignName}
-                      </p>
-                    </div>
-                    <span style={{
-                      padding: "6px 12px",
-                      background: "#dcfce7",
-                      color: "#166534",
-                      borderRadius: "20px",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                    }}>
-                      Open
-                    </span>
-                  </div>
-
-                  <p style={{ fontSize: "14px", color: "#666", margin: "12px 0" }}>
-                    {task.description}
-                  </p>
-
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "16px", marginBottom: "16px", paddingBottom: "16px", borderBottom: "1px solid #e0dcff" }}>
-                    <div>
-                      <p style={{ fontSize: "12px", color: "#999", margin: "0 0 4px 0" }}>Format</p>
-                      <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>{task.type}</p>
-                    </div>
-                    <div>
-                      <p style={{ fontSize: "12px", color: "#999", margin: "0 0 4px 0" }}>Budget</p>
-                      <p style={{ fontSize: "14px", fontWeight: "600", color: "#6366f1", margin: "0" }}>{task.budget}</p>
-                    </div>
-                    <div>
-                      <p style={{ fontSize: "12px", color: "#999", margin: "0 0 4px 0" }}>Deadline</p>
-                      <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>{task.deadline}</p>
-                    </div>
-                    <div>
-                      <p style={{ fontSize: "12px", color: "#999", margin: "0 0 4px 0" }}>Requirements</p>
-                      <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>{task.followers}</p>
-                    </div>
-                  </div>
-
-                  {applied.includes(task.id) ? (
-                    <div style={{
-                      padding: "10px 16px",
-                      background: "#dcfce7",
-                      color: "#166534",
-                      borderRadius: "8px",
-                      textAlign: "center",
-                      fontSize: "14px",
-                      fontWeight: "600",
-                    }}>
-                      ✓ Application Sent
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => handleApply(task.id)}
-                      style={{
-                        width: "100%",
-                        padding: "10px 16px",
-                        background: "#6366f1",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "8px",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "#4f46e5";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "#6366f1";
-                      }}
-                    >
-                      Snatch Opportunity 🎯
-                    </button>
-                  )}
-                </div>
-              ))}
             </div>
 
             {/* How It Works */}
-            <div style={{ marginTop: "32px", paddingTop: "32px", borderTop: "1px solid #e0dcff" }}>
+            <div style={{ marginTop: "24px" }}>
               <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#1a1a1a", marginBottom: "20px" }}>
                 How It Works
               </h3>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "16px" }}>
-                <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "16px", textAlign: "center" }}>
-                  <p style={{ fontSize: "24px", margin: "0 0 8px 0" }}>1️⃣</p>
-                  <p style={{ fontSize: "13px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>
-                    Snatch Opportunity
-                  </p>
-                  <p style={{ fontSize: "12px", color: "#666", margin: "4px 0 0 0" }}>
-                    Browse & apply to tasks that fit your style
-                  </p>
-                </div>
-                <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "16px", textAlign: "center" }}>
-                  <p style={{ fontSize: "24px", margin: "0 0 8px 0" }}>2️⃣</p>
-                  <p style={{ fontSize: "13px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>
-                    Review Requirements
-                  </p>
-                  <p style={{ fontSize: "12px", color: "#666", margin: "4px 0 0 0" }}>
-                    Understand the brief & guidelines
-                  </p>
-                </div>
-                <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "16px", textAlign: "center" }}>
-                  <p style={{ fontSize: "24px", margin: "0 0 8px 0" }}>3️⃣</p>
-                  <p style={{ fontSize: "13px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>
-                    Accept Task
-                  </p>
-                  <p style={{ fontSize: "12px", color: "#666", margin: "4px 0 0 0" }}>
-                    Confirm acceptance & start creating
-                  </p>
-                </div>
-                <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "16px", textAlign: "center" }}>
-                  <p style={{ fontSize: "24px", margin: "0 0 8px 0" }}>4️⃣</p>
-                  <p style={{ fontSize: "13px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>
-                    Deliver & Get Paid
-                  </p>
-                  <p style={{ fontSize: "12px", color: "#666", margin: "4px 0 0 0" }}>
-                    Submit content, get paid post delivery
-                  </p>
-                </div>
+              <div style={{
+                background: "#f0f9ff",
+                border: "2px solid #bfdbfe",
+                borderRadius: "12px",
+                padding: "24px",
+                textAlign: "center",
+              }}>
+                <p style={{ fontSize: "16px", fontWeight: "600", color: "#1a1a1a", margin: "0 0 12px 0" }}>
+                  🎯 Snatch Opportunity
+                </p>
+                <p style={{ fontSize: "14px", color: "#666", margin: "0", lineHeight: "1.8" }}>
+                  You will get tasks assigned by the Admins of NagarInfluence. 
+                  <br />
+                  <br />
+                  Complete your profile to start receiving opportunities that match your niche and audience size. Our team carefully selects and assigns tasks that align with your expertise.
+                </p>
               </div>
+            </div>
+
+            {/* Call to Action */}
+            <div style={{ marginTop: "32px", padding: "24px", background: "#e0dcff", borderRadius: "12px", textAlign: "center" }}>
+              <p style={{ fontSize: "14px", color: "#1a1a1a", margin: "0 0 16px 0", fontWeight: "600" }}>
+                ✨ Complete your profile to unlock opportunities
+              </p>
+              <button
+                onClick={() => setActiveSection("profile")}
+                style={{
+                  padding: "12px 24px",
+                  background: "#6366f1",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#4f46e5";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#6366f1";
+                }}
+              >
+                Go to Profile →
+              </button>
             </div>
           </div>
         );

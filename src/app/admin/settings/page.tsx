@@ -15,22 +15,22 @@ const INTEGRATIONS = [
 export default function SettingsPage() {
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold text-white mb-8">Settings & Team</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Settings & Team</h1>
 
       {/* Team Members Section */}
-      <div className="bg-[#131829] border border-[#1e2847] rounded-lg p-6 mb-8">
-        <h2 className="text-lg font-semibold text-white mb-6">Team Members</h2>
+      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
+        <h2 className="text-lg font-semibold text-gray-900 mb-6">Team Members</h2>
         
         <div className="space-y-4">
           {TEAM_MEMBERS.map((member) => (
-            <div key={member.id} className="flex items-center justify-between pb-4 border-b border-[#1e2847] last:border-0">
+            <div key={member.id} className="flex items-center justify-between pb-4 border-b border-gray-200 last:border-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 font-bold">
                   {member.name.split(" ").map((n) => n[0]).join("")}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">{member.name}</p>
-                  <p className="text-xs text-gray-500">{member.role} · {member.campaigns}</p>
+                  <p className="text-sm font-semibold text-gray-900">{member.name}</p>
+                  <p className="text-xs text-gray-600">{member.role} · {member.campaigns}</p>
                 </div>
               </div>
               <button className="text-orange-400 hover:text-orange-300 transition font-medium text-sm">
@@ -46,13 +46,13 @@ export default function SettingsPage() {
       </div>
 
       {/* Integrations Section */}
-      <div className="bg-[#131829] border border-[#1e2847] rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-white mb-6">Integrations</h2>
+      <div className="bg-white border border-gray-200 rounded-lg p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-6">Integrations</h2>
 
         <div className="space-y-4">
           {INTEGRATIONS.map((integration) => (
-            <div key={integration.name} className="flex items-center justify-between pb-4 border-b border-[#1e2847] last:border-0">
-              <p className="text-sm font-medium text-white">{integration.name}</p>
+            <div key={integration.name} className="flex items-center justify-between pb-4 border-b border-gray-200 last:border-0">
+              <p className="text-sm font-medium text-gray-900">{integration.name}</p>
               <span
                 className={`text-sm font-medium px-3 py-1 rounded-lg ${
                   integration.status === "Connected"

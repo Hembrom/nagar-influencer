@@ -48,27 +48,27 @@ export default function InfluencersPage() {
   const MIN_FOLLOWERS = ["Any", "100K+", "500K+", "1M+"];
 
   return (
-    <div className="p-8">
+    <div className="p-8 bg-gray-50 min-h-dvh">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-6">Influencer Search</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">Influencer Search</h1>
 
         {/* Filters */}
-        <div className="bg-[#131829] border border-[#1e2847] rounded-lg p-6 mb-6">
+        <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {/* Search */}
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">Search influencers...</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Search influencers...</label>
               <input
                 type="text"
                 placeholder="@username"
-                className="w-full px-3 py-2 bg-[#0a0e27] border border-[#1e2847] rounded-lg text-white placeholder-gray-600 text-sm focus:outline-none focus:border-orange-500"
+                className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 text-sm focus:outline-none focus:border-orange-500"
               />
             </div>
 
             {/* Category */}
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">Niche</label>
-              <select className="w-full px-3 py-2 bg-[#0a0e27] border border-[#1e2847] rounded-lg text-white text-sm focus:outline-none focus:border-orange-500">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Niche</label>
+              <select className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-orange-500">
                 <option>All categories</option>
                 {CATEGORIES.map((cat) => (
                   <option key={cat}>{cat}</option>
@@ -78,8 +78,8 @@ export default function InfluencersPage() {
 
             {/* Followers */}
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">Min. Followers</label>
-              <select className="w-full px-3 py-2 bg-[#0a0e27] border border-[#1e2847] rounded-lg text-white text-sm focus:outline-none focus:border-orange-500">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Min. Followers</label>
+              <select className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-orange-500">
                 {MIN_FOLLOWERS.map((min) => (
                   <option key={min}>{min}</option>
                 ))}
@@ -88,8 +88,8 @@ export default function InfluencersPage() {
 
             {/* Verified */}
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">Status</label>
-              <select className="w-full px-3 py-2 bg-[#0a0e27] border border-[#1e2847] rounded-lg text-white text-sm focus:outline-none focus:border-orange-500">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+              <select className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 text-sm focus:outline-none focus:border-orange-500">
                 <option>All</option>
                 <option>Verified only</option>
               </select>
@@ -101,34 +101,34 @@ export default function InfluencersPage() {
       {/* Influencers Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {INFLUENCERS.map((inf) => (
-          <div key={inf.id} className="bg-[#131829] border border-[#1e2847] rounded-lg p-6 hover:border-orange-500 transition cursor-pointer">
+          <div key={inf.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition cursor-pointer">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3 flex-1">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-pink-400 flex items-center justify-center text-white text-lg font-bold">
                   {inf.handle.charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-white truncate">{inf.name}</p>
-                  <p className="text-xs text-gray-500">{inf.followers}</p>
+                  <p className="text-sm font-semibold text-gray-900 truncate">{inf.name}</p>
+                  <p className="text-xs text-gray-600">{inf.followers}</p>
                 </div>
               </div>
-              <span className="text-xs font-semibold text-cyan-400 bg-cyan-500/10 px-2 py-1 rounded">
+              <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded">
                 ✓ Verified
               </span>
             </div>
 
             <div className="space-y-3 mb-4">
               <div>
-                <p className="text-xs font-medium text-gray-400">Engagement Rate</p>
-                <p className="text-lg font-bold text-orange-400">{inf.engagement}</p>
+                <p className="text-xs font-medium text-gray-600">Engagement Rate</p>
+                <p className="text-lg font-bold text-orange-500">{inf.engagement}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-gray-400">Niche</p>
-                <p className="text-sm text-gray-300">{inf.niche}</p>
+                <p className="text-xs font-medium text-gray-600">Niche</p>
+                <p className="text-sm text-gray-700">{inf.niche}</p>
               </div>
             </div>
 
-            <button className="w-full px-3 py-2 bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/20 rounded-lg text-sm font-medium transition">
+            <button className="w-full px-3 py-2 bg-orange-100 hover:bg-orange-200 text-orange-600 border border-orange-300 rounded-lg text-sm font-medium transition">
               Add to campaign
             </button>
           </div>

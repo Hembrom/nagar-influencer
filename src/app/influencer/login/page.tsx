@@ -87,7 +87,7 @@ export default function InfluencerLoginPage() {
   return (
     <div
       style={{
-        background: "#f5f3ff",
+        background: "#ffffff",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
@@ -149,8 +149,8 @@ export default function InfluencerLoginPage() {
             background: "white", 
             borderRadius: "12px", 
             padding: "48px", 
-            border: "1px solid #e0dcff",
-            boxShadow: "0 4px 16px rgba(99, 102, 241, 0.08)",
+            border: "1px solid #e5e7eb",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
             height: "fit-content",
           }}>
             <h2 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "8px", color: "#1a1a1a" }}>

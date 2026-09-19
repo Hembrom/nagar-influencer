@@ -408,7 +408,7 @@ export default function InfluencerDashboardPage() {
                     {userEmail || (isDemo ? "Enter email on login page" : "Loading...")}
                   </p>
                   <p style={{ fontSize: "12px", color: "#666", margin: "8px 0 0 0" }}>
-                    🔒 Google Login {isDemo ? "(Demo Mode)" : "(Read-only)"}
+                    🔒 Google Login{isDemo ? " (Demo Mode)" : ""}
                   </p>
                 </div>
               </div>

@@ -53,6 +53,7 @@ export default function InfluencerSetupPage() {
         setAudienceSize(profile.audienceSize || "");
         setCollaborationInterests(new Set(profile.collaborationInterests || []));
         setPortfolioLinks(profile.portfolioLinks || ["", "", "", "", ""]);
+        console.log("Profile loaded from localStorage:", profile);
       } catch (e) {
         console.error("Error loading profile:", e);
       }
@@ -134,11 +135,13 @@ export default function InfluencerSetupPage() {
       const demoMode = sessionStorage.getItem("demo_mode");
       if (demoMode) {
         localStorage.setItem("influencer_profile", JSON.stringify(profile));
+        console.log("Profile saved to localStorage:", profile);
       }
       // TODO: Save to Supabase in production
-      console.log("Influencer profile saved:", profile);
     } catch (e) {
       console.error("Error saving profile:", e);
+      alert("Error saving profile. Please try again.");
+      return;
     }
     
     router.push("/influencer/dashboard");

@@ -645,24 +645,42 @@ export default function InfluencerSetupPage() {
                   (Add links to your portfolio items - up to 5 links)
                 </span>
               </label>
-              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "12px" }}>
                 {portfolioLinks.map((link, i) => (
-                  <div key={i} style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                    <input
-                      type="url"
-                      value={link}
-                      onChange={(e) => handlePortfolioLinkChange(i, e.target.value)}
-                      placeholder={`Link ${i + 1}: Paste link to your portfolio item (Instagram, YouTube, website, etc.)`}
-                      style={{
-                        flex: 1,
-                        padding: "10px 12px",
-                        border: link ? "1px solid #6366f1" : "1px solid #e9e5ff",
-                        borderRadius: "8px",
-                        fontSize: "13px",
-                        background: "white",
-                        boxSizing: "border-box",
-                      }}
-                    />
+                  <div key={i} style={{ display: "flex", gap: "8px", alignItems: "flex-start" }}>
+                    <div style={{ display: "flex", alignItems: "center", paddingTop: "10px", color: "#999", fontSize: "12px", fontWeight: "600", minWidth: "40px" }}>
+                      {i + 1}.
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <input
+                        type="url"
+                        value={link}
+                        onChange={(e) => handlePortfolioLinkChange(i, e.target.value)}
+                        placeholder={`Paste link (Instagram, YouTube, website, blog, portfolio, etc.)`}
+                        style={{
+                          width: "100%",
+                          padding: "10px 12px",
+                          border: link ? "1px solid #6366f1" : "1px solid #e9e5ff",
+                          borderRadius: "8px",
+                          fontSize: "13px",
+                          background: link ? "#f0f9ff" : "white",
+                          boxSizing: "border-box",
+                          transition: "all 0.2s ease",
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = "#6366f1";
+                          e.currentTarget.style.boxShadow = "0 0 0 3px rgba(99, 102, 241, 0.1)";
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.boxShadow = "none";
+                        }}
+                      />
+                      {link && (
+                        <div style={{ fontSize: "11px", color: "#6366f1", marginTop: "4px" }}>
+                          ✓ Link added
+                        </div>
+                      )}
+                    </div>
                     {link && (
                       <button
                         onClick={() => handlePortfolioLinkChange(i, "")}
@@ -673,6 +691,7 @@ export default function InfluencerSetupPage() {
                           cursor: "pointer",
                           fontSize: "18px",
                           padding: "4px 8px",
+                          marginTop: "2px",
                         }}
                         title="Clear link"
                       >
@@ -681,6 +700,11 @@ export default function InfluencerSetupPage() {
                     )}
                   </div>
                 ))}
+              </div>
+              <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "8px", padding: "12px", marginTop: "12px" }}>
+                <p style={{ fontSize: "12px", color: "#1e40af", margin: "0" }}>
+                  💡 You can always edit these links later. All {portfolioLinks.length} fields are available to fill anytime.
+                </p>
               </div>
               <p style={{ fontSize: "12px", color: "#999", marginTop: "8px" }}>
                 Added: {portfolioLinks.filter(l => l.trim()).length} of 5 links

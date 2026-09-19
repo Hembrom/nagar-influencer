@@ -11,6 +11,7 @@ export default function InfluencerLoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [configured, setConfigured] = useState(false);
+  const [demoEmail, setDemoEmail] = useState("");
   const env = getSupabaseEnv();
   const supabaseUrl = env?.url;
 
@@ -38,9 +39,13 @@ export default function InfluencerLoginPage() {
         // Demo mode - redirect to setup
         sessionStorage.setItem("demo_mode", "true");
         sessionStorage.setItem("influencer_demo_user", JSON.stringify({
-          email: "creator@example.com",
+          email: demoEmail || "creator@example.com",
           role: "influencer",
         }));
+        // Save email for display in dashboard
+        if (demoEmail) {
+          sessionStorage.setItem("influencer_email", demoEmail);
+        }
         router.push("/influencer/setup");
         return;
       }
@@ -52,9 +57,12 @@ export default function InfluencerLoginPage() {
         // Fall back to demo mode
         sessionStorage.setItem("demo_mode", "true");
         sessionStorage.setItem("influencer_demo_user", JSON.stringify({
-          email: "creator@example.com",
+          email: demoEmail || "creator@example.com",
           role: "influencer",
         }));
+        if (demoEmail) {
+          sessionStorage.setItem("influencer_email", demoEmail);
+        }
         router.push("/influencer/setup");
         return;
       }
@@ -160,13 +168,28 @@ export default function InfluencerLoginPage() {
             <div style={{
               background: "#f0f9ff",
               border: "1px solid #bfdbfe",
-              color: "#1e40af",
-              padding: "12px 14px",
               borderRadius: "8px",
+              padding: "12px 14px",
               fontSize: "13px",
               marginBottom: "20px",
             }}>
-              Working in demo mode. Your progress will be saved locally.
+              <p style={{ color: "#1e40af", margin: "0 0 12px 0" }}>
+                Working in demo mode. Your progress will be saved locally.
+              </p>
+              <input
+                type="email"
+                placeholder="Enter your email (e.g., dailygoals@gmail.com)"
+                value={demoEmail}
+                onChange={(e) => setDemoEmail(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "10px 12px",
+                  border: "1px solid #bfdbfe",
+                  borderRadius: "6px",
+                  fontSize: "13px",
+                  boxSizing: "border-box",
+                }}
+              />
             </div>
           )}
 

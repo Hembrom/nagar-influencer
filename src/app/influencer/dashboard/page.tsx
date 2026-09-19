@@ -46,14 +46,19 @@ export default function InfluencerDashboardPage() {
         setUserName(profileData.displayName || "Creator");
       } else {
         console.log("No profile found in localStorage");
-        // First time - show setup prompt
-        const demoUser = sessionStorage.getItem("influencer_demo_user");
-        if (demoUser) {
-          try {
-            const user = JSON.parse(demoUser);
-            setUserName(user.email?.split("@")[0] || "Creator");
-          } catch (e) {
-            console.error("Error parsing user:", e);
+        // First time - try to get email from sessionStorage
+        const email = sessionStorage.getItem("influencer_email");
+        if (email) {
+          setUserName(email.split("@")[0] || "Creator");
+        } else {
+          const demoUser = sessionStorage.getItem("influencer_demo_user");
+          if (demoUser) {
+            try {
+              const user = JSON.parse(demoUser);
+              setUserName(user.email?.split("@")[0] || "Creator");
+            } catch (e) {
+              console.error("Error parsing user:", e);
+            }
           }
         }
       }
@@ -372,7 +377,7 @@ export default function InfluencerDashboardPage() {
                     Google Account Email
                   </p>
                   <p style={{ fontSize: "14px", color: "#1a1a1a", fontWeight: "500", margin: "0", paddingBottom: "8px", borderBottom: "1px solid #bfdbfe" }}>
-                    {profile?.displayName ? `${profile.displayName.toLowerCase()}@creator.local` : "creator@example.com"}
+                    {sessionStorage.getItem("influencer_email") || profile?.displayName ? `${profile?.displayName?.toLowerCase()}@creator.local` : "creator@example.com"}
                   </p>
                   <p style={{ fontSize: "12px", color: "#666", margin: "8px 0 0 0" }}>
                     🔒 Google Login (Read-only)

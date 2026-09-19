@@ -1,7 +1,61 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
+import { createClient } from "@/lib/supabase/client";
+import { getSupabaseEnv } from "@/lib/supabase/env";
+import { isSupabaseAuthReachable } from "@/lib/supabase/health";
 
 export default function InfluencersPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const env = getSupabaseEnv();
+  const supabaseUrl = env?.url;
+
+  async function applyAsCreator() {
+    setLoading(true);
+    try {
+      if (!supabaseUrl) {
+        // Demo mode
+        sessionStorage.setItem("demo_mode", "true");
+        sessionStorage.setItem("influencer_demo_user", JSON.stringify({
+          email: "creator@example.com",
+          role: "influencer",
+        }));
+        router.push("/influencer/setup");
+        return;
+      }
+
+      const reachable = await isSupabaseAuthReachable(supabaseUrl);
+      if (!reachable) {
+        // Fallback to demo
+        sessionStorage.setItem("demo_mode", "true");
+        sessionStorage.setItem("influencer_demo_user", JSON.stringify({
+          email: "creator@example.com",
+          role: "influencer",
+        }));
+        router.push("/influencer/setup");
+        return;
+      }
+
+      // Production: Use Supabase OAuth
+      const supabase = createClient();
+      const origin = window.location.origin;
+      const { error: authError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${origin}/auth/callback?next=${encodeURIComponent("/influencer/setup")}`,
+        },
+      });
+      if (authError) throw authError;
+    } catch (e) {
+      console.error("Error:", e);
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="min-h-dvh bg-background">
       <div className="mx-auto max-w-5xl px-8 py-10">
@@ -13,12 +67,13 @@ export default function InfluencersPage() {
             <span className="text-base font-bold text-navy">NagarInfluence</span>
             <VerifiedBadge />
           </Link>
-          <Link
-            href="mailto:creators@nagarinfluence.com"
-            className="rounded-xl bg-purple-deep px-4 py-2.5 text-sm font-bold text-white"
+          <button
+            onClick={applyAsCreator}
+            disabled={loading}
+            className="rounded-xl bg-purple-deep px-4 py-2.5 text-sm font-bold text-white hover:bg-purple-deep/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Apply as creator
-          </Link>
+            {loading ? "Signing in..." : "Apply as creator"}
+          </button>
         </header>
 
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">

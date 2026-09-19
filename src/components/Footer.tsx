@@ -92,15 +92,10 @@ export function Footer() {
                   Contact
                 </Link>
               </li>
-              <li>
-                <Link href="/" className="hover:text-foreground transition">
-                  Careers
-                </Link>
-              </li>
             </ul>
           </div>
 
-          {/* Legal & Contact */}
+          {/* Legal */}
           <div>
             <h3 className="font-semibold text-foreground mb-4">Legal</h3>
             <ul className="space-y-2 text-sm">
@@ -119,30 +114,14 @@ export function Footer() {
                   Contact us
                 </a>
               </li>
-              <li className="pt-2 border-t border-border">
-                <div className="flex gap-3">
-                  <a href="#" className="hover:text-purple transition">
-                    Twitter
-                  </a>
-                  <a href="#" className="hover:text-purple transition">
-                    Instagram
-                  </a>
-                  <a href="#" className="hover:text-purple transition">
-                    LinkedIn
-                  </a>
-                </div>
-              </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-border pt-8 flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-sm text-muted">
+        <div className="border-t border-border pt-8">
+          <p className="text-sm text-muted text-center">
             © 2026 NagarInfluence. All rights reserved.
-          </p>
-          <p className="text-sm text-muted mt-4 sm:mt-0">
-            Made with ❤️ in India
           </p>
         </div>
       </div>

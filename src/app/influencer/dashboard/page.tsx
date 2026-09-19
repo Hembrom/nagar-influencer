@@ -345,36 +345,264 @@ export default function InfluencerDashboardPage() {
             <p style={{ fontSize: "14px", color: "#666", marginBottom: "24px" }}>
               Update your account settings and preferences.
             </p>
-            <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+
+            {/* ACCOUNT SECTION */}
+            <div style={{ marginBottom: "32px" }}>
+              <h3 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
+                Account
+              </h3>
+              <div style={{ display: "grid", gap: "12px" }}>
+                <div style={{ 
+                  background: "#f0f9ff", 
+                  border: "1px solid #bfdbfe", 
+                  borderRadius: "8px", 
+                  padding: "16px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}>
+                  <div>
+                    <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0 0 4px 0" }}>
+                      Email Address
+                    </p>
+                    <p style={{ fontSize: "12px", color: "#666", margin: "0" }}>
+                      {profile?.displayName ? `${profile.displayName.toLowerCase()}@creator.local` : "creator@example.com"}
+                    </p>
+                  </div>
+                  <button
+                    style={{
+                      padding: "8px 12px",
+                      background: "white",
+                      border: "1px solid #bfdbfe",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: "600",
+                      color: "#1e40af",
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "#eff6ff";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "white";
+                    }}
+                  >
+                    Change
+                  </button>
+                </div>
+
+                <div style={{ 
+                  background: "#f0f9ff", 
+                  border: "1px solid #bfdbfe", 
+                  borderRadius: "8px", 
+                  padding: "16px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}>
+                  <div>
+                    <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0 0 4px 0" }}>
+                      Password
+                    </p>
+                    <p style={{ fontSize: "12px", color: "#666", margin: "0" }}>
+                      Set a strong password to protect your account
+                    </p>
+                  </div>
+                  <button
+                    style={{
+                      padding: "8px 12px",
+                      background: "white",
+                      border: "1px solid #bfdbfe",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: "600",
+                      color: "#1e40af",
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "#eff6ff";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "white";
+                    }}
+                  >
+                    Update
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* PRIVACY SECTION */}
+            <div style={{ marginBottom: "32px" }}>
+              <h3 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
+                Privacy & Visibility
+              </h3>
+              <div style={{ display: "grid", gap: "12px" }}>
+                <div style={{ 
+                  background: "#f0f9ff", 
+                  border: "1px solid #bfdbfe", 
+                  borderRadius: "8px", 
+                  padding: "16px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}>
+                  <div>
+                    <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0 0 4px 0" }}>
+                      Profile Visibility
+                    </p>
+                    <p style={{ fontSize: "12px", color: "#666", margin: "0" }}>
+                      Make your profile visible to brands
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    defaultChecked
+                    style={{ width: "20px", height: "20px", cursor: "pointer" }}
+                  />
+                </div>
+
+                <div style={{ 
+                  background: "#f0f9ff", 
+                  border: "1px solid #bfdbfe", 
+                  borderRadius: "8px", 
+                  padding: "16px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}>
+                  <div>
+                    <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0 0 4px 0" }}>
+                      Show Portfolio
+                    </p>
+                    <p style={{ fontSize: "12px", color: "#666", margin: "0" }}>
+                      Display your work samples to potential partners
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    defaultChecked
+                    style={{ width: "20px", height: "20px", cursor: "pointer" }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* NOTIFICATIONS SECTION */}
+            <div style={{ marginBottom: "32px" }}>
+              <h3 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
+                Notifications
+              </h3>
+              <div style={{ display: "grid", gap: "12px" }}>
+                <div style={{ 
+                  background: "#f0f9ff", 
+                  border: "1px solid #bfdbfe", 
+                  borderRadius: "8px", 
+                  padding: "16px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}>
+                  <div>
+                    <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0 0 4px 0" }}>
+                      Brand Messages
+                    </p>
+                    <p style={{ fontSize: "12px", color: "#666", margin: "0" }}>
+                      Get notified when brands reach out
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    defaultChecked
+                    style={{ width: "20px", height: "20px", cursor: "pointer" }}
+                  />
+                </div>
+
+                <div style={{ 
+                  background: "#f0f9ff", 
+                  border: "1px solid #bfdbfe", 
+                  borderRadius: "8px", 
+                  padding: "16px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}>
+                  <div>
+                    <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0 0 4px 0" }}>
+                      Collaboration Offers
+                    </p>
+                    <p style={{ fontSize: "12px", color: "#666", margin: "0" }}>
+                      Alerts for new opportunities matching your niche
+                    </p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    defaultChecked
+                    style={{ width: "20px", height: "20px", cursor: "pointer" }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* DANGER ZONE */}
+            <div style={{ borderTop: "1px solid #e0dcff", paddingTop: "24px" }}>
+              <h3 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "16px", color: "#991b1b" }}>
+                Account Actions
+              </h3>
+              <div style={{ display: "flex", gap: "12px" }}>
                 <button
                   onClick={handleSignOut}
                   style={{
+                    flex: 1,
                     padding: "12px 16px",
-                    background: "#fee2e2",
+                    background: "#fef2f2",
                     color: "#991b1b",
                     borderRadius: "8px",
                     fontSize: "14px",
                     fontWeight: "600",
-                    border: "1px solid #fecaca",
+                    border: "1px solid #fee2e2",
                     cursor: "pointer",
                     transition: "all 0.2s ease",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#fecaca";
+                    e.currentTarget.style.background = "#fee2e2";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "#fee2e2";
+                    e.currentTarget.style.background = "#fef2f2";
                   }}
                 >
                   Sign Out
                 </button>
-                {isDemo && (
-                  <p style={{ fontSize: "12px", color: "#6366f1", fontWeight: "600", margin: "0", textAlign: "center" }}>
-                    Demo Mode Active
-                  </p>
-                )}
+                <button
+                  style={{
+                    flex: 1,
+                    padding: "12px 16px",
+                    background: "#fef2f2",
+                    color: "#991b1b",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    border: "1px solid #fee2e2",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#fee2e2";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#fef2f2";
+                  }}
+                >
+                  Delete Account
+                </button>
               </div>
+              {isDemo && (
+                <p style={{ fontSize: "12px", color: "#6366f1", fontWeight: "600", margin: "16px 0 0 0", textAlign: "center" }}>
+                  🔵 Demo Mode Active
+                </p>
+              )}
             </div>
           </div>
         );

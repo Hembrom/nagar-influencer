@@ -249,9 +249,7 @@ export default function InfluencerSetupPage() {
                       width: "120px",
                       height: "120px",
                       borderRadius: "12px",
-                      background: profilePhoto ? `url('${profilePhoto}')` : "#f0f0f0",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
+                      background: "#f0f0f0",
                       border: "2px solid #e0e0e0",
                       display: "flex",
                       alignItems: "center",
@@ -261,7 +259,18 @@ export default function InfluencerSetupPage() {
                       overflow: "hidden",
                     }}
                   >
-                    {!profilePhoto && (
+                    {profilePhoto ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={profilePhoto}
+                        alt="Profile"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    ) : (
                       <div style={{ textAlign: "center" }}>
                         <div style={{ fontSize: "32px", marginBottom: "4px" }}>📷</div>
                         <div style={{ fontSize: "12px", color: "#7a7a77" }}>Add Photo</div>

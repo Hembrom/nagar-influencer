@@ -51,16 +51,16 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-dvh bg-[#0a0e27] flex">
+    <div className="min-h-dvh bg-gray-50 flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-[#0f1225] border-r border-[#1e2847] p-6 flex flex-col">
+      <aside className="w-64 bg-white border-r border-gray-200 p-6 flex flex-col">
         {/* Logo */}
         <div className="flex items-center gap-3 mb-8">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500 text-sm font-bold text-white">
             NI
           </div>
           <div>
-            <p className="text-sm font-bold text-white">NagarInfluence</p>
+            <p className="text-sm font-bold text-gray-900">NagarInfluence</p>
             <p className="text-xs text-gray-500">Manager Dashboard</p>
           </div>
         </div>
@@ -75,8 +75,8 @@ export default function AdminLayout({
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
                   isActive
-                    ? "bg-orange-500/20 border border-orange-500 text-orange-400"
-                    : "text-gray-400 hover:text-gray-300 hover:bg-[#1e2847]"
+                    ? "bg-orange-50 border border-orange-300 text-orange-600"
+                    : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                 }`}
               >
                 <span className="text-lg">{item.icon}</span>
@@ -89,14 +89,14 @@ export default function AdminLayout({
         {/* Logout */}
         <button
           onClick={handleLogout}
-          className="w-full px-4 py-2 text-red-400 hover:bg-red-500/10 border border-red-500/20 rounded-lg text-sm font-medium transition"
+          className="w-full px-4 py-2 text-red-600 hover:bg-red-50 border border-red-300 rounded-lg text-sm font-medium transition"
         >
           Logout
         </button>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto bg-gray-50">
         {children}
       </main>
     </div>

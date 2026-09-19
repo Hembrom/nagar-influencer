@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 const CONTENT_CATEGORIES = [
   "Fashion",
@@ -16,13 +15,10 @@ const CONTENT_CATEGORIES = [
   "Other",
 ];
 
-const COLLABORATION_TYPES = [
-  "Brand partnerships",
-  "Product reviews",
-  "Event invites",
-  "Travel collaborations",
-  "Long-term campaigns",
-  "Sponsored content",
+const SOCIAL_PLATFORMS = [
+  { name: "Instagram", icon: "📷", key: "instagram" },
+  { name: "YouTube", icon: "▶️", key: "youtube" },
+  { name: "TikTok", icon: "♪", key: "tiktok" },
 ];
 
 export default function InfluencerSetupPage() {
@@ -35,7 +31,7 @@ export default function InfluencerSetupPage() {
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
   const [socialLinks, setSocialLinks] = useState({ instagram: "", youtube: "", tiktok: "" });
   const [audienceSize, setAudienceSize] = useState("");
-  const [collaborationInterests, setCollaborationInterests] = useState<Set<string>>(new Set());
+  const [collaborationInterests, setCollaborationInterests] = useState("");
   const [portfolioLinks, setPortfolioLinks] = useState<string[]>(["", "", "", "", ""]);
 
   // Load existing profile on mount
@@ -51,7 +47,7 @@ export default function InfluencerSetupPage() {
         setSelectedCategories(new Set(profile.categories || []));
         setSocialLinks(profile.socialLinks || { instagram: "", youtube: "", tiktok: "" });
         setAudienceSize(profile.audienceSize || "");
-        setCollaborationInterests(new Set(profile.collaborationInterests || []));
+        setCollaborationInterests(profile.collaborationInterests?.join?.(", ") || "");
         setPortfolioLinks(profile.portfolioLinks || ["", "", "", "", ""]);
         console.log("Profile loaded from localStorage:", profile);
       } catch (e) {
@@ -81,14 +77,8 @@ export default function InfluencerSetupPage() {
     setSelectedCategories(next);
   };
 
-  const toggleCollaboration = (type: string) => {
-    const next = new Set(collaborationInterests);
-    if (next.has(type)) {
-      next.delete(type);
-    } else {
-      next.add(type);
-    }
-    setCollaborationInterests(next);
+  const updateSocialLink = (platform: string, value: string) => {
+    setSocialLinks({ ...socialLinks, [platform]: value });
   };
 
   const handlePortfolioLinkChange = (index: number, value: string) => {
@@ -97,26 +87,12 @@ export default function InfluencerSetupPage() {
     setPortfolioLinks(next);
   };
 
-  const handleSkip = () => {
-    router.push("/influencer/dashboard");
-  };
-
-  const handleNextStep = () => {
-    if (step === 1) {
-      if (!displayName.trim() || !bio.trim() || selectedCategories.size === 0) {
-        alert("Please fill in all required fields");
-        return;
-      }
-      setStep(2);
-    }
-  };
-
   const handleSaveProfile = () => {
-    if (!socialLinks.instagram && !socialLinks.youtube && !socialLinks.tiktok) {
-      alert("Please add at least one social media link");
+    if (!displayName.trim() || !bio.trim() || selectedCategories.size === 0) {
+      alert("Please fill in all required fields on this page");
       return;
     }
-    
+
     const profile = {
       displayName,
       bio,
@@ -125,148 +101,400 @@ export default function InfluencerSetupPage() {
       categories: Array.from(selectedCategories),
       socialLinks,
       audienceSize,
-      collaborationInterests: Array.from(collaborationInterests),
+      collaborationInterests: collaborationInterests.split(",").map(c => c.trim()).filter(c => c),
       portfolioLinks: portfolioLinks.filter(link => link.trim()),
       createdAt: new Date().toISOString(),
     };
 
-    // Save to localStorage (demo mode) or Supabase (production)
     try {
       const demoMode = sessionStorage.getItem("demo_mode");
       if (demoMode) {
         localStorage.setItem("influencer_profile", JSON.stringify(profile));
         console.log("Profile saved to localStorage:", profile);
       }
-      // TODO: Save to Supabase in production
     } catch (e) {
       console.error("Error saving profile:", e);
       alert("Error saving profile. Please try again.");
       return;
     }
-    
+
     router.push("/influencer/dashboard");
   };
 
   return (
-    <div style={{ background: "#f9f9f7", minHeight: "100vh" }}>
-      <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "24px" }}>
+    <div style={{ background: "#f5f3ff", minHeight: "100vh", padding: "32px 24px" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
         {/* HEADER */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "48px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "40px" }}>
           <div>
-            <h1 style={{ fontSize: "28px", fontWeight: "700", margin: "0 0 8px 0", color: "#1a1a18" }}>
-              {step === 1 ? "Tell Us About Yourself" : "Showcase Your Work"}
+            <button
+              onClick={() => router.back()}
+              style={{
+                background: "none",
+                border: "none",
+                fontSize: "14px",
+                fontWeight: "600",
+                color: "#6366f1",
+                cursor: "pointer",
+                marginBottom: "16px",
+              }}
+            >
+              ← Back
+            </button>
+            <h1 style={{ fontSize: "32px", fontWeight: "700", margin: "0", color: "#1a1a1a" }}>
+              Tell Us About Yourself
             </h1>
-            <p style={{ fontSize: "14px", color: "#7a7a77", margin: "0" }}>
-              {step === 1
-                ? "This information helps brands understand you better."
-                : "Add your best work to attract brand partnerships."}
+            <p style={{ fontSize: "14px", color: "#666", margin: "8px 0 0 0" }}>
+              This information helps brands understand you better.
             </p>
           </div>
-          <button
-            onClick={handleSkip}
-            style={{
-              background: "none",
-              border: "none",
-              color: "#FF6B35",
-              fontSize: "14px",
-              fontWeight: "600",
-              cursor: "pointer",
-            }}
-          >
-            Skip for now
-          </button>
-        </div>
-
-        {/* PROGRESS */}
-        <div style={{ marginBottom: "32px" }}>
-          <div style={{ display: "flex", gap: "16px", marginBottom: "12px" }}>
-            <div style={{ textAlign: "center", flex: 1 }}>
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  background: step >= 1 ? "#FF6B35" : "#e0e0e0",
-                  color: "white",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 8px",
-                  fontWeight: "700",
-                  fontSize: "16px",
-                }}
-              >
-                {step > 1 ? "✓" : "1"}
-              </div>
-              <p style={{ fontSize: "12px", color: step >= 1 ? "#FF6B35" : "#7a7a77", fontWeight: "500", margin: "0" }}>
-                About You
-              </p>
-            </div>
-            <div style={{ textAlign: "center", flex: 1 }}>
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  background: step >= 2 ? "#FF6B35" : "#e0e0e0",
-                  color: "white",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 8px",
-                  fontWeight: "700",
-                  fontSize: "16px",
-                }}
-              >
-                2
-              </div>
-              <p style={{ fontSize: "12px", color: step >= 2 ? "#FF6B35" : "#7a7a77", fontWeight: "500", margin: "0" }}>
-                Your Work
-              </p>
-            </div>
-          </div>
-          <div style={{ height: "4px", background: "#e0e0e0", borderRadius: "2px", overflow: "hidden" }}>
-            <div
+          <div style={{ textAlign: "right" }}>
+            <p style={{ fontSize: "14px", color: "#666", margin: "0 0 8px 0" }}>Step 2 of 2</p>
+            <button
+              onClick={() => router.push("/influencer/dashboard")}
               style={{
-                height: "100%",
-                background: "#FF6B35",
-                width: step === 1 ? "50%" : "100%",
-                transition: "width 0.3s ease",
+                background: "none",
+                border: "none",
+                fontSize: "14px",
+                fontWeight: "600",
+                color: "#6366f1",
+                cursor: "pointer",
               }}
-            />
+            >
+              Skip for now
+            </button>
           </div>
         </div>
 
-        <div style={{ background: "white", borderRadius: "12px", padding: "32px" }}>
-          {step === 1 ? (
-            /* STEP 1 - ABOUT YOU */
-            <div style={{ maxWidth: "600px" }}>
-              {/* Profile Photo */}
-              <div style={{ marginBottom: "28px" }}>
-                <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-                  Profile Photo
-                </label>
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "16px" }}>
-                  <div
+        {/* MAIN CONTENT */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px" }}>
+          {/* LEFT COLUMN */}
+          <div style={{ maxWidth: "500px" }}>
+            {/* Profile Photo */}
+            <div style={{ marginBottom: "32px" }}>
+              <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "16px", color: "#1a1a1a" }}>
+                Profile Photo
+              </label>
+              <div style={{ position: "relative", display: "inline-block", width: "150px" }}>
+                <div
+                  style={{
+                    width: "150px",
+                    height: "150px",
+                    borderRadius: "50%",
+                    background: "#e9e5ff",
+                    border: "3px solid #6366f1",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "relative",
+                    cursor: "pointer",
+                    overflow: "hidden",
+                  }}
+                >
+                  {profilePhoto ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={profilePhoto}
+                      alt="Profile"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  ) : (
+                    <span style={{ fontSize: "48px" }}>📷</span>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
                     style={{
-                      width: "120px",
-                      height: "120px",
-                      borderRadius: "12px",
-                      background: "#f0f0f0",
-                      border: "2px solid #e0e0e0",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      opacity: 0,
+                      cursor: "pointer",
+                    }}
+                  />
+                </div>
+                <button
+                  onClick={() => {
+                    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+                    fileInput?.click();
+                  }}
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                    width: "48px",
+                    height: "48px",
+                    borderRadius: "50%",
+                    background: "#6366f1",
+                    color: "white",
+                    border: "3px solid white",
+                    fontSize: "20px",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  📷
+                </button>
+              </div>
+              <button
+                onClick={() => setProfilePhoto(null)}
+                style={{
+                  marginTop: "12px",
+                  fontSize: "14px",
+                  color: "#6366f1",
+                  fontWeight: "600",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                Change Photo
+              </button>
+              <p style={{ fontSize: "12px", color: "#999", marginTop: "8px" }}>JPG, PNG up to 5MB</p>
+            </div>
+
+            {/* Display Name */}
+            <div style={{ marginBottom: "24px" }}>
+              <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "8px", color: "#1a1a1a" }}>
+                Display Name <span style={{ color: "#ff6b6b" }}>*</span>
+              </label>
+              <input
+                type="text"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="Alex Creator"
+                style={{
+                  width: "100%",
+                  padding: "12px 14px",
+                  border: "1px solid #e9e5ff",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  background: "white",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+
+            {/* Bio */}
+            <div style={{ marginBottom: "24px" }}>
+              <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "8px", color: "#1a1a1a" }}>
+                Bio / About Me <span style={{ color: "#ff6b6b" }}>*</span>
+              </label>
+              <textarea
+                value={bio}
+                onChange={(e) => setBio(e.target.value.slice(0, 300))}
+                placeholder="Tell us what you create, your niche, and what makes you unique..."
+                style={{
+                  width: "100%",
+                  minHeight: "120px",
+                  padding: "12px 14px",
+                  border: "1px solid #e9e5ff",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  background: "white",
+                  boxSizing: "border-box",
+                  fontFamily: "inherit",
+                  resize: "vertical",
+                }}
+              />
+              <p style={{ fontSize: "12px", color: "#999", marginTop: "6px", textAlign: "right" }}>
+                {bio.length}/300
+              </p>
+            </div>
+
+            {/* Location */}
+            <div style={{ marginBottom: "24px" }}>
+              <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "8px", color: "#1a1a1a" }}>
+                Location <span style={{ color: "#ff6b6b" }}>*</span>
+              </label>
+              <select
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "12px 14px",
+                  border: "1px solid #e9e5ff",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  background: "white",
+                  boxSizing: "border-box",
+                  cursor: "pointer",
+                }}
+              >
+                <option value="">Select city</option>
+                <option value="Mumbai, Maharashtra">Mumbai, Maharashtra</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Bangalore">Bangalore</option>
+                <option value="Kolkata">Kolkata</option>
+                <option value="Pune">Pune</option>
+              </select>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN */}
+          <div>
+            {/* Content Categories */}
+            <div style={{ marginBottom: "32px" }}>
+              <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "12px", color: "#1a1a1a" }}>
+                Content Categories <span style={{ color: "#ff6b6b" }}>*</span>
+              </label>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" }}>
+                {CONTENT_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => toggleCategory(cat)}
+                    style={{
+                      padding: "10px 12px",
+                      border: selectedCategories.has(cat) ? "2px solid #6366f1" : "1px solid #e9e5ff",
+                      borderRadius: "8px",
+                      background: selectedCategories.has(cat) ? "#e9e5ff" : "white",
+                      fontSize: "13px",
+                      fontWeight: "600",
+                      color: selectedCategories.has(cat) ? "#6366f1" : "#666",
+                      cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      position: "relative",
+                      gap: "6px",
+                    }}
+                  >
+                    {selectedCategories.has(cat) ? "✓" : "○"} {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Social Media Links */}
+            <div style={{ marginBottom: "32px" }}>
+              <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "12px", color: "#1a1a1a" }}>
+                Social Media Links
+              </label>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {SOCIAL_PLATFORMS.map((platform) => (
+                  <div key={platform.key} style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                    <span style={{ fontSize: "20px", width: "24px", textAlign: "center" }}>{platform.icon}</span>
+                    <input
+                      type="text"
+                      value={socialLinks[platform.key as keyof typeof socialLinks]}
+                      onChange={(e) => updateSocialLink(platform.key, e.target.value)}
+                      placeholder={`@${platform.key}handle`}
+                      style={{
+                        flex: 1,
+                        padding: "10px 12px",
+                        border: "1px solid #e9e5ff",
+                        borderRadius: "8px",
+                        fontSize: "13px",
+                        background: "white",
+                      }}
+                    />
+                    <button
+                      onClick={() => updateSocialLink(platform.key, "")}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: "#999",
+                        cursor: "pointer",
+                        fontSize: "16px",
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Audience Size */}
+            <div style={{ marginBottom: "32px" }}>
+              <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "8px", color: "#1a1a1a" }}>
+                Audience Size (Total Followers) <span style={{ color: "#ff6b6b" }}>*</span>
+              </label>
+              <select
+                value={audienceSize}
+                onChange={(e) => setAudienceSize(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "12px 14px",
+                  border: "1px solid #e9e5ff",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  background: "white",
+                  cursor: "pointer",
+                }}
+              >
+                <option value="">Select range</option>
+                <option value="1K - 10K">1K - 10K</option>
+                <option value="10K - 50K">10K - 50K</option>
+                <option value="50K - 100K">50K - 100K</option>
+                <option value="100K - 500K">100K - 500K</option>
+                <option value="500K - 1M">500K - 1M</option>
+                <option value="1M+">1M+</option>
+              </select>
+            </div>
+
+            {/* Collaboration Interests */}
+            <div style={{ marginBottom: "32px" }}>
+              <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "8px", color: "#1a1a1a" }}>
+                What kind of collaborations are you interested in? <span style={{ color: "#ff6b6b" }}>*</span>
+              </label>
+              <textarea
+                value={collaborationInterests}
+                onChange={(e) => setCollaborationInterests(e.target.value.slice(0, 300))}
+                placeholder="Brand partnerships, product reviews, event invites, travel collaborations and long-term campaigns."
+                style={{
+                  width: "100%",
+                  minHeight: "80px",
+                  padding: "12px 14px",
+                  border: "1px solid #e9e5ff",
+                  borderRadius: "8px",
+                  fontSize: "13px",
+                  background: "white",
+                  boxSizing: "border-box",
+                  fontFamily: "inherit",
+                  resize: "vertical",
+                }}
+              />
+              <p style={{ fontSize: "12px", color: "#999", marginTop: "6px", textAlign: "right" }}>
+                {collaborationInterests.length}/300
+              </p>
+            </div>
+
+            {/* Portfolio */}
+            <div>
+              <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "12px", color: "#1a1a1a" }}>
+                Portfolio / Sample Work
+              </label>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "10px" }}>
+                {portfolioLinks.map((link, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      aspectRatio: "1",
+                      borderRadius: "8px",
+                      border: "2px dashed #e9e5ff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: link ? "transparent" : "#f9f7ff",
                       cursor: "pointer",
+                      position: "relative",
                       overflow: "hidden",
                     }}
                   >
-                    {profilePhoto ? (
+                    {link ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={profilePhoto}
-                        alt="Profile"
+                        src={link}
+                        alt={`Portfolio ${i + 1}`}
                         style={{
                           width: "100%",
                           height: "100%",
@@ -274,15 +502,21 @@ export default function InfluencerSetupPage() {
                         }}
                       />
                     ) : (
-                      <div style={{ textAlign: "center" }}>
-                        <div style={{ fontSize: "32px", marginBottom: "4px" }}>📷</div>
-                        <div style={{ fontSize: "12px", color: "#7a7a77" }}>Add Photo</div>
-                      </div>
+                      <span style={{ fontSize: "24px" }}>+</span>
                     )}
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={handlePhotoUpload}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            handlePortfolioLinkChange(i, event.target?.result as string);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
                       style={{
                         position: "absolute",
                         top: 0,
@@ -294,327 +528,34 @@ export default function InfluencerSetupPage() {
                       }}
                     />
                   </div>
-                  <div>
-                    <p style={{ fontSize: "13px", color: "#7a7a77", margin: "0 0 8px 0" }}>JPG, PNG up to 5MB</p>
-                    {profilePhoto && (
-                      <button
-                        onClick={() => setProfilePhoto(null)}
-                        style={{
-                          background: "#FFF5F0",
-                          border: "none",
-                          color: "#FF6B35",
-                          padding: "6px 12px",
-                          borderRadius: "6px",
-                          fontSize: "13px",
-                          fontWeight: "600",
-                          cursor: "pointer",
-                        }}
-                      >
-                        Change Photo
-                      </button>
-                    )}
-                  </div>
-                </div>
+                ))}
               </div>
-
-              {/* Display Name */}
-              <div style={{ marginBottom: "20px" }}>
-                <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "8px", color: "#1a1a18" }}>
-                  Display Name *
-                </label>
-                <input
-                  type="text"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  placeholder="Your name or creator handle"
-                  style={{
-                    width: "100%",
-                    padding: "12px 14px",
-                    border: "1px solid #d0d0cc",
-                    borderRadius: "8px",
-                    fontSize: "15px",
-                    fontFamily: "inherit",
-                  }}
-                />
-              </div>
-
-              {/* Bio */}
-              <div style={{ marginBottom: "20px" }}>
-                <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "8px", color: "#1a1a18" }}>
-                  Bio / About Me *
-                </label>
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  placeholder="Tell us what you create, your niche, and what makes you unique..."
-                  style={{
-                    width: "100%",
-                    padding: "12px 14px",
-                    border: "1px solid #d0d0cc",
-                    borderRadius: "8px",
-                    fontSize: "15px",
-                    fontFamily: "inherit",
-                    minHeight: "100px",
-                    resize: "vertical",
-                  }}
-                />
-                <p style={{ fontSize: "13px", color: "#7a7a77", margin: "6px 0 0 0" }}>
-                  {bio.length}/300
-                </p>
-              </div>
-
-              {/* Location */}
-              <div style={{ marginBottom: "20px" }}>
-                <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "8px", color: "#1a1a18" }}>
-                  Location
-                </label>
-                <input
-                  type="text"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="City, Country"
-                  style={{
-                    width: "100%",
-                    padding: "12px 14px",
-                    border: "1px solid #d0d0cc",
-                    borderRadius: "8px",
-                    fontSize: "15px",
-                    fontFamily: "inherit",
-                  }}
-                />
-              </div>
-
-              {/* Content Categories */}
-              <div style={{ marginBottom: "20px" }}>
-                <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-                  Content Categories *
-                </label>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-                  {CONTENT_CATEGORIES.map((cat) => (
-                    <button
-                      key={cat}
-                      onClick={() => toggleCategory(cat)}
-                      style={{
-                        padding: "8px 16px",
-                        borderRadius: "20px",
-                        border: selectedCategories.has(cat) ? "none" : "1px solid #d0d0cc",
-                        background: selectedCategories.has(cat) ? "#FF6B35" : "white",
-                        color: selectedCategories.has(cat) ? "white" : "#1a1a18",
-                        fontSize: "13px",
-                        fontWeight: "600",
-                        cursor: "pointer",
-                        transition: "all 0.2s",
-                      }}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Next Button */}
-              <div style={{ display: "flex", gap: "12px", marginTop: "32px" }}>
-                <button
-                  onClick={() => router.back()}
-                  style={{
-                    flex: 1,
-                    padding: "14px 24px",
-                    border: "1px solid #d0d0cc",
-                    borderRadius: "8px",
-                    background: "white",
-                    color: "#1a1a18",
-                    fontSize: "15px",
-                    fontWeight: "600",
-                    cursor: "pointer",
-                  }}
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handleNextStep}
-                  style={{
-                    flex: 1,
-                    padding: "14px 24px",
-                    border: "none",
-                    borderRadius: "8px",
-                    background: "#FF6B35",
-                    color: "white",
-                    fontSize: "15px",
-                    fontWeight: "600",
-                    cursor: "pointer",
-                  }}
-                >
-                  Continue →
-                </button>
-              </div>
+              <p style={{ fontSize: "12px", color: "#999", marginTop: "8px" }}>
+                Add images or links to showcase your best work (up to 5)
+              </p>
             </div>
-          ) : (
-            /* STEP 2 - YOUR WORK */
-            <div style={{ maxWidth: "600px" }}>
-              {/* Social Media Links */}
-              <div style={{ marginBottom: "28px" }}>
-                <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-                  Social Media Links
-                </label>
-                <div>
-                  {[
-                    { id: "instagram", label: "Instagram", icon: "📷", placeholder: "@yourusername" },
-                    { id: "youtube", label: "YouTube", icon: "▶️", placeholder: "@yourchannel" },
-                    { id: "tiktok", label: "TikTok", icon: "🎵", placeholder: "@yourusername" },
-                  ].map((platform) => (
-                    <div key={platform.id} style={{ marginBottom: "12px" }}>
-                      <label style={{ fontSize: "13px", fontWeight: "600", color: "#7a7a77", marginBottom: "6px", display: "block" }}>
-                        {platform.label}
-                      </label>
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <span style={{ fontSize: "18px" }}>{platform.icon}</span>
-                        <input
-                          type="text"
-                          value={socialLinks[platform.id as keyof typeof socialLinks]}
-                          onChange={(e) =>
-                            setSocialLinks({
-                              ...socialLinks,
-                              [platform.id]: e.target.value,
-                            })
-                          }
-                          placeholder={platform.placeholder}
-                          style={{
-                            flex: 1,
-                            padding: "10px 12px",
-                            border: "1px solid #d0d0cc",
-                            borderRadius: "8px",
-                            fontSize: "14px",
-                            fontFamily: "inherit",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          </div>
+        </div>
 
-              {/* Audience Size */}
-              <div style={{ marginBottom: "28px" }}>
-                <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "8px", color: "#1a1a18" }}>
-                  Audience Size (Total Followers)
-                </label>
-                <select
-                  value={audienceSize}
-                  onChange={(e) => setAudienceSize(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "12px 14px",
-                    border: "1px solid #d0d0cc",
-                    borderRadius: "8px",
-                    fontSize: "15px",
-                    fontFamily: "inherit",
-                    cursor: "pointer",
-                  }}
-                >
-                  <option value="">Select audience size...</option>
-                  <option value="1k-10k">1K - 10K</option>
-                  <option value="10k-50k">10K - 50K</option>
-                  <option value="50k-100k">50K - 100K</option>
-                  <option value="100k-500k">100K - 500K</option>
-                  <option value="500k-1m">500K - 1M</option>
-                  <option value="1m+">1M+</option>
-                </select>
-              </div>
-
-              {/* Collaboration Interests */}
-              <div style={{ marginBottom: "28px" }}>
-                <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-                  What kind of collaborations are you interested in?
-                </label>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-                  {COLLABORATION_TYPES.map((type) => (
-                    <button
-                      key={type}
-                      onClick={() => toggleCollaboration(type)}
-                      style={{
-                        padding: "8px 14px",
-                        borderRadius: "20px",
-                        border: collaborationInterests.has(type) ? "none" : "1px solid #d0d0cc",
-                        background: collaborationInterests.has(type) ? "#FF6B35" : "white",
-                        color: collaborationInterests.has(type) ? "white" : "#1a1a18",
-                        fontSize: "13px",
-                        fontWeight: "600",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {type}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Portfolio Links */}
-              <div style={{ marginBottom: "28px" }}>
-                <label style={{ display: "block", fontSize: "15px", fontWeight: "600", marginBottom: "12px", color: "#1a1a18" }}>
-                  Portfolio / Sample Work
-                </label>
-                <p style={{ fontSize: "13px", color: "#7a7a77", marginBottom: "12px", margin: "0 0 12px 0" }}>
-                  Add up to 5 YouTube or Instagram links to showcase your best work
-                </p>
-                <div>
-                  {portfolioLinks.map((link, idx) => (
-                    <input
-                      key={idx}
-                      type="text"
-                      value={link}
-                      onChange={(e) => handlePortfolioLinkChange(idx, e.target.value)}
-                      placeholder={`Link ${idx + 1} (YouTube or Instagram)`}
-                      style={{
-                        width: "100%",
-                        padding: "10px 12px",
-                        border: "1px solid #d0d0cc",
-                        borderRadius: "8px",
-                        fontSize: "14px",
-                        fontFamily: "inherit",
-                        marginBottom: "8px",
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Buttons */}
-              <div style={{ display: "flex", gap: "12px" }}>
-                <button
-                  onClick={() => setStep(1)}
-                  style={{
-                    flex: 1,
-                    padding: "14px 24px",
-                    border: "1px solid #d0d0cc",
-                    borderRadius: "8px",
-                    background: "white",
-                    color: "#1a1a18",
-                    fontSize: "15px",
-                    fontWeight: "600",
-                    cursor: "pointer",
-                  }}
-                >
-                  ← Back
-                </button>
-                <button
-                  onClick={handleSaveProfile}
-                  style={{
-                    flex: 1,
-                    padding: "14px 24px",
-                    border: "none",
-                    borderRadius: "8px",
-                    background: "#FF6B35",
-                    color: "white",
-                    fontSize: "15px",
-                    fontWeight: "600",
-                    cursor: "pointer",
-                  }}
-                >
-                  Complete Profile →
-                </button>
-              </div>
-            </div>
-          )}
+        {/* FOOTER */}
+        <div style={{ marginTop: "48px", display: "flex", justifyContent: "center" }}>
+          <button
+            onClick={handleSaveProfile}
+            style={{
+              padding: "14px 48px",
+              background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+              color: "white",
+              border: "none",
+              borderRadius: "12px",
+              fontSize: "16px",
+              fontWeight: "600",
+              cursor: "pointer",
+              width: "100%",
+              maxWidth: "400px",
+            }}
+          >
+            Save & Continue →
+          </button>
         </div>
       </div>
     </div>

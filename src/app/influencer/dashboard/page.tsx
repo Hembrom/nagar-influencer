@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 interface InfluencerProfile {
   displayName: string;
   bio: string;
+  location?: string;
   profilePhoto?: string;
   categories: string[];
   socialLinks: { instagram: string; youtube: string; tiktok: string };
@@ -88,7 +89,28 @@ export default function InfluencerDashboardPage() {
             </p>
             {profile ? (
               <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px" }}>
-                <div style={{ display: "grid", gap: "16px" }}>
+                <div style={{ display: "grid", gap: "20px" }}>
+                  {/* PROFILE PHOTO */}
+                  {profile.profilePhoto && (
+                    <div>
+                      <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 8px 0" }}>
+                        Profile Photo
+                      </p>
+                      <img
+                        src={profile.profilePhoto}
+                        alt="Profile"
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          border: "2px solid #6366f1",
+                        }}
+                      />
+                    </div>
+                  )}
+                  
+                  {/* DISPLAY NAME */}
                   <div>
                     <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
                       Display Name
@@ -97,22 +119,42 @@ export default function InfluencerDashboardPage() {
                       {profile.displayName}
                     </p>
                   </div>
+
+                  {/* BIO */}
                   <div>
                     <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
                       Bio
                     </p>
-                    <p style={{ fontSize: "14px", color: "#1a1a1a", margin: "0" }}>
+                    <p style={{ fontSize: "14px", color: "#1a1a1a", margin: "0", lineHeight: "1.5" }}>
                       {profile.bio}
                     </p>
                   </div>
+
+                  {/* CATEGORIES */}
                   <div>
-                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
+                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 8px 0" }}>
                       Categories
                     </p>
-                    <p style={{ fontSize: "14px", color: "#1a1a1a", margin: "0" }}>
-                      {profile.categories.join(", ")}
-                    </p>
+                    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                      {profile.categories.map((cat) => (
+                        <span
+                          key={cat}
+                          style={{
+                            background: "#e0dcff",
+                            color: "#6366f1",
+                            padding: "6px 12px",
+                            borderRadius: "20px",
+                            fontSize: "13px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          {cat}
+                        </span>
+                      ))}
+                    </div>
                   </div>
+
+                  {/* AUDIENCE SIZE */}
                   <div>
                     <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
                       Audience Size
@@ -121,11 +163,93 @@ export default function InfluencerDashboardPage() {
                       {profile.audienceSize}
                     </p>
                   </div>
+
+                  {/* LOCATION */}
+                  {profile.location && (
+                    <div>
+                      <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
+                        Location
+                      </p>
+                      <p style={{ fontSize: "14px", color: "#1a1a1a", margin: "0" }}>
+                        {profile.location}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* SOCIAL LINKS */}
+                  {(profile.socialLinks.instagram || profile.socialLinks.youtube || profile.socialLinks.tiktok) && (
+                    <div>
+                      <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 8px 0" }}>
+                        Social Media
+                      </p>
+                      <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                        {profile.socialLinks.instagram && (
+                          <a
+                            href={profile.socialLinks.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              padding: "6px 12px",
+                              background: "#f0f9ff",
+                              border: "1px solid #bfdbfe",
+                              borderRadius: "6px",
+                              fontSize: "13px",
+                              fontWeight: "600",
+                              color: "#1e40af",
+                              textDecoration: "none",
+                            }}
+                          >
+                            📷 Instagram
+                          </a>
+                        )}
+                        {profile.socialLinks.youtube && (
+                          <a
+                            href={profile.socialLinks.youtube}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              padding: "6px 12px",
+                              background: "#f0f9ff",
+                              border: "1px solid #bfdbfe",
+                              borderRadius: "6px",
+                              fontSize: "13px",
+                              fontWeight: "600",
+                              color: "#1e40af",
+                              textDecoration: "none",
+                            }}
+                          >
+                            ▶️ YouTube
+                          </a>
+                        )}
+                        {profile.socialLinks.tiktok && (
+                          <a
+                            href={profile.socialLinks.tiktok}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              padding: "6px 12px",
+                              background: "#f0f9ff",
+                              border: "1px solid #bfdbfe",
+                              borderRadius: "6px",
+                              fontSize: "13px",
+                              fontWeight: "600",
+                              color: "#1e40af",
+                              textDecoration: "none",
+                            }}
+                          >
+                            ♪ TikTok
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
+
+                {/* EDIT BUTTON */}
                 <button
                   onClick={() => router.push("/influencer/setup")}
                   style={{
-                    marginTop: "20px",
+                    marginTop: "24px",
                     padding: "10px 16px",
                     background: "#6366f1",
                     color: "white",

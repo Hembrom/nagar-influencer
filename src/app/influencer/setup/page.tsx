@@ -33,6 +33,7 @@ export default function InfluencerSetupPage() {
   const [audienceSize, setAudienceSize] = useState("");
   const [collaborationInterests, setCollaborationInterests] = useState("");
   const [portfolioLinks, setPortfolioLinks] = useState<string[]>(["", "", "", "", ""]);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   // Load existing profile on mount
   useEffect(() => {
@@ -88,11 +89,27 @@ export default function InfluencerSetupPage() {
   };
 
   const handleSaveProfile = () => {
-    if (!displayName.trim() || !bio.trim() || selectedCategories.size === 0) {
-      alert("Please fill in all required fields");
+    const newErrors: { [key: string]: string } = {};
+
+    // Validate required fields
+    if (!displayName.trim()) {
+      newErrors.displayName = "Display name is required";
+    }
+    if (!bio.trim()) {
+      newErrors.bio = "Bio is required";
+    }
+    if (selectedCategories.size === 0) {
+      newErrors.categories = "Select at least one content category";
+    }
+
+    setErrors(newErrors);
+
+    // If there are errors, scroll to top and don't proceed
+    if (Object.keys(newErrors).length > 0) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    
+
     const profile = {
       displayName,
       bio,
@@ -110,12 +127,13 @@ export default function InfluencerSetupPage() {
     try {
       localStorage.setItem("influencer_profile", JSON.stringify(profile));
       console.log("✓ Profile saved to localStorage:", profile);
+      setErrors({}); // Clear errors on success
     } catch (e) {
       console.error("Error saving profile:", e);
-      alert("Error saving profile. Please try again.");
+      setErrors({ save: "Error saving profile. Please try again." });
       return;
     }
-    
+
     router.push("/influencer/dashboard");
   };
 
@@ -322,18 +340,28 @@ export default function InfluencerSetupPage() {
               <input
                 type="text"
                 value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
+                onChange={(e) => {
+                  setDisplayName(e.target.value);
+                  if (errors.displayName) {
+                    setErrors({ ...errors, displayName: "" });
+                  }
+                }}
                 placeholder="Alex Creator"
                 style={{
                   width: "100%",
                   padding: "12px 14px",
-                  border: "1px solid #e9e5ff",
+                  border: errors.displayName ? "1px solid #ff6b6b" : "1px solid #e9e5ff",
                   borderRadius: "8px",
                   fontSize: "14px",
                   background: "white",
                   boxSizing: "border-box",
                 }}
               />
+              {errors.displayName && (
+                <p style={{ fontSize: "12px", color: "#ff6b6b", margin: "6px 0 0 0" }}>
+                  ⚠️ {errors.displayName}
+                </p>
+              )}
             </div>
 
             {/* Bio */}
@@ -343,13 +371,18 @@ export default function InfluencerSetupPage() {
               </label>
               <textarea
                 value={bio}
-                onChange={(e) => setBio(e.target.value.slice(0, 300))}
+                onChange={(e) => {
+                  setBio(e.target.value.slice(0, 300));
+                  if (errors.bio) {
+                    setErrors({ ...errors, bio: "" });
+                  }
+                }}
                 placeholder="Tell us what you create, your niche, and what makes you unique..."
                 style={{
                   width: "100%",
                   minHeight: "120px",
                   padding: "12px 14px",
-                  border: "1px solid #e9e5ff",
+                  border: errors.bio ? "1px solid #ff6b6b" : "1px solid #e9e5ff",
                   borderRadius: "8px",
                   fontSize: "14px",
                   background: "white",
@@ -358,9 +391,14 @@ export default function InfluencerSetupPage() {
                   resize: "vertical",
                 }}
               />
-              <p style={{ fontSize: "12px", color: "#999", marginTop: "6px", textAlign: "right" }}>
-                {bio.length}/300
-              </p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "6px" }}>
+                <p style={{ fontSize: "12px", color: errors.bio ? "#ff6b6b" : "#999", margin: "0" }}>
+                  {errors.bio ? `⚠️ ${errors.bio}` : ""}
+                </p>
+                <p style={{ fontSize: "12px", color: "#999", margin: "0", textAlign: "right" }}>
+                  {bio.length}/300
+                </p>
+              </div>
             </div>
 
             {/* Location */}
@@ -399,11 +437,16 @@ export default function InfluencerSetupPage() {
               <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "12px", color: "#1a1a1a" }}>
                 Content Categories <span style={{ color: "#ff6b6b" }}>*</span>
               </label>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px", marginBottom: "8px" }}>
                 {CONTENT_CATEGORIES.map((cat) => (
                   <button
                     key={cat}
-                    onClick={() => toggleCategory(cat)}
+                    onClick={() => {
+                      toggleCategory(cat);
+                      if (errors.categories) {
+                        setErrors({ ...errors, categories: "" });
+                      }
+                    }}
                     style={{
                       padding: "10px 12px",
                       border: selectedCategories.has(cat) ? "2px solid #6366f1" : "1px solid #e9e5ff",
@@ -423,6 +466,11 @@ export default function InfluencerSetupPage() {
                   </button>
                 ))}
               </div>
+              {errors.categories && (
+                <p style={{ fontSize: "12px", color: "#ff6b6b", margin: "0" }}>
+                  ⚠️ {errors.categories}
+                </p>
+              )}
             </div>
 
             {/* Social Media Links */}

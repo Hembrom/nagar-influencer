@@ -88,52 +88,54 @@ export default function InfluencerDashboardPage() {
               View and update your influencer profile information.
             </p>
             {profile ? (
-              <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px" }}>
-                <div style={{ display: "grid", gap: "20px" }}>
-                  {/* PROFILE PHOTO */}
-                  {profile.profilePhoto && (
+              <div>
+                {/* TOP ROW - PHOTO & BASIC INFO */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginBottom: "20px" }}>
+                  {/* LEFT - PHOTO & NAME */}
+                  <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px", textAlign: "center" }}>
+                    {profile.profilePhoto && (
+                      <div style={{ marginBottom: "16px" }}>
+                        <img
+                          src={profile.profilePhoto}
+                          alt="Profile"
+                          style={{
+                            width: "120px",
+                            height: "120px",
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                            border: "3px solid #6366f1",
+                            margin: "0 auto",
+                          }}
+                        />
+                      </div>
+                    )}
                     <div>
-                      <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 8px 0" }}>
-                        Profile Photo
+                      <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
+                        Display Name
                       </p>
-                      <img
-                        src={profile.profilePhoto}
-                        alt="Profile"
-                        style={{
-                          width: "100px",
-                          height: "100px",
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                          border: "2px solid #6366f1",
-                        }}
-                      />
+                      <p style={{ fontSize: "18px", color: "#1a1a1a", fontWeight: "700", margin: "0" }}>
+                        {profile.displayName}
+                      </p>
                     </div>
-                  )}
-                  
-                  {/* DISPLAY NAME */}
-                  <div>
-                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
-                      Display Name
-                    </p>
-                    <p style={{ fontSize: "15px", color: "#1a1a1a", fontWeight: "500", margin: "0" }}>
-                      {profile.displayName}
-                    </p>
                   </div>
 
-                  {/* BIO */}
-                  <div>
-                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
+                  {/* RIGHT - BIO */}
+                  <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px" }}>
+                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 8px 0" }}>
                       Bio
                     </p>
-                    <p style={{ fontSize: "14px", color: "#1a1a1a", margin: "0", lineHeight: "1.5" }}>
+                    <p style={{ fontSize: "14px", color: "#1a1a1a", margin: "0", lineHeight: "1.6" }}>
                       {profile.bio}
                     </p>
                   </div>
+                </div>
 
-                  {/* CATEGORIES */}
-                  <div>
-                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 8px 0" }}>
-                      Categories
+                {/* SECOND ROW - CATEGORIES & AUDIENCE */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginBottom: "20px" }}>
+                  {/* LEFT - CATEGORIES */}
+                  <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px" }}>
+                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 12px 0" }}>
+                      Content Categories
                     </p>
                     <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                       {profile.categories.map((cat) => (
@@ -154,103 +156,111 @@ export default function InfluencerDashboardPage() {
                     </div>
                   </div>
 
-                  {/* AUDIENCE SIZE */}
-                  <div>
-                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
+                  {/* RIGHT - AUDIENCE SIZE */}
+                  <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px" }}>
+                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 8px 0" }}>
                       Audience Size
                     </p>
-                    <p style={{ fontSize: "14px", color: "#1a1a1a", margin: "0" }}>
+                    <p style={{ fontSize: "18px", color: "#6366f1", fontWeight: "700", margin: "0" }}>
                       {profile.audienceSize}
                     </p>
                   </div>
+                </div>
 
-                  {/* LOCATION */}
-                  {profile.location && (
-                    <div>
-                      <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
-                        Location
-                      </p>
-                      <p style={{ fontSize: "14px", color: "#1a1a1a", margin: "0" }}>
-                        {profile.location}
-                      </p>
-                    </div>
-                  )}
+                {/* THIRD ROW - LOCATION & SOCIAL */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginBottom: "20px" }}>
+                  {/* LEFT - LOCATION */}
+                  <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px" }}>
+                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 8px 0" }}>
+                      Location
+                    </p>
+                    <p style={{ fontSize: "14px", color: "#1a1a1a", fontWeight: "500", margin: "0" }}>
+                      {profile.location || "Not specified"}
+                    </p>
+                  </div>
 
-                  {/* SOCIAL LINKS */}
-                  {(profile.socialLinks.instagram || profile.socialLinks.youtube || profile.socialLinks.tiktok) && (
-                    <div>
-                      <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 8px 0" }}>
-                        Social Media
-                      </p>
-                      <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                        {profile.socialLinks.instagram && (
-                          <a
-                            href={profile.socialLinks.instagram}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              padding: "6px 12px",
-                              background: "#f0f9ff",
-                              border: "1px solid #bfdbfe",
-                              borderRadius: "6px",
-                              fontSize: "13px",
-                              fontWeight: "600",
-                              color: "#1e40af",
-                              textDecoration: "none",
-                            }}
-                          >
-                            📷 Instagram
-                          </a>
-                        )}
-                        {profile.socialLinks.youtube && (
-                          <a
-                            href={profile.socialLinks.youtube}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              padding: "6px 12px",
-                              background: "#f0f9ff",
-                              border: "1px solid #bfdbfe",
-                              borderRadius: "6px",
-                              fontSize: "13px",
-                              fontWeight: "600",
-                              color: "#1e40af",
-                              textDecoration: "none",
-                            }}
-                          >
-                            ▶️ YouTube
-                          </a>
-                        )}
-                        {profile.socialLinks.tiktok && (
-                          <a
-                            href={profile.socialLinks.tiktok}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              padding: "6px 12px",
-                              background: "#f0f9ff",
-                              border: "1px solid #bfdbfe",
-                              borderRadius: "6px",
-                              fontSize: "13px",
-                              fontWeight: "600",
-                              color: "#1e40af",
-                              textDecoration: "none",
-                            }}
-                          >
-                            ♪ TikTok
-                          </a>
-                        )}
-                      </div>
+                  {/* RIGHT - SOCIAL LINKS */}
+                  <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px" }}>
+                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 12px 0" }}>
+                      Social Media
+                    </p>
+                    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                      {profile.socialLinks.instagram ? (
+                        <a
+                          href={profile.socialLinks.instagram}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            padding: "6px 12px",
+                            background: "#e0dcff",
+                            border: "none",
+                            borderRadius: "6px",
+                            fontSize: "12px",
+                            fontWeight: "600",
+                            color: "#6366f1",
+                            textDecoration: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          📷 Instagram
+                        </a>
+                      ) : (
+                        <span style={{ fontSize: "12px", color: "#999" }}>—</span>
+                      )}
+                      {profile.socialLinks.youtube ? (
+                        <a
+                          href={profile.socialLinks.youtube}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            padding: "6px 12px",
+                            background: "#e0dcff",
+                            border: "none",
+                            borderRadius: "6px",
+                            fontSize: "12px",
+                            fontWeight: "600",
+                            color: "#6366f1",
+                            textDecoration: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          ▶️ YouTube
+                        </a>
+                      ) : (
+                        <span style={{ fontSize: "12px", color: "#999" }}>—</span>
+                      )}
+                      {profile.socialLinks.tiktok ? (
+                        <a
+                          href={profile.socialLinks.tiktok}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            padding: "6px 12px",
+                            background: "#e0dcff",
+                            border: "none",
+                            borderRadius: "6px",
+                            fontSize: "12px",
+                            fontWeight: "600",
+                            color: "#6366f1",
+                            textDecoration: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          ♪ TikTok
+                        </a>
+                      ) : (
+                        <span style={{ fontSize: "12px", color: "#999" }}>—</span>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
 
                 {/* EDIT BUTTON */}
                 <button
                   onClick={() => router.push("/influencer/setup")}
                   style={{
-                    marginTop: "24px",
-                    padding: "10px 16px",
+                    width: "100%",
+                    padding: "12px 16px",
                     background: "#6366f1",
                     color: "white",
                     borderRadius: "8px",

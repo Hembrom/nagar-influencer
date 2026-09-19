@@ -181,61 +181,86 @@ export default function InfluencerDashboardPage() {
               🎯 Available Opportunities
             </h2>
 
-            {/* Company Info Banner */}
-            <div style={{
-              background: "linear-gradient(135deg, #e0dcff 0%, #f0f9ff 100%)",
-              border: "1px solid #bfdbfe",
-              borderRadius: "12px",
-              padding: "24px",
-              marginBottom: "32px",
-            }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "24px" }}>
-                <div>
-                  <p style={{ fontSize: "12px", color: "#666", fontWeight: "600", margin: "0 0 8px 0" }}>
-                    📱 Content Formats
-                  </p>
-                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a1a", margin: "0", lineHeight: "1.6" }}>
-                    Instagram Reel<br />
-                    YouTube Video<br />
-                    TikTok
-                  </p>
+            {/* Task Flow - Per Row Breakdown */}
+            <div style={{ marginBottom: "32px" }}>
+              <div style={{
+                background: "white",
+                border: "1px solid #e0dcff",
+                borderRadius: "12px",
+                overflow: "hidden",
+              }}>
+                {/* Header Row */}
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: "2fr 1.5fr 1fr",
+                  gap: "24px",
+                  padding: "16px 24px",
+                  background: "#f0f9ff",
+                  borderBottom: "2px solid #bfdbfe",
+                  fontWeight: "600",
+                  color: "#1a1a1a",
+                  fontSize: "13px",
+                }}>
+                  <div>🎯 NICHE</div>
+                  <div>📱 FORMAT</div>
+                  <div>💰 BUDGET</div>
                 </div>
-                <div>
-                  <p style={{ fontSize: "12px", color: "#666", fontWeight: "600", margin: "0 0 8px 0" }}>
-                    💰 Budget Range
-                  </p>
-                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#6366f1", margin: "0" }}>
-                    ₹40K - ₹75K per task
-                  </p>
-                </div>
-                <div>
-                  <p style={{ fontSize: "12px", color: "#666", fontWeight: "600", margin: "0 0 8px 0" }}>
-                    🎯 Niches Being Worked On
-                  </p>
-                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                    {["Fashion", "Food", "Tech", "Lifestyle"].map((niche) => (
-                      <span
-                        key={niche}
-                        style={{
-                          display: "inline-block",
-                          padding: "4px 10px",
-                          background: "#6366f1",
-                          color: "white",
-                          borderRadius: "16px",
-                          fontSize: "12px",
-                          fontWeight: "600",
-                        }}
-                      >
-                        {niche}
+
+                {/* Task Rows */}
+                {[
+                  { niche: "Fashion", format: "Instagram Reel", budget: "₹50,000" },
+                  { niche: "Food & Lifestyle", format: "YouTube Video", budget: "₹75,000" },
+                  { niche: "Tech & Gadgets", format: "Instagram Reels + Stories", budget: "₹60,000" },
+                  { niche: "Cafe & Food", format: "TikTok Video", budget: "₹40,000" },
+                ].map((task, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "2fr 1.5fr 1fr",
+                      gap: "24px",
+                      padding: "16px 24px",
+                      borderBottom: index < 3 ? "1px solid #f0f9ff" : "none",
+                      alignItems: "center",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "#f5f3ff";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "white";
+                    }}
+                  >
+                    <div>
+                      <span style={{
+                        display: "inline-block",
+                        padding: "6px 12px",
+                        background: "#e0dcff",
+                        color: "#6366f1",
+                        borderRadius: "16px",
+                        fontSize: "13px",
+                        fontWeight: "600",
+                      }}>
+                        {task.niche}
                       </span>
-                    ))}
+                    </div>
+                    <div style={{ fontSize: "13px", fontWeight: "500", color: "#1a1a1a" }}>
+                      {task.format}
+                    </div>
+                    <div style={{ fontSize: "14px", fontWeight: "700", color: "#6366f1" }}>
+                      {task.budget}
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
+
+              <p style={{ fontSize: "12px", color: "#999", marginTop: "12px", marginLeft: "0" }}>
+                📊 Showing 4 active task flows • More opportunities added daily
+              </p>
             </div>
 
             {/* How It Works */}
-            <div style={{ marginTop: "24px" }}>
+            <div style={{ marginTop: "32px", paddingTop: "32px", borderTop: "2px solid #e0dcff" }}>
               <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#1a1a1a", marginBottom: "20px" }}>
                 How It Works
               </h3>

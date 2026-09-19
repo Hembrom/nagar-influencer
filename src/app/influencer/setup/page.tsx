@@ -237,26 +237,81 @@ export default function InfluencerSetupPage() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#4f46e5";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#6366f1";
                   }}
                 >
                   📷
                 </button>
               </div>
-              <button
-                onClick={() => setProfilePhoto(null)}
-                style={{
-                  marginTop: "12px",
-                  fontSize: "14px",
-                  color: "#6366f1",
-                  fontWeight: "600",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                Change Photo
-              </button>
-              <p style={{ fontSize: "12px", color: "#999", marginTop: "8px" }}>JPG, PNG up to 5MB</p>
+              <div style={{ marginTop: "16px" }}>
+                <p style={{ fontSize: "12px", color: "#666", margin: "0 0 8px 0" }}>
+                  {profilePhoto ? "✓ Photo uploaded" : "No photo selected"}
+                </p>
+                <button
+                  onClick={() => {
+                    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+                    fileInput?.click();
+                  }}
+                  style={{
+                    padding: "8px 14px",
+                    background: profilePhoto ? "#f0f9ff" : "#6366f1",
+                    color: profilePhoto ? "#1e40af" : "white",
+                    border: profilePhoto ? "1px solid #bfdbfe" : "none",
+                    borderRadius: "6px",
+                    fontSize: "13px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (profilePhoto) {
+                      e.currentTarget.style.background = "#e0f2fe";
+                    } else {
+                      e.currentTarget.style.background = "#4f46e5";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (profilePhoto) {
+                      e.currentTarget.style.background = "#f0f9ff";
+                    } else {
+                      e.currentTarget.style.background = "#6366f1";
+                    }
+                  }}
+                >
+                  {profilePhoto ? "📷 Change Photo" : "📷 Upload Photo"}
+                </button>
+                {profilePhoto && (
+                  <button
+                    onClick={() => setProfilePhoto(null)}
+                    style={{
+                      marginLeft: "8px",
+                      padding: "8px 14px",
+                      background: "#fee2e2",
+                      color: "#991b1b",
+                      border: "1px solid #fecaca",
+                      borderRadius: "6px",
+                      fontSize: "13px",
+                      fontWeight: "600",
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "#fecaca";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "#fee2e2";
+                    }}
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Display Name */}

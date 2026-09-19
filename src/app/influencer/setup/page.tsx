@@ -71,7 +71,15 @@ export default function InfluencerSetupPage() {
         setSocialLinks(profile.socialLinks || { instagram: "", youtube: "", tiktok: "" });
         setAudienceSize(profile.audienceSize || "");
         setCollaborationInterests(profile.collaborationInterests?.join?.(", ") || "");
-        setPortfolioLinks(profile.portfolioLinks || ["", "", "", "", ""]);
+        
+        // Ensure portfolioLinks always has 5 fields
+        const savedLinks = profile.portfolioLinks || [];
+        const portfolioArray = [...savedLinks];
+        while (portfolioArray.length < 5) {
+          portfolioArray.push("");
+        }
+        setPortfolioLinks(portfolioArray.slice(0, 5));
+        
         console.log("Profile loaded from localStorage:", profile);
       } catch (e) {
         console.error("Error loading profile:", e);

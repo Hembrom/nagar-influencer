@@ -173,9 +173,6 @@ export default function InfluencerLoginPage() {
               fontSize: "13px",
               marginBottom: "20px",
             }}>
-              <p style={{ color: "#1e40af", margin: "0 0 12px 0" }}>
-                Working in demo mode. Your progress will be saved locally.
-              </p>
               <input
                 type="email"
                 placeholder="Enter your email (e.g., dailygoals@gmail.com)"

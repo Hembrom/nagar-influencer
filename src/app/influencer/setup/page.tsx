@@ -21,6 +21,27 @@ const SOCIAL_PLATFORMS = [
   { name: "TikTok", icon: "♪", key: "tiktok" },
 ];
 
+const MAHARASHTRA_CITIES = [
+  "Mumbai, Maharashtra",
+  "Pune, Maharashtra",
+  "Nagpur, Maharashtra",
+  "Amravati, Maharashtra",
+  "Nasik, Maharashtra",
+  "Aurangabad, Maharashtra",
+  "Solapur, Maharashtra",
+  "Jalgaon, Maharashtra",
+  "Kolhapur, Maharashtra",
+  "Thane, Maharashtra",
+  "Navi Mumbai, Maharashtra",
+  "Akola, Maharashtra",
+  "Wardha, Maharashtra",
+  "Yavatmal, Maharashtra",
+  "Latur, Maharashtra",
+  "Parbhani, Maharashtra",
+  "Hingoli, Maharashtra",
+  "Beed, Maharashtra",
+];
+
 export default function InfluencerSetupPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
@@ -34,6 +55,7 @@ export default function InfluencerSetupPage() {
   const [collaborationInterests, setCollaborationInterests] = useState("");
   const [portfolioLinks, setPortfolioLinks] = useState<string[]>(["", "", "", "", ""]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [locationSuggestions, setLocationSuggestions] = useState<string[]>([]);
 
   // Load existing profile on mount
   useEffect(() => {
@@ -86,6 +108,19 @@ export default function InfluencerSetupPage() {
     const next = [...portfolioLinks];
     next[index] = value;
     setPortfolioLinks(next);
+  };
+
+  const handleLocationChange = (value: string) => {
+    setLocation(value);
+    // Filter cities based on input
+    if (value.trim().length > 0) {
+      const filtered = MAHARASHTRA_CITIES.filter(city =>
+        city.toLowerCase().includes(value.toLowerCase())
+      );
+      setLocationSuggestions(filtered);
+    } else {
+      setLocationSuggestions([]);
+    }
   };
 
   const handleSaveProfile = () => {
@@ -402,13 +437,15 @@ export default function InfluencerSetupPage() {
             </div>
 
             {/* Location */}
-            <div style={{ marginBottom: "24px" }}>
+            <div style={{ marginBottom: "24px", position: "relative" }}>
               <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "8px", color: "#1a1a1a" }}>
                 Location <span style={{ color: "#ff6b6b" }}>*</span>
               </label>
-              <select
+              <input
+                type="text"
                 value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={(e) => handleLocationChange(e.target.value)}
+                placeholder="Type city name (e.g., Mumbai, Pune, Nasik...)"
                 style={{
                   width: "100%",
                   padding: "12px 14px",
@@ -417,16 +454,48 @@ export default function InfluencerSetupPage() {
                   fontSize: "14px",
                   background: "white",
                   boxSizing: "border-box",
-                  cursor: "pointer",
                 }}
-              >
-                <option value="">Select city</option>
-                <option value="Mumbai, Maharashtra">Mumbai, Maharashtra</option>
-                <option value="Delhi">Delhi</option>
-                <option value="Bangalore">Bangalore</option>
-                <option value="Kolkata">Kolkata</option>
-                <option value="Pune">Pune</option>
-              </select>
+              />
+              {locationSuggestions.length > 0 && (
+                <div style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: "0",
+                  right: "0",
+                  background: "white",
+                  border: "1px solid #e9e5ff",
+                  borderTop: "none",
+                  borderRadius: "0 0 8px 8px",
+                  zIndex: 10,
+                  maxHeight: "200px",
+                  overflowY: "auto",
+                }}>
+                  {locationSuggestions.map((city, i) => (
+                    <div
+                      key={i}
+                      onClick={() => {
+                        setLocation(city);
+                        setLocationSuggestions([]);
+                      }}
+                      style={{
+                        padding: "10px 14px",
+                        cursor: "pointer",
+                        borderBottom: i < locationSuggestions.length - 1 ? "1px solid #f0f0f0" : "none",
+                        fontSize: "14px",
+                        color: "#1a1a1a",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "#f5f3ff";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "white";
+                      }}
+                    >
+                      📍 {city}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -572,6 +641,9 @@ export default function InfluencerSetupPage() {
             <div>
               <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "12px", color: "#1a1a1a" }}>
                 Portfolio / Sample Work
+                <span style={{ fontSize: "12px", color: "#666", fontWeight: "400", marginLeft: "8px" }}>
+                  (Add links to your portfolio items - up to 5 links)
+                </span>
               </label>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 {portfolioLinks.map((link, i) => (
@@ -580,11 +652,11 @@ export default function InfluencerSetupPage() {
                       type="url"
                       value={link}
                       onChange={(e) => handlePortfolioLinkChange(i, e.target.value)}
-                      placeholder="Paste link to your portfolio item (e.g., Instagram, YouTube, website)"
+                      placeholder={`Link ${i + 1}: Paste link to your portfolio item (Instagram, YouTube, website, etc.)`}
                       style={{
                         flex: 1,
                         padding: "10px 12px",
-                        border: "1px solid #e9e5ff",
+                        border: link ? "1px solid #6366f1" : "1px solid #e9e5ff",
                         borderRadius: "8px",
                         fontSize: "13px",
                         background: "white",
@@ -597,11 +669,12 @@ export default function InfluencerSetupPage() {
                         style={{
                           background: "none",
                           border: "none",
-                          color: "#999",
+                          color: "#ff6b6b",
                           cursor: "pointer",
-                          fontSize: "16px",
+                          fontSize: "18px",
                           padding: "4px 8px",
                         }}
+                        title="Clear link"
                       >
                         ✕
                       </button>
@@ -610,7 +683,7 @@ export default function InfluencerSetupPage() {
                 ))}
               </div>
               <p style={{ fontSize: "12px", color: "#999", marginTop: "8px" }}>
-                Add links to your portfolio items (Instagram, YouTube, website, etc.) - up to 5 links
+                Added: {portfolioLinks.filter(l => l.trim()).length} of 5 links
               </p>
             </div>
           </div>

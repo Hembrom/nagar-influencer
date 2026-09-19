@@ -23,33 +23,39 @@ export default function InfluencerDashboardPage() {
   const [isDemo, setIsDemo] = useState(false);
 
   useEffect(() => {
+    console.log("Dashboard mount - loading profile...");
+    
     // Check if in demo mode
     const demoMode = sessionStorage.getItem("demo_mode");
     if (demoMode) {
       setIsDemo(true);
     }
 
-    // Load profile from localStorage
-    const savedProfile = localStorage.getItem("influencer_profile");
-    if (savedProfile) {
-      try {
+    // Load profile from localStorage - ALWAYS check fresh
+    try {
+      const savedProfile = localStorage.getItem("influencer_profile");
+      console.log("Raw localStorage data:", savedProfile);
+      
+      if (savedProfile) {
         const profileData = JSON.parse(savedProfile) as InfluencerProfile;
+        console.log("Parsed profile data:", profileData);
         setProfile(profileData);
         setUserName(profileData.displayName || "Creator");
-      } catch (e) {
-        console.error("Error loading profile:", e);
-      }
-    } else {
-      // First time - show setup prompt
-      const demoUser = sessionStorage.getItem("influencer_demo_user");
-      if (demoUser) {
-        try {
-          const user = JSON.parse(demoUser);
-          setUserName(user.email?.split("@")[0] || "Creator");
-        } catch (e) {
-          console.error("Error parsing user:", e);
+      } else {
+        console.log("No profile found in localStorage");
+        // First time - show setup prompt
+        const demoUser = sessionStorage.getItem("influencer_demo_user");
+        if (demoUser) {
+          try {
+            const user = JSON.parse(demoUser);
+            setUserName(user.email?.split("@")[0] || "Creator");
+          } catch (e) {
+            console.error("Error parsing user:", e);
+          }
         }
       }
+    } catch (e) {
+      console.error("Error loading profile:", e);
     }
   }, []);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -37,6 +37,27 @@ export default function InfluencerSetupPage() {
   const [audienceSize, setAudienceSize] = useState("");
   const [collaborationInterests, setCollaborationInterests] = useState<Set<string>>(new Set());
   const [portfolioLinks, setPortfolioLinks] = useState<string[]>(["", "", "", "", ""]);
+
+  // Load existing profile on mount
+  useEffect(() => {
+    const savedProfile = localStorage.getItem("influencer_profile");
+    if (savedProfile) {
+      try {
+        const profile = JSON.parse(savedProfile);
+        setProfilePhoto(profile.profilePhoto || null);
+        setDisplayName(profile.displayName || "");
+        setBio(profile.bio || "");
+        setLocation(profile.location || "");
+        setSelectedCategories(new Set(profile.categories || []));
+        setSocialLinks(profile.socialLinks || { instagram: "", youtube: "", tiktok: "" });
+        setAudienceSize(profile.audienceSize || "");
+        setCollaborationInterests(new Set(profile.collaborationInterests || []));
+        setPortfolioLinks(profile.portfolioLinks || ["", "", "", "", ""]);
+      } catch (e) {
+        console.error("Error loading profile:", e);
+      }
+    }
+  }, []);
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -228,7 +249,7 @@ export default function InfluencerSetupPage() {
                       width: "120px",
                       height: "120px",
                       borderRadius: "12px",
-                      background: profilePhoto ? `url(${profilePhoto})` : "#f0f0f0",
+                      background: profilePhoto ? `url('${profilePhoto}')` : "#f0f0f0",
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       border: "2px solid #e0e0e0",

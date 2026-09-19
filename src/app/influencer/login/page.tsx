@@ -8,8 +8,6 @@ import { isSupabaseAuthReachable } from "@/lib/supabase/health";
 
 export default function InfluencerLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [configured, setConfigured] = useState(false);
@@ -32,75 +30,58 @@ export default function InfluencerLoginPage() {
     };
   }, [supabaseUrl]);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleGoogleSignIn = async () => {
     setError(null);
     setLoading(true);
-
     try {
       if (!configured || !env) {
-        // Demo mode - redirect to influencer dashboard
+        // Demo mode - redirect to setup
         sessionStorage.setItem("demo_mode", "true");
         sessionStorage.setItem("influencer_demo_user", JSON.stringify({
-          email,
+          email: "creator@example.com",
           role: "influencer",
         }));
-        router.push("/influencer/dashboard");
+        router.push("/influencer/setup");
         return;
       }
 
-      // Production: Use Supabase auth
+      // Production: Use Supabase OAuth
       const reachable = await isSupabaseAuthReachable(env.url);
       if (!reachable) {
         setConfigured(false);
         // Fall back to demo mode
         sessionStorage.setItem("demo_mode", "true");
         sessionStorage.setItem("influencer_demo_user", JSON.stringify({
-          email,
+          email: "creator@example.com",
           role: "influencer",
         }));
-        router.push("/influencer/dashboard");
+        router.push("/influencer/setup");
         return;
       }
 
       const supabase = createClient();
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const origin = window.location.origin;
+      const { error: authError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${origin}/auth/callback?next=${encodeURIComponent("/influencer/setup")}`,
+        },
       });
 
-      if (authError) {
-        setError(authError.message || "Invalid email or password");
-        setLoading(false);
-        return;
-      }
-
-      if (data.user) {
-        // Check if user has influencer profile
-        const { data: profile, error: profileError } = await supabase
-          .from("influencer_profiles")
-          .select("*")
-          .eq("user_id", data.user.id)
-          .single();
-
-        if (profileError && profileError.code !== "PGRST116") {
-          setError("Could not verify influencer profile");
-          setLoading(false);
-          return;
-        }
-
-        if (!profile) {
-          // First time user - go to setup
-          router.push("/influencer/setup");
-        } else {
-          // Existing user - go to dashboard
-          router.push("/influencer/dashboard");
-        }
-      }
+      if (authError) throw authError;
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Login failed. Please try again.");
+      setError(e instanceof Error ? e.message : "Google sign-in failed");
       setLoading(false);
     }
+  };
+
+  const handleDemoMode = () => {
+    sessionStorage.setItem("demo_mode", "true");
+    sessionStorage.setItem("influencer_demo_user", JSON.stringify({
+      email: "demo@creator.com",
+      role: "influencer",
+    }));
+    router.push("/influencer/setup");
   };
 
   return (
@@ -166,7 +147,7 @@ export default function InfluencerLoginPage() {
 
           {error && (
             <div style={{
-              background: "#FFE5E0",
+              background: "#FFE5D9",
               border: "1px solid #FFD9C8",
               color: "#E24B4A",
               padding: "12px 14px",
@@ -192,134 +173,63 @@ export default function InfluencerLoginPage() {
             </div>
           )}
 
-          <form onSubmit={handleLogin}>
-            {/* Email */}
-            <div style={{ marginBottom: "20px" }}>
-              <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "8px", color: "#1a1a18" }}>
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-                style={{
-                  width: "100%",
-                  padding: "12px 14px",
-                  border: "1px solid #d0d0cc",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                  fontFamily: "inherit",
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
+          {/* GOOGLE SIGN IN */}
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={loading}
+            style={{
+              width: "100%",
+              padding: "14px 24px",
+              background: "#FF6B35",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              fontSize: "15px",
+              fontWeight: "600",
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.7 : 1,
+              marginBottom: "20px",
+            }}
+          >
+            {loading ? "Signing in..." : "Continue with Google"}
+          </button>
 
-            {/* Password */}
-            <div style={{ marginBottom: "24px" }}>
-              <label style={{ display: "block", fontSize: "14px", fontWeight: "600", marginBottom: "8px", color: "#1a1a18" }}>
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                style={{
-                  width: "100%",
-                  padding: "12px 14px",
-                  border: "1px solid #d0d0cc",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                  fontFamily: "inherit",
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
-
-            {/* Remember Me */}
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>
-              <input type="checkbox" id="remember" style={{ cursor: "pointer" }} />
-              <label htmlFor="remember" style={{ fontSize: "13px", color: "#7a7a77", cursor: "pointer", margin: "0" }}>
-                Remember me
-              </label>
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                width: "100%",
-                padding: "14px 24px",
-                background: "#FF6B35",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                fontSize: "15px",
-                fontWeight: "600",
-                cursor: loading ? "not-allowed" : "pointer",
-                opacity: loading ? 0.7 : 1,
-              }}
-            >
-              {loading ? "Signing in..." : "Sign In"}
-            </button>
-          </form>
-
-          {/* Divider */}
+          {/* DIVIDER */}
           <div style={{ display: "flex", alignItems: "center", gap: "12px", margin: "24px 0", opacity: "0.5" }}>
             <div style={{ flex: 1, height: "1px", background: "#d0d0cc" }} />
             <span style={{ fontSize: "13px" }}>or</span>
             <div style={{ flex: 1, height: "1px", background: "#d0d0cc" }} />
           </div>
 
-          {/* Sign Up Link */}
-          <p style={{ textAlign: "center", fontSize: "14px", color: "#7a7a77", margin: "24px 0 0 0" }}>
-            Don't have an account?{" "}
-            <a href="/influencer/signup" style={{ color: "#FF6B35", fontWeight: "600", textDecoration: "none", cursor: "pointer" }}>
-              Sign up here
-            </a>
-          </p>
+          {/* DEMO WORKSPACE */}
+          <button
+            onClick={handleDemoMode}
+            style={{
+              width: "100%",
+              padding: "12px 24px",
+              background: "transparent",
+              color: "#FF6B35",
+              border: "1px solid #FF6B35",
+              borderRadius: "8px",
+              fontSize: "14px",
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#FFF5F0";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+            }}
+          >
+            Open Demo Workspace
+          </button>
 
-          {/* Demo Mode Link */}
-          <div style={{ marginTop: "24px", paddingTop: "24px", borderTop: "1px solid #e0e0e0" }}>
-            <p style={{ fontSize: "12px", color: "#7a7a77", textAlign: "center", margin: "0 0 12px 0" }}>
-              Want to try the demo?
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                sessionStorage.setItem("demo_mode", "true");
-                sessionStorage.setItem("influencer_demo_user", JSON.stringify({
-                  email: "demo@influencer.com",
-                  role: "influencer",
-                }));
-                router.push("/influencer/dashboard");
-              }}
-              style={{
-                width: "100%",
-                padding: "12px 24px",
-                background: "transparent",
-                color: "#FF6B35",
-                border: "1px solid #FF6B35",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#FFF5F0";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-              }}
-            >
-              Open Demo Workspace
-            </button>
-          </div>
+          {/* TERMS */}
+          <p style={{ fontSize: "12px", color: "#7a7a77", textAlign: "center", marginTop: "20px" }}>
+            By continuing you agree to NagarInfluence terms.
+          </p>
         </div>
       </div>
     </div>

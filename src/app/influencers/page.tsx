@@ -67,13 +67,6 @@ export default function InfluencersPage() {
             <span className="text-base font-bold text-navy">NagarInfluence</span>
             <VerifiedBadge />
           </Link>
-          <button
-            onClick={applyAsCreator}
-            disabled={loading}
-            className="rounded-xl bg-purple-deep px-4 py-2.5 text-sm font-bold text-white hover:bg-purple-deep/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? "Signing in..." : "Apply as creator"}
-          </button>
         </header>
 
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
@@ -88,6 +81,13 @@ export default function InfluencersPage() {
               Join NagarInfluence as a creator. Get matched with tech & SaaS
               brands, clear briefs, and on-time payouts.
             </p>
+            <button
+              onClick={applyAsCreator}
+              disabled={loading}
+              className="mt-6 rounded-xl bg-purple-deep px-6 py-3 text-base font-bold text-white hover:bg-purple-deep/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Signing in..." : "Apply as creator"}
+            </button>
           </div>
 
           <div className="grid gap-4">

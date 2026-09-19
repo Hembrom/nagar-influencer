@@ -174,8 +174,8 @@ export default function InfluencerDashboardPage() {
             <p style={{ fontSize: "14px", color: "#7a7a77", marginBottom: "16px", margin: "0 0 16px 0" }}>
               View and update your influencer profile information.
             </p>
-            <Link
-              href="/influencer/profile"
+            <button
+              onClick={() => router.push("/influencer/setup")}
               style={{
                 display: "inline-block",
                 padding: "10px 16px",
@@ -186,10 +186,11 @@ export default function InfluencerDashboardPage() {
                 fontWeight: "600",
                 textDecoration: "none",
                 cursor: "pointer",
+                border: "none",
               }}
             >
               View Profile →
-            </Link>
+            </button>
           </div>
 
           {/* Opportunities Card */}

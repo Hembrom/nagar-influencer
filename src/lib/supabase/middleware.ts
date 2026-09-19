@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "./database.types";
 import { getSupabaseEnv } from "./env";
 
-const AUTH_FETCH_TIMEOUT_MS = 4_000;
+const AUTH_FETCH_TIMEOUT_MS = 10_000; // Increased from 4s to 10s for slower networks
 
 function hasSupabaseSessionCookie(request: NextRequest) {
   return request.cookies

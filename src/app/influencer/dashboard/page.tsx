@@ -558,56 +558,31 @@ export default function InfluencerDashboardPage() {
 
             {/* DANGER ZONE */}
             <div style={{ borderTop: "1px solid #e0dcff", paddingTop: "24px" }}>
-              <h3 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "16px", color: "#991b1b" }}>
-                Account Actions
+              <h3 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
+                More Options
               </h3>
-              <div style={{ display: "flex", gap: "12px" }}>
-                <button
-                  onClick={handleSignOut}
-                  style={{
-                    flex: 1,
-                    padding: "12px 16px",
-                    background: "#fef2f2",
-                    color: "#991b1b",
-                    borderRadius: "8px",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    border: "1px solid #fee2e2",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#fee2e2";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "#fef2f2";
-                  }}
-                >
-                  Sign Out
-                </button>
-                <button
-                  style={{
-                    flex: 1,
-                    padding: "12px 16px",
-                    background: "#fef2f2",
-                    color: "#991b1b",
-                    borderRadius: "8px",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    border: "1px solid #fee2e2",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#fee2e2";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "#fef2f2";
-                  }}
-                >
-                  Delete Account
-                </button>
-              </div>
+              <button
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  background: "#fef2f2",
+                  color: "#991b1b",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  border: "1px solid #fee2e2",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#fee2e2";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#fef2f2";
+                }}
+              >
+                Delete Account
+              </button>
               {isDemo && (
                 <p style={{ fontSize: "12px", color: "#6366f1", fontWeight: "600", margin: "16px 0 0 0", textAlign: "center" }}>
                   🔵 Demo Mode Active
@@ -644,7 +619,7 @@ export default function InfluencerDashboardPage() {
         {/* MAIN LAYOUT - SIDEBAR + CONTENT */}
         <div style={{ display: "grid", gridTemplateColumns: "220px 1fr", gap: "32px" }}>
           {/* LEFT SIDEBAR - MENU */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", height: "fit-content" }}>
             {MENU_ITEMS.map((item) => (
               <button
                 key={item.id}
@@ -681,6 +656,40 @@ export default function InfluencerDashboardPage() {
                 <span>{item.label}</span>
               </button>
             ))}
+
+            {/* DIVIDER */}
+            <div style={{ height: "1px", background: "#e0dcff", margin: "12px 0" }} />
+
+            {/* SIGN OUT BUTTON */}
+            <button
+              onClick={handleSignOut}
+              style={{
+                padding: "12px 16px",
+                background: "#fef2f2",
+                color: "#991b1b",
+                border: "1px solid #fee2e2",
+                borderRadius: "8px",
+                fontSize: "14px",
+                fontWeight: "600",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                textAlign: "left",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#fee2e2";
+                e.currentTarget.style.borderColor = "#fecaca";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#fef2f2";
+                e.currentTarget.style.borderColor = "#fee2e2";
+              }}
+            >
+              <span style={{ fontSize: "18px" }}>🚪</span>
+              <span>Sign Out</span>
+            </button>
           </div>
 
           {/* RIGHT CONTENT AREA */}

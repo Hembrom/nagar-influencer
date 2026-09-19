@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -16,11 +15,14 @@ interface InfluencerProfile {
   createdAt: string;
 }
 
+type ActiveSection = "profile" | "collaborations" | "messages" | "settings";
+
 export default function InfluencerDashboardPage() {
   const router = useRouter();
   const [profile, setProfile] = useState<InfluencerProfile | null>(null);
   const [userName, setUserName] = useState<string>("Creator");
   const [isDemo, setIsDemo] = useState(false);
+  const [activeSection, setActiveSection] = useState<ActiveSection>("profile");
 
   useEffect(() => {
     console.log("Dashboard mount - loading profile...");
@@ -66,12 +68,204 @@ export default function InfluencerDashboardPage() {
     router.push("/influencer/login");
   };
 
+  const MENU_ITEMS: { id: ActiveSection; icon: string; label: string }[] = [
+    { id: "profile", icon: "📋", label: "Your Profile" },
+    { id: "collaborations", icon: "✅", label: "Active Collaborations" },
+    { id: "messages", icon: "💬", label: "Messages" },
+    { id: "settings", icon: "⚙️", label: "Settings" },
+  ];
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case "profile":
+        return (
+          <div>
+            <h2 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
+              📋 Your Profile
+            </h2>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "24px" }}>
+              View and update your influencer profile information.
+            </p>
+            {profile ? (
+              <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px" }}>
+                <div style={{ display: "grid", gap: "16px" }}>
+                  <div>
+                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
+                      Display Name
+                    </p>
+                    <p style={{ fontSize: "15px", color: "#1a1a1a", fontWeight: "500", margin: "0" }}>
+                      {profile.displayName}
+                    </p>
+                  </div>
+                  <div>
+                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
+                      Bio
+                    </p>
+                    <p style={{ fontSize: "14px", color: "#1a1a1a", margin: "0" }}>
+                      {profile.bio}
+                    </p>
+                  </div>
+                  <div>
+                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
+                      Categories
+                    </p>
+                    <p style={{ fontSize: "14px", color: "#1a1a1a", margin: "0" }}>
+                      {profile.categories.join(", ")}
+                    </p>
+                  </div>
+                  <div>
+                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
+                      Audience Size
+                    </p>
+                    <p style={{ fontSize: "14px", color: "#1a1a1a", margin: "0" }}>
+                      {profile.audienceSize}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => router.push("/influencer/setup")}
+                  style={{
+                    marginTop: "20px",
+                    padding: "10px 16px",
+                    background: "#6366f1",
+                    color: "white",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    border: "none",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#4f46e5";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#6366f1";
+                  }}
+                >
+                  Edit Profile →
+                </button>
+              </div>
+            ) : (
+              <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px" }}>
+                <p style={{ fontSize: "14px", color: "#1e40af", margin: "0 0 16px 0" }}>
+                  Your profile is not set up yet.
+                </p>
+                <button
+                  onClick={() => router.push("/influencer/setup")}
+                  style={{
+                    padding: "10px 16px",
+                    background: "#6366f1",
+                    color: "white",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    border: "none",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#4f46e5";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#6366f1";
+                  }}
+                >
+                  Create Profile →
+                </button>
+              </div>
+            )}
+          </div>
+        );
+
+      case "collaborations":
+        return (
+          <div>
+            <h2 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
+              ✅ Active Collaborations
+            </h2>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "24px" }}>
+              Manage your ongoing brand partnerships and deliverables.
+            </p>
+            <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px", textAlign: "center" }}>
+              <p style={{ fontSize: "14px", color: "#1e40af", margin: "0" }}>
+                No active collaborations yet. Complete your profile to get started! 🚀
+              </p>
+            </div>
+          </div>
+        );
+
+      case "messages":
+        return (
+          <div>
+            <h2 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
+              💬 Messages
+            </h2>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "24px" }}>
+              Chat with brands about partnership details.
+            </p>
+            <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px", textAlign: "center" }}>
+              <p style={{ fontSize: "14px", color: "#1e40af", margin: "0" }}>
+                No messages yet. Brands will reach out once you complete your profile! 💌
+              </p>
+            </div>
+          </div>
+        );
+
+      case "settings":
+        return (
+          <div>
+            <h2 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
+              ⚙️ Settings
+            </h2>
+            <p style={{ fontSize: "14px", color: "#666", marginBottom: "24px" }}>
+              Update your account settings and preferences.
+            </p>
+            <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "20px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <button
+                  onClick={handleSignOut}
+                  style={{
+                    padding: "12px 16px",
+                    background: "#fee2e2",
+                    color: "#991b1b",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    border: "1px solid #fecaca",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#fecaca";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#fee2e2";
+                  }}
+                >
+                  Sign Out
+                </button>
+                {isDemo && (
+                  <p style={{ fontSize: "12px", color: "#6366f1", fontWeight: "600", margin: "0", textAlign: "center" }}>
+                    Demo Mode Active
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <div style={{ background: "#f5f3ff", minHeight: "100vh", padding: "24px" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
         {/* HEADER */}
         <div style={{ marginBottom: "32px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
               <h1 style={{ fontSize: "28px", fontWeight: "700", margin: "0", color: "#1a1a1a" }}>
                 Welcome, {userName}! 👋
@@ -82,387 +276,60 @@ export default function InfluencerDashboardPage() {
                 </p>
               )}
             </div>
-            <button
-              onClick={handleSignOut}
-              style={{
-                padding: "10px 16px",
-                border: "1px solid #c7d2fe",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                color: "#6366f1",
-                background: "white",
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#f0f9ff";
-                e.currentTarget.style.borderColor = "#6366f1";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "white";
-                e.currentTarget.style.borderColor = "#c7d2fe";
-              }}
-            >
-              Sign Out
-            </button>
           </div>
-          <p style={{ fontSize: "14px", color: "#666", margin: "0" }}>
-            {profile 
-              ? "Complete your profile and start getting brand collaboration offers."
-              : "Let's set up your profile to start getting brand collaboration offers."}
-          </p>
         </div>
 
-        {/* PROFILE SETUP PROMPT */}
-        {!profile && (
-          <div style={{
-            background: "#f0f9ff",
-            border: "1px solid #bfdbfe",
-            borderRadius: "12px",
-            padding: "20px",
-            marginBottom: "32px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+        {/* MAIN LAYOUT - SIDEBAR + CONTENT */}
+        <div style={{ display: "grid", gridTemplateColumns: "220px 1fr", gap: "32px" }}>
+          {/* LEFT SIDEBAR - MENU */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            {MENU_ITEMS.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setActiveSection(item.id)}
+                style={{
+                  padding: "12px 16px",
+                  background: activeSection === item.id ? "#6366f1" : "white",
+                  color: activeSection === item.id ? "white" : "#1a1a1a",
+                  border: activeSection === item.id ? "1px solid #6366f1" : "1px solid #e0dcff",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  textAlign: "left",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
+                onMouseEnter={(e) => {
+                  if (activeSection !== item.id) {
+                    e.currentTarget.style.background = "#f0f9ff";
+                    e.currentTarget.style.borderColor = "#bfdbfe";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (activeSection !== item.id) {
+                    e.currentTarget.style.background = "white";
+                    e.currentTarget.style.borderColor = "#e0dcff";
+                  }
+                }}
+              >
+                <span style={{ fontSize: "18px" }}>{item.icon}</span>
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* RIGHT CONTENT AREA */}
+          <div style={{ 
+            background: "white", 
+            borderRadius: "12px", 
+            padding: "32px",
+            border: "1px solid #e0dcff",
+            boxShadow: "0 4px 16px rgba(99, 102, 241, 0.08)"
           }}>
-            <div>
-              <p style={{ fontSize: "15px", fontWeight: "600", color: "#6366f1", margin: "0 0 4px 0" }}>
-                Complete your profile to attract brands! ✨
-              </p>
-              <p style={{ fontSize: "13px", color: "#666", margin: "0" }}>
-                Add your bio, categories, and portfolio links to get started.
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                // Force reload to ensure data is loaded
-                router.push("/influencer/setup");
-                // Also check localStorage immediately
-                const saved = localStorage.getItem("influencer_profile");
-                console.log("Profile in localStorage:", saved);
-              }}
-              style={{
-                padding: "10px 16px",
-                background: "#6366f1",
-                color: "white",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                textDecoration: "none",
-                cursor: "pointer",
-                border: "none",
-                whiteSpace: "nowrap",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#4f46e5";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#6366f1";
-              }}
-            >
-              Complete Profile →
-            </button>
-          </div>
-        )}
-
-        {/* CONTENT GRID */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "20px",
-          }}
-        >
-          {/* Profile Card */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              padding: "24px",
-              border: "1px solid #e0dcff",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#c7d2fe";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.08)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#e0dcff";
-              e.currentTarget.style.boxShadow = "none";
-            }}
-          >
-            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
-              📋 Your Profile
-            </h2>
-            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px", margin: "0 0 16px 0" }}>
-              View and update your influencer profile information.
-            </p>
-            <button
-              onClick={() => router.push("/influencer/setup")}
-              style={{
-                display: "inline-block",
-                padding: "10px 16px",
-                background: "#6366f1",
-                color: "white",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                textDecoration: "none",
-                cursor: "pointer",
-                border: "none",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#4f46e5";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#6366f1";
-              }}
-            >
-              View Profile →
-            </button>
-          </div>
-
-          {/* Opportunities Card */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              padding: "24px",
-              border: "1px solid #e0dcff",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#c7d2fe";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.08)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#e0dcff";
-              e.currentTarget.style.boxShadow = "none";
-            }}
-          >
-            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
-              🎯 Brand Opportunities
-            </h2>
-            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px", margin: "0 0 16px 0" }}>
-              Browse and apply for brand collaboration opportunities.
-            </p>
-            <button
-              style={{
-                display: "inline-block",
-                padding: "10px 16px",
-                background: "#6366f1",
-                color: "white",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                border: "none",
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#4f46e5";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#6366f1";
-              }}
-            >
-              Browse Opportunities →
-            </button>
-          </div>
-
-          {/* Messages Card */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              padding: "24px",
-              border: "1px solid #e0dcff",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#c7d2fe";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.08)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#e0dcff";
-              e.currentTarget.style.boxShadow = "none";
-            }}
-          >
-            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
-              💬 Messages
-            </h2>
-            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px", margin: "0 0 16px 0" }}>
-              Chat with brands about partnership details.
-            </p>
-            <button
-              style={{
-                display: "inline-block",
-                padding: "10px 16px",
-                background: "#6366f1",
-                color: "white",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                border: "none",
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#4f46e5";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#6366f1";
-              }}
-            >
-              Check Messages →
-            </button>
-          </div>
-
-          {/* Analytics Card */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              padding: "24px",
-              border: "1px solid #e0dcff",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#c7d2fe";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.08)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#e0dcff";
-              e.currentTarget.style.boxShadow = "none";
-            }}
-          >
-            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
-              📊 Analytics
-            </h2>
-            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px", margin: "0 0 16px 0" }}>
-              Track your profile views and collaboration performance.
-            </p>
-            <button
-              style={{
-                display: "inline-block",
-                padding: "10px 16px",
-                background: "#6366f1",
-                color: "white",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                border: "none",
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#4f46e5";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#6366f1";
-              }}
-            >
-              View Analytics →
-            </button>
-          </div>
-
-          {/* My Collaborations Card */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              padding: "24px",
-              border: "1px solid #e0dcff",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#c7d2fe";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.08)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#e0dcff";
-              e.currentTarget.style.boxShadow = "none";
-            }}
-          >
-            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
-              ✅ Active Collaborations
-            </h2>
-            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px", margin: "0 0 16px 0" }}>
-              Manage your ongoing brand partnerships and deliverables.
-            </p>
-            <button
-              style={{
-                display: "inline-block",
-                padding: "10px 16px",
-                background: "#6366f1",
-                color: "white",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                border: "none",
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#4f46e5";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#6366f1";
-              }}
-            >
-              View Collaborations →
-            </button>
-          </div>
-
-          {/* Settings Card */}
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              padding: "24px",
-              border: "1px solid #e0dcff",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#c7d2fe";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.08)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#e0dcff";
-              e.currentTarget.style.boxShadow = "none";
-            }}
-          >
-            <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
-              ⚙️ Settings
-            </h2>
-            <p style={{ fontSize: "14px", color: "#666", marginBottom: "16px", margin: "0 0 16px 0" }}>
-              Update your account settings and preferences.
-            </p>
-            <button
-              style={{
-                display: "inline-block",
-                padding: "10px 16px",
-                background: "#6366f1",
-                color: "white",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                border: "none",
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#4f46e5";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#6366f1";
-              }}
-            >
-              Go to Settings →
-            </button>
+            {renderContent()}
           </div>
         </div>
       </div>

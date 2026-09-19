@@ -23,20 +23,6 @@ export default function HomePage() {
             </span>
             <VerifiedBadge />
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="rounded-xl px-4 py-2 text-sm font-semibold text-white/75 transition hover:text-white"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/login?next=/dashboard/campaigns/new"
-              className="rounded-xl bg-orange px-4 py-2.5 text-sm font-bold text-white shadow-[0_8px_24px_rgba(255,107,43,0.35)] transition hover:bg-[#f05f20]"
-            >
-              Open workspace
-            </Link>
-          </div>
         </header>
 
         <main className="grid items-center gap-12 py-20 lg:grid-cols-2 lg:py-28">

@@ -361,85 +361,22 @@ export default function InfluencerDashboardPage() {
               <h3 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
                 Account
               </h3>
-              <div style={{ display: "grid", gap: "12px" }}>
-                <div style={{ 
-                  background: "#f0f9ff", 
-                  border: "1px solid #bfdbfe", 
-                  borderRadius: "8px", 
-                  padding: "16px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center"
-                }}>
-                  <div>
-                    <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0 0 4px 0" }}>
-                      Email Address
-                    </p>
-                    <p style={{ fontSize: "12px", color: "#666", margin: "0" }}>
-                      {profile?.displayName ? `${profile.displayName.toLowerCase()}@creator.local` : "creator@example.com"}
-                    </p>
-                  </div>
-                  <button
-                    style={{
-                      padding: "8px 12px",
-                      background: "white",
-                      border: "1px solid #bfdbfe",
-                      borderRadius: "6px",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      color: "#1e40af",
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#eff6ff";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "white";
-                    }}
-                  >
-                    Change
-                  </button>
-                </div>
-
-                <div style={{ 
-                  background: "#f0f9ff", 
-                  border: "1px solid #bfdbfe", 
-                  borderRadius: "8px", 
-                  padding: "16px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center"
-                }}>
-                  <div>
-                    <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0 0 4px 0" }}>
-                      Password
-                    </p>
-                    <p style={{ fontSize: "12px", color: "#666", margin: "0" }}>
-                      Set a strong password to protect your account
-                    </p>
-                  </div>
-                  <button
-                    style={{
-                      padding: "8px 12px",
-                      background: "white",
-                      border: "1px solid #bfdbfe",
-                      borderRadius: "6px",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      color: "#1e40af",
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#eff6ff";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "white";
-                    }}
-                  >
-                    Update
-                  </button>
+              <div style={{ 
+                background: "#f0f9ff", 
+                border: "1px solid #bfdbfe", 
+                borderRadius: "8px", 
+                padding: "16px",
+              }}>
+                <div>
+                  <p style={{ fontSize: "12px", fontWeight: "600", color: "#666", margin: "0 0 4px 0" }}>
+                    Google Account Email
+                  </p>
+                  <p style={{ fontSize: "14px", color: "#1a1a1a", fontWeight: "500", margin: "0", paddingBottom: "8px", borderBottom: "1px solid #bfdbfe" }}>
+                    {profile?.displayName ? `${profile.displayName.toLowerCase()}@creator.local` : "creator@example.com"}
+                  </p>
+                  <p style={{ fontSize: "12px", color: "#666", margin: "8px 0 0 0" }}>
+                    🔒 Google Login (Read-only)
+                  </p>
                 </div>
               </div>
             </div>
@@ -556,7 +493,7 @@ export default function InfluencerDashboardPage() {
               </div>
             </div>
 
-            {/* DANGER ZONE */}
+            {/* MORE OPTIONS */}
             <div style={{ borderTop: "1px solid #e0dcff", paddingTop: "24px" }}>
               <h3 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
                 More Options
@@ -583,11 +520,6 @@ export default function InfluencerDashboardPage() {
               >
                 Delete Account
               </button>
-              {isDemo && (
-                <p style={{ fontSize: "12px", color: "#6366f1", fontWeight: "600", margin: "16px 0 0 0", textAlign: "center" }}>
-                  🔵 Demo Mode Active
-                </p>
-              )}
             </div>
           </div>
         );

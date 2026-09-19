@@ -38,17 +38,27 @@ export default function InfluencerDashboardPage() {
       const email = sessionStorage.getItem("influencer_email");
       if (email) {
         setUserEmail(email);
+        console.log("Demo mode - email from sessionStorage:", email);
       }
     } else {
       // Try to get authenticated user from Supabase
       const supabase = createClient();
-      supabase.auth.getUser().then(({ data: { user } }) => {
+      supabase.auth.getUser().then(({ data: { user }, error }) => {
+        if (error) {
+          console.error("Error getting user from Supabase:", error);
+          setUserEmail("Not authenticated");
+          return;
+        }
         if (user?.email) {
           setUserEmail(user.email);
-          console.log("Got user email from Supabase:", user.email);
+          console.log("✓ Got user email from Supabase:", user.email);
+        } else {
+          console.log("No user email found");
+          setUserEmail("Not available");
         }
       }).catch((err) => {
         console.error("Error getting user from Supabase:", err);
+        setUserEmail("Not available");
       });
     }
 
@@ -395,10 +405,10 @@ export default function InfluencerDashboardPage() {
                     Google Account Email
                   </p>
                   <p style={{ fontSize: "14px", color: "#1a1a1a", fontWeight: "500", margin: "0", paddingBottom: "8px", borderBottom: "1px solid #bfdbfe" }}>
-                    {userEmail || "Loading..."}
+                    {userEmail || (isDemo ? "Enter email on login page" : "Loading...")}
                   </p>
                   <p style={{ fontSize: "12px", color: "#666", margin: "8px 0 0 0" }}>
-                    🔒 Google Login (Read-only)
+                    🔒 Google Login {isDemo ? "(Demo Mode)" : "(Read-only)"}
                   </p>
                 </div>
               </div>

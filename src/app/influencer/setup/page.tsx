@@ -149,7 +149,6 @@ export default function InfluencerSetupPage() {
             </p>
           </div>
           <div style={{ textAlign: "right" }}>
-            <p style={{ fontSize: "14px", color: "#666", margin: "0 0 8px 0" }}>Step 1 of 2</p>
             <button
               onClick={() => router.push("/influencer/dashboard")}
               style={{

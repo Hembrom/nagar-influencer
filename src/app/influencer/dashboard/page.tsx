@@ -119,8 +119,14 @@ export default function InfluencerDashboardPage() {
                 Add your bio, categories, and portfolio links to get started.
               </p>
             </div>
-            <Link
-              href="/influencer/setup"
+            <button
+              onClick={() => {
+                // Force reload to ensure data is loaded
+                router.push("/influencer/setup");
+                // Also check localStorage immediately
+                const saved = localStorage.getItem("influencer_profile");
+                console.log("Profile in localStorage:", saved);
+              }}
               style={{
                 padding: "10px 16px",
                 background: "#FF6B35",
@@ -130,11 +136,12 @@ export default function InfluencerDashboardPage() {
                 fontWeight: "600",
                 textDecoration: "none",
                 cursor: "pointer",
+                border: "none",
                 whiteSpace: "nowrap",
               }}
             >
               Complete Profile →
-            </Link>
+            </button>
           </div>
         )}
 

@@ -17,15 +17,16 @@ interface InfluencerProfile {
   createdAt: string;
 }
 
-type ActiveSection = "profile" | "collaborations" | "messages" | "settings";
+type ActiveSection = "home" | "profile" | "collaborations" | "messages" | "settings";
 
 export default function InfluencerDashboardPage() {
   const router = useRouter();
   const [profile, setProfile] = useState<InfluencerProfile | null>(null);
   const [userName, setUserName] = useState<string>("Creator");
   const [isDemo, setIsDemo] = useState(false);
-  const [activeSection, setActiveSection] = useState<ActiveSection>("profile");
+  const [activeSection, setActiveSection] = useState<ActiveSection>("home");
   const [userEmail, setUserEmail] = useState<string>("");
+  const [applied, setApplied] = useState<number[]>([]);
 
   useEffect(() => {
     console.log("Dashboard mount - loading profile and auth...");
@@ -102,7 +103,69 @@ export default function InfluencerDashboardPage() {
     router.push("/influencer/login");
   };
 
+  // Tasks data
+  const AVAILABLE_TASKS = [
+    {
+      id: 1,
+      brand: "Priya Fashion",
+      campaignName: "Summer Collection Launch",
+      type: "Instagram Reel",
+      budget: "₹50,000",
+      deadline: "5 days",
+      followers: "100K+",
+      engagement: "4%+",
+      description: "Showcase our new summer collection with a creative reel. Focus on styling and trends.",
+      status: "open",
+    },
+    {
+      id: 2,
+      brand: "NutriWell Foods",
+      campaignName: "Healthy Lifestyle Campaign",
+      type: "YouTube Video",
+      budget: "₹75,000",
+      deadline: "7 days",
+      followers: "200K+",
+      engagement: "5%+",
+      description: "Create an authentic video showcasing how NutriWell fits into your daily routine.",
+      status: "open",
+    },
+    {
+      id: 3,
+      brand: "TechGadget Pro",
+      campaignName: "Product Review Series",
+      type: "Instagram Reels + Stories",
+      budget: "₹60,000",
+      deadline: "3 days",
+      followers: "50K+",
+      engagement: "3%+",
+      description: "Honest review of our latest gadget in your signature style. Full creative freedom.",
+      status: "open",
+    },
+    {
+      id: 4,
+      brand: "Urban Cafe",
+      campaignName: "Cafe Experience Challenge",
+      type: "TikTok Video",
+      budget: "₹40,000",
+      deadline: "10 days",
+      followers: "75K+",
+      engagement: "6%+",
+      description: "Create a fun, engaging video featuring our cafe vibe. Perfect for food creators!",
+      status: "open",
+    },
+  ];
+
+  const handleApply = (taskId: number) => {
+    if (!applied.includes(taskId)) {
+      setApplied([...applied, taskId]);
+      setTimeout(() => {
+        alert("Application sent! The brand will review and get back to you soon.");
+      }, 300);
+    }
+  };
+
   const MENU_ITEMS: { id: ActiveSection; icon: string; label: string }[] = [
+    { id: "home", icon: "🏠", label: "Home" },
     { id: "profile", icon: "📋", label: "Your Profile" },
     { id: "collaborations", icon: "✅", label: "Active Collaborations" },
     { id: "messages", icon: "💬", label: "Messages" },
@@ -111,6 +174,210 @@ export default function InfluencerDashboardPage() {
 
   const renderContent = () => {
     switch (activeSection) {
+      case "home":
+        return (
+          <div>
+            <h2 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
+              🎯 Available Opportunities
+            </h2>
+
+            {/* Company Info Banner */}
+            <div style={{
+              background: "linear-gradient(135deg, #e0dcff 0%, #f0f9ff 100%)",
+              border: "1px solid #bfdbfe",
+              borderRadius: "12px",
+              padding: "24px",
+              marginBottom: "24px",
+            }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "20px" }}>
+                <div>
+                  <p style={{ fontSize: "12px", color: "#666", fontWeight: "600", margin: "0 0 8px 0" }}>
+                    📱 Format (Last 28 Days)
+                  </p>
+                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a1a", margin: "0" }}>
+                    Instagram Reel, YouTube, TikTok
+                  </p>
+                </div>
+                <div>
+                  <p style={{ fontSize: "12px", color: "#666", fontWeight: "600", margin: "0 0 8px 0" }}>
+                    💰 Budget Range
+                  </p>
+                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#6366f1", margin: "0" }}>
+                    ₹40K - ₹75K
+                  </p>
+                </div>
+                <div>
+                  <p style={{ fontSize: "12px", color: "#666", fontWeight: "600", margin: "0 0 8px 0" }}>
+                    🎯 Top Niches
+                  </p>
+                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a1a", margin: "0" }}>
+                    Fashion, Food, Tech, Lifestyle
+                  </p>
+                </div>
+                <div>
+                  <p style={{ fontSize: "12px", color: "#666", fontWeight: "600", margin: "0 0 8px 0" }}>
+                    📊 Total Opportunities
+                  </p>
+                  <p style={{ fontSize: "14px", fontWeight: "700", color: "#1a1a1a", margin: "0" }}>
+                    4 Available Now
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Tasks */}
+            <div style={{ display: "grid", gap: "16px" }}>
+              {AVAILABLE_TASKS.map((task) => (
+                <div
+                  key={task.id}
+                  style={{
+                    background: "white",
+                    border: "1px solid #e0dcff",
+                    borderRadius: "12px",
+                    padding: "20px",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "#6366f1";
+                    e.currentTarget.style.boxShadow = "0 4px 12px rgba(99, 102, 241, 0.1)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "#e0dcff";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "12px" }}>
+                    <div>
+                      <h3 style={{ fontSize: "16px", fontWeight: "700", color: "#1a1a1a", margin: "0 0 4px 0" }}>
+                        {task.brand}
+                      </h3>
+                      <p style={{ fontSize: "14px", color: "#666", margin: "0" }}>
+                        {task.campaignName}
+                      </p>
+                    </div>
+                    <span style={{
+                      padding: "6px 12px",
+                      background: "#dcfce7",
+                      color: "#166534",
+                      borderRadius: "20px",
+                      fontSize: "12px",
+                      fontWeight: "600",
+                    }}>
+                      Open
+                    </span>
+                  </div>
+
+                  <p style={{ fontSize: "14px", color: "#666", margin: "12px 0" }}>
+                    {task.description}
+                  </p>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "16px", marginBottom: "16px", paddingBottom: "16px", borderBottom: "1px solid #e0dcff" }}>
+                    <div>
+                      <p style={{ fontSize: "12px", color: "#999", margin: "0 0 4px 0" }}>Format</p>
+                      <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>{task.type}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: "12px", color: "#999", margin: "0 0 4px 0" }}>Budget</p>
+                      <p style={{ fontSize: "14px", fontWeight: "600", color: "#6366f1", margin: "0" }}>{task.budget}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: "12px", color: "#999", margin: "0 0 4px 0" }}>Deadline</p>
+                      <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>{task.deadline}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: "12px", color: "#999", margin: "0 0 4px 0" }}>Requirements</p>
+                      <p style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>{task.followers}</p>
+                    </div>
+                  </div>
+
+                  {applied.includes(task.id) ? (
+                    <div style={{
+                      padding: "10px 16px",
+                      background: "#dcfce7",
+                      color: "#166534",
+                      borderRadius: "8px",
+                      textAlign: "center",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                    }}>
+                      ✓ Application Sent
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleApply(task.id)}
+                      style={{
+                        width: "100%",
+                        padding: "10px 16px",
+                        background: "#6366f1",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "8px",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "#4f46e5";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "#6366f1";
+                      }}
+                    >
+                      Snatch Opportunity 🎯
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* How It Works */}
+            <div style={{ marginTop: "32px", paddingTop: "32px", borderTop: "1px solid #e0dcff" }}>
+              <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#1a1a1a", marginBottom: "20px" }}>
+                How It Works
+              </h3>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "16px" }}>
+                <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "16px", textAlign: "center" }}>
+                  <p style={{ fontSize: "24px", margin: "0 0 8px 0" }}>1️⃣</p>
+                  <p style={{ fontSize: "13px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>
+                    Snatch Opportunity
+                  </p>
+                  <p style={{ fontSize: "12px", color: "#666", margin: "4px 0 0 0" }}>
+                    Browse & apply to tasks that fit your style
+                  </p>
+                </div>
+                <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "16px", textAlign: "center" }}>
+                  <p style={{ fontSize: "24px", margin: "0 0 8px 0" }}>2️⃣</p>
+                  <p style={{ fontSize: "13px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>
+                    Review Requirements
+                  </p>
+                  <p style={{ fontSize: "12px", color: "#666", margin: "4px 0 0 0" }}>
+                    Understand the brief & guidelines
+                  </p>
+                </div>
+                <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "16px", textAlign: "center" }}>
+                  <p style={{ fontSize: "24px", margin: "0 0 8px 0" }}>3️⃣</p>
+                  <p style={{ fontSize: "13px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>
+                    Accept Task
+                  </p>
+                  <p style={{ fontSize: "12px", color: "#666", margin: "4px 0 0 0" }}>
+                    Confirm acceptance & start creating
+                  </p>
+                </div>
+                <div style={{ background: "#f0f9ff", border: "1px solid #bfdbfe", borderRadius: "12px", padding: "16px", textAlign: "center" }}>
+                  <p style={{ fontSize: "24px", margin: "0 0 8px 0" }}>4️⃣</p>
+                  <p style={{ fontSize: "13px", fontWeight: "600", color: "#1a1a1a", margin: "0" }}>
+                    Deliver & Get Paid
+                  </p>
+                  <p style={{ fontSize: "12px", color: "#666", margin: "4px 0 0 0" }}>
+                    Submit content, get paid post delivery
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
       case "profile":
         return (
           <div>

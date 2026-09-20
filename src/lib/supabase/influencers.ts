@@ -115,22 +115,24 @@ export async function deleteInfluencer(id: string) {
 export async function getInfluencerStats() {
   const supabase = createClient();
   
-  const { data, error } = await supabase
-    .from('influencers')
-    .select('source')
-    .then(async (res) => {
-      if (res.error) throw res.error;
-      
-      const all = res.data?.length || 0;
-      const selfRegistered = res.data?.filter(i => i.source === 'self-registered').length || 0;
-      const adminAdded = res.data?.filter(i => i.source === 'admin-added').length || 0;
-      
-      return {
-        total: all,
-        selfRegistered,
-        adminAdded,
-      };
-    });
-
-  return error ? null : data;
+  try {
+    const { data, error } = await supabase
+      .from('influencers')
+      .select('source');
+    
+    if (error) throw error;
+    
+    const all = data?.length || 0;
+    const selfRegistered = data?.filter(i => i.source === 'self-registered').length || 0;
+    const adminAdded = data?.filter(i => i.source === 'admin-added').length || 0;
+    
+    return {
+      total: all,
+      selfRegistered,
+      adminAdded,
+    };
+  } catch (error) {
+    console.error('Error getting influencer stats:', error);
+    return null;
+  }
 }

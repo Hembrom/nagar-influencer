@@ -363,33 +363,80 @@ ALTER TABLE analytics ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow authenticated to read influencers"
   ON influencers FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow users to manage their own influencer profile"
-  ON influencers FOR ALL USING (auth.uid() = created_by OR auth.role() = 'authenticated')
-  WITH CHECK (auth.uid() = created_by OR auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated to insert influencers"
+  ON influencers FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated to update influencers"
+  ON influencers FOR UPDATE USING (auth.role() = 'authenticated')
+  WITH CHECK (auth.role() = 'authenticated');
 
 -- RLS Policies for Clients
 CREATE POLICY "Allow authenticated to read clients"
   ON clients FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow users to manage their own client profile"
-  ON clients FOR ALL USING (auth.uid() = created_by OR auth.role() = 'authenticated')
-  WITH CHECK (auth.uid() = created_by OR auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated to insert clients"
+  ON clients FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated to update clients"
+  ON clients FOR UPDATE USING (auth.role() = 'authenticated')
+  WITH CHECK (auth.role() = 'authenticated');
 
 -- RLS Policies for Admins (restricted)
-CREATE POLICY "Only superadmins can manage admins"
-  ON admins FOR ALL USING (auth.role() = 'authenticated')
-  WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated to read admins"
+  ON admins FOR SELECT USING (auth.role() = 'authenticated');
 
 -- RLS Policies for Campaigns
 CREATE POLICY "Allow authenticated to read campaigns"
   ON campaigns FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow clients to create campaigns"
+CREATE POLICY "Allow authenticated to insert campaigns"
   ON campaigns FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow clients to update their campaigns"
-  ON campaigns FOR UPDATE USING (client_id IN (SELECT id FROM clients WHERE created_by = auth.uid()))
-  WITH CHECK (client_id IN (SELECT id FROM clients WHERE created_by = auth.uid()));
+CREATE POLICY "Allow authenticated to update campaigns"
+  ON campaigns FOR UPDATE USING (auth.role() = 'authenticated')
+  WITH CHECK (auth.role() = 'authenticated');
+
+-- RLS Policies for Applications
+CREATE POLICY "Allow authenticated to read applications"
+  ON campaign_applications FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated to insert applications"
+  ON campaign_applications FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+-- RLS Policies for Deliverables
+CREATE POLICY "Allow authenticated to read deliverables"
+  ON deliverables FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated to insert deliverables"
+  ON deliverables FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+-- RLS Policies for Transactions
+CREATE POLICY "Allow authenticated to read transactions"
+  ON transactions FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated to insert transactions"
+  ON transactions FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+-- RLS Policies for Messages
+CREATE POLICY "Allow authenticated to read messages"
+  ON messages FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated to insert messages"
+  ON messages FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+-- RLS Policies for Reviews
+CREATE POLICY "Allow authenticated to read reviews"
+  ON reviews FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated to insert reviews"
+  ON reviews FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+-- RLS Policies for Analytics
+CREATE POLICY "Allow authenticated to read analytics"
+  ON analytics FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated to insert analytics"
+  ON analytics FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 
 -- ============================================================
 -- OPTIONAL: SAMPLE DATA

@@ -2,21 +2,10 @@
 // Helper functions for influencer management with source tracking
 
 import { createClient } from "@/lib/supabase/client";
+import type { Database } from "@/lib/supabase/database.types";
 
+export type Influencer = Database["public"]["Tables"]["influencers"]["Row"];
 export type InfluencerSource = "self-registered" | "admin-added";
-
-export interface Influencer {
-  id: string;
-  name: string;
-  email: string;
-  handle: string;
-  followers: string;
-  category: string;
-  source: InfluencerSource;
-  status: string;
-  created_at: string;
-  updated_at: string;
-}
 
 // Add influencer (by admin)
 export async function addInfluencerByAdmin(influencerData: Omit<Influencer, 'id' | 'source' | 'created_at' | 'updated_at'>) {
@@ -28,7 +17,7 @@ export async function addInfluencerByAdmin(influencerData: Omit<Influencer, 'id'
       {
         ...influencerData,
         source: 'admin-added',
-      },
+      } as Database["public"]["Tables"]["influencers"]["Insert"],
     ])
     .select();
 
@@ -46,7 +35,7 @@ export async function addInfluencerSelfRegistered(influencerData: Omit<Influence
       {
         ...influencerData,
         source: 'self-registered',
-      },
+      } as Database["public"]["Tables"]["influencers"]["Insert"],
     ])
     .select();
 

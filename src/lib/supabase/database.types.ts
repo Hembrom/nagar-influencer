@@ -1,6 +1,45 @@
 export type Database = {
   public: {
     Tables: {
+      influencers: {
+        Row: {
+          id: string;
+          name: string;
+          email: string;
+          handle: string;
+          followers: string;
+          category: string;
+          source: "self-registered" | "admin-added";
+          status: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          email: string;
+          handle: string;
+          followers: string;
+          category: string;
+          source?: "self-registered" | "admin-added";
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          email?: string;
+          handle?: string;
+          followers?: string;
+          category?: string;
+          source?: "self-registered" | "admin-added";
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       profiles: {
         Row: {
           id: string;

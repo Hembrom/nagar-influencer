@@ -12,6 +12,7 @@ const DEFAULT_INFLUENCERS = [
     email: "priya@example.com",
     status: "verified",
     joinedDate: "2026-08-10",
+    source: "self-registered",
   },
   {
     id: 2,
@@ -22,12 +23,14 @@ const DEFAULT_INFLUENCERS = [
     email: "rahul@example.com",
     status: "verified",
     joinedDate: "2026-08-15",
+    source: "admin-added",
   },
 ];
 
 export default function InfluencersManagementPage() {
   const [influencers, setInfluencers] = useState(DEFAULT_INFLUENCERS);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [filterSource, setFilterSource] = useState<"all" | "self-registered" | "admin-added">("all");
   const [formData, setFormData] = useState({
     name: "",
     handle: "",
@@ -49,6 +52,7 @@ export default function InfluencersManagementPage() {
       email: formData.email,
       status: "verified",
       joinedDate: new Date().toISOString().split("T")[0],
+      source: "admin-added",
     };
 
     setInfluencers([...influencers, newInfluencer]);
@@ -85,6 +89,40 @@ export default function InfluencersManagementPage() {
           {success}
         </div>
       )}
+
+      {/* Filter Buttons */}
+      <div className="mb-6 flex gap-3">
+        <button
+          onClick={() => setFilterSource("all")}
+          className={`px-4 py-2 rounded-lg font-medium text-sm transition ${
+            filterSource === "all"
+              ? "bg-purple-600 text-white"
+              : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+          }`}
+        >
+          All ({influencers.length})
+        </button>
+        <button
+          onClick={() => setFilterSource("self-registered")}
+          className={`px-4 py-2 rounded-lg font-medium text-sm transition ${
+            filterSource === "self-registered"
+              ? "bg-blue-600 text-white"
+              : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+          }`}
+        >
+          Self-Registered ({influencers.filter(i => i.source === "self-registered").length})
+        </button>
+        <button
+          onClick={() => setFilterSource("admin-added")}
+          className={`px-4 py-2 rounded-lg font-medium text-sm transition ${
+            filterSource === "admin-added"
+              ? "bg-green-600 text-white"
+              : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+          }`}
+        >
+          Admin Added ({influencers.filter(i => i.source === "admin-added").length})
+        </button>
+      </div>
 
       {/* Add Influencer Form */}
       {showAddForm && (
@@ -183,12 +221,15 @@ export default function InfluencersManagementPage() {
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Category</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Followers</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Added By</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Joined</th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {influencers.map((influencer) => (
+            {influencers
+              .filter((inf) => filterSource === "all" || inf.source === filterSource)
+              .map((influencer) => (
               <tr key={influencer.id} className="border-b border-gray-200 hover:bg-gray-50 transition">
                 <td className="px-6 py-4">
                   <p className="text-sm font-medium text-gray-900">{influencer.name}</p>
@@ -210,6 +251,15 @@ export default function InfluencersManagementPage() {
                 <td className="px-6 py-4">
                   <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
                     {influencer.status === "verified" ? "✓ Verified" : "Pending"}
+                  </span>
+                </td>
+                <td className="px-6 py-4">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    influencer.source === "self-registered"
+                      ? "bg-blue-100 text-blue-700"
+                      : "bg-green-100 text-green-700"
+                  }`}>
+                    {influencer.source === "self-registered" ? "📝 Self" : "👤 Admin"}
                   </span>
                 </td>
                 <td className="px-6 py-4">

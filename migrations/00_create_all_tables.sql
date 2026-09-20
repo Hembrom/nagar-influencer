@@ -359,6 +359,30 @@ ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
 ALTER TABLE analytics ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Allow authenticated to read influencers" ON influencers;
+DROP POLICY IF EXISTS "Allow authenticated to insert influencers" ON influencers;
+DROP POLICY IF EXISTS "Allow authenticated to update influencers" ON influencers;
+DROP POLICY IF EXISTS "Allow authenticated to read clients" ON clients;
+DROP POLICY IF EXISTS "Allow authenticated to insert clients" ON clients;
+DROP POLICY IF EXISTS "Allow authenticated to update clients" ON clients;
+DROP POLICY IF EXISTS "Allow authenticated to read admins" ON admins;
+DROP POLICY IF EXISTS "Allow authenticated to read campaigns" ON campaigns;
+DROP POLICY IF EXISTS "Allow authenticated to insert campaigns" ON campaigns;
+DROP POLICY IF EXISTS "Allow authenticated to update campaigns" ON campaigns;
+DROP POLICY IF EXISTS "Allow authenticated to read applications" ON campaign_applications;
+DROP POLICY IF EXISTS "Allow authenticated to insert applications" ON campaign_applications;
+DROP POLICY IF EXISTS "Allow authenticated to read deliverables" ON deliverables;
+DROP POLICY IF EXISTS "Allow authenticated to insert deliverables" ON deliverables;
+DROP POLICY IF EXISTS "Allow authenticated to read transactions" ON transactions;
+DROP POLICY IF EXISTS "Allow authenticated to insert transactions" ON transactions;
+DROP POLICY IF EXISTS "Allow authenticated to read messages" ON messages;
+DROP POLICY IF EXISTS "Allow authenticated to insert messages" ON messages;
+DROP POLICY IF EXISTS "Allow authenticated to read reviews" ON reviews;
+DROP POLICY IF EXISTS "Allow authenticated to insert reviews" ON reviews;
+DROP POLICY IF EXISTS "Allow authenticated to read analytics" ON analytics;
+DROP POLICY IF EXISTS "Allow authenticated to insert analytics" ON analytics;
+
 -- RLS Policies for Influencers
 CREATE POLICY "Allow authenticated to read influencers"
   ON influencers FOR SELECT USING (auth.role() = 'authenticated');

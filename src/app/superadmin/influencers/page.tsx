@@ -58,7 +58,6 @@ export default function InfluencersManagementPage() {
         followers: formData.followers,
         category: formData.category,
         status: "verified",
-        source: "admin-added",
       });
 
       if (result && result[0]) {

@@ -78,7 +78,7 @@ export function Sidebar({ user }: Props) {
       <div className="hidden lg:block border-b border-white/10 px-5 py-5">
         <Link href="/dashboard/campaigns" className="flex items-center gap-2.5">
           <Image
-            src="/gmi-logo.png"
+            src="/gmi-logo.svg"
             alt="Grow My Influence"
             width={120}
             height={36}

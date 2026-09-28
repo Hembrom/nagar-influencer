@@ -271,7 +271,7 @@ function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5">
       <Image
-        src="/gmi-logo.png"
+        src="/gmi-logo.svg"
         alt="Grow My Influence"
         width={90}
         height={32}

@@ -11,7 +11,7 @@ export function Footer() {
           <div>
             <div className="mb-4">
               <Image
-                src="/gmi-logo.png"
+                src="/gmi-logo.svg"
                 alt="Grow My Influence"
                 width={120}
                 height={40}

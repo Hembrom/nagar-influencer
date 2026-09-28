@@ -64,7 +64,7 @@ export default function InfluencersPage() {
         <header className="mb-12 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
             <Image
-              src="/gmi-logo.png"
+              src="/gmi-logo.svg"
               alt="Grow My Influence"
               width={100}
               height={36}

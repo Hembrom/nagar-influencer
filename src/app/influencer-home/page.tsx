@@ -79,7 +79,7 @@ export default function InfluencerHomePage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
             <Image
-              src="/gmi-logo.png"
+              src="/gmi-logo.svg"
               alt="Grow My Influence"
               width={120}
               height={40}

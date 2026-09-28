@@ -58,7 +58,7 @@ export default function AdminLayout({
         {/* Logo */}
         <div className="mb-8">
           <Image
-            src="/gmi-logo.png"
+            src="/gmi-logo.svg"
             alt="Grow My Influence"
             width={140}
             height={50}

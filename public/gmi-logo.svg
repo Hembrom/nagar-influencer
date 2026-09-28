@@ -1,0 +1,24 @@
+<svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" width="400" height="120">
+  <!-- Leaf icon -->
+  <g>
+    <!-- Main leaf -->
+    <path d="M 85 15 Q 95 5 105 20 Q 100 35 85 40 Q 70 35 75 20 Z" fill="#16a34a" stroke="none"/>
+    <!-- Leaf accent line -->
+    <path d="M 90 20 Q 95 15 100 25" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- Small leaf -->
+    <path d="M 70 30 Q 75 25 80 32 Q 77 40 70 40 Z" fill="#22c55e" stroke="none"/>
+  </g>
+  
+  <!-- Grow text -->
+  <text x="60" y="75" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="#001f3f">Grow</text>
+  
+  <!-- my text in yellow -->
+  <text x="215" y="75" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="#fbbf24">my</text>
+  
+  <!-- Influence text -->
+  <text x="60" y="115" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#001f3f">Influence</text>
+  
+  <!-- Circle accent for "o" in Grow -->
+  <circle cx="155" cy="50" r="18" fill="#ef4444" opacity="0.9"/>
+  <text x="148" y="60" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white">o</text>
+</svg>

@@ -119,7 +119,7 @@ export default function LoginPage() {
         <div className="mb-10 max-w-lg lg:mb-0">
           <Link href="/" className="inline-flex items-center gap-2.5">
             <Image
-              src="/gmi-logo.png"
+              src="/gmi-logo.svg"
               alt="Grow My Influence"
               width={110}
               height={40}

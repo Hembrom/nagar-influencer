@@ -18,7 +18,7 @@ export default function SuperAdminSettingsPage() {
               </label>
               <input
                 type="text"
-                defaultValue="NagarInfluence"
+                defaultValue="Grow My Influence"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900"
               />
             </div>

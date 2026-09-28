@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
@@ -76,11 +77,14 @@ export function Sidebar({ user }: Props) {
     <aside className="flex lg:h-dvh lg:w-[260px] h-auto w-full shrink-0 flex-col lg:flex-col flex-row lg:border-r border-r-0 lg:border-t border-t border-border bg-[#0f0a1f] text-white lg:border-b-0">
       <div className="hidden lg:block border-b border-white/10 px-5 py-5">
         <Link href="/dashboard/campaigns" className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange text-xs font-extrabold text-white">
-            NI
-          </div>
+          <Image
+            src="/gmi-logo.png"
+            alt="Grow My Influence"
+            width={120}
+            height={36}
+            className="h-auto w-auto"
+          />
           <div>
-            <p className="text-sm font-bold tracking-tight">NagarInfluence</p>
             <p className="text-[11px] text-white/45">Brand workspace</p>
           </div>
         </Link>

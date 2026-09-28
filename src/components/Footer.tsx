@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -8,11 +9,14 @@ export function Footer() {
         <div className="grid gap-8 md:grid-cols-5 mb-8">
           {/* Brand Column */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple text-xs font-bold text-white">
-                NI
-              </div>
-              <span className="font-bold text-foreground">NagarInfluence</span>
+            <div className="mb-4">
+              <Image
+                src="/gmi-logo.png"
+                alt="Grow My Influence"
+                width={120}
+                height={40}
+                className="h-auto w-auto"
+              />
             </div>
             <p className="text-sm text-muted">
               Connect verified brands with creators for authentic campaigns.
@@ -121,7 +125,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="border-t border-border pt-8">
           <p className="text-sm text-muted text-center">
-            © 2026 NagarInfluence. All rights reserved.
+            © 2026 Grow My Influence. All rights reserved.
           </p>
         </div>
       </div>

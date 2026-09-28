@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   useCallback,
   useEffect,
@@ -269,12 +270,13 @@ function CheckIcon({ className = "" }: { className?: string }) {
 function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5">
-      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple text-xs font-extrabold text-white">
-        GMI
-      </div>
-      <span className="text-base font-bold tracking-tight text-navy">
-        Grow My Influence
-      </span>
+      <Image
+        src="/gmi-logo.png"
+        alt="Grow My Influence"
+        width={90}
+        height={32}
+        className="h-auto w-auto"
+      />
     </Link>
   );
 }

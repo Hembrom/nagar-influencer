@@ -231,7 +231,7 @@ export default function InfluencerLoginPage() {
 
             {/* TERMS */}
             <p style={{ fontSize: "12px", color: "#999", textAlign: "center", marginTop: "24px" }}>
-              By continuing you agree to NagarInfluence terms.
+              By continuing you agree to Grow My Influence terms.
             </p>
           </div>
         </div>

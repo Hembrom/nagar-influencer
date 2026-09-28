@@ -275,7 +275,7 @@ export default function InfluencerDashboardPage() {
                   🎯 Snatch Opportunity
                 </p>
                 <p style={{ fontSize: "14px", color: "#666", margin: "0", lineHeight: "1.8" }}>
-                  You will get tasks assigned by the Admins of NagarInfluence. 
+                  You will get tasks assigned by the Admins of Grow My Influence. 
                   <br />
                   <br />
                   Complete your profile to start receiving opportunities that match your niche and audience size. Our team carefully selects and assigns tasks that align with your expertise.

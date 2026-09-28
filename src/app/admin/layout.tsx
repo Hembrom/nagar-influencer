@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 
 const ADMIN_NAV = [
@@ -55,14 +56,15 @@ export default function AdminLayout({
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-gray-200 p-6 flex flex-col">
         {/* Logo */}
-        <div className="flex items-center gap-3 mb-8">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500 text-sm font-bold text-white">
-            NI
-          </div>
-          <div>
-            <p className="text-sm font-bold text-gray-900">NagarInfluence</p>
-            <p className="text-xs text-gray-500">Manager Dashboard</p>
-          </div>
+        <div className="mb-8">
+          <Image
+            src="/gmi-logo.png"
+            alt="Grow My Influence"
+            width={140}
+            height={50}
+            className="h-auto w-auto mb-3"
+          />
+          <p className="text-xs text-gray-500">Manager Dashboard</p>
         </div>
 
         {/* Navigation */}

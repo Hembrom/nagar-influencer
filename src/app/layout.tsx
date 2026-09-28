@@ -9,9 +9,9 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "NagarInfluence — Brand & Creator Campaigns",
+  title: "Grow My Influence — Brand & Creator Campaigns",
   description:
-    "Book verified influencer campaigns for your brand, or grow as a creator on NagarInfluence.",
+    "Book verified influencer campaigns for your brand, or grow as a creator on Grow My Influence.",
 };
 
 export default function RootLayout({

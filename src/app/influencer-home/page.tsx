@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const AVAILABLE_TASKS = [
@@ -76,14 +77,15 @@ export default function InfluencerHomePage() {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white">
-              NI
-            </div>
-            <div>
-              <p className="text-sm font-bold text-gray-900">NagarInfluence</p>
-              <p className="text-xs text-gray-500">Creator Hub</p>
-            </div>
+          <div>
+            <Image
+              src="/gmi-logo.png"
+              alt="Grow My Influence"
+              width={120}
+              height={40}
+              className="h-auto w-auto mb-2"
+            />
+            <p className="text-xs text-gray-500">Creator Hub</p>
           </div>
           <div className="flex items-center gap-4">
             <Link
@@ -109,7 +111,7 @@ export default function InfluencerHomePage() {
             🎯 Available Creator Opportunities
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl">
-            We've matched you with 4 brand collaborations. Review details, apply to ones that fit your style, and start earning with NagarInfluence!
+            We've matched you with 4 brand collaborations. Review details, apply to ones that fit your style, and start earning with Grow My Influence!
           </p>
         </div>
 

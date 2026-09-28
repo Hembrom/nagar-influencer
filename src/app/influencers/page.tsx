@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
@@ -62,10 +63,13 @@ export default function InfluencersPage() {
       <div className="mx-auto max-w-5xl px-8 py-10">
         <header className="mb-12 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple text-xs font-extrabold text-white">
-              NI
-            </div>
-            <span className="text-base font-bold text-navy">NagarInfluence</span>
+            <Image
+              src="/gmi-logo.png"
+              alt="Grow My Influence"
+              width={100}
+              height={36}
+              className="h-auto w-auto"
+            />
             <VerifiedBadge />
           </Link>
         </header>
@@ -79,7 +83,7 @@ export default function InfluencersPage() {
               Grow with verified brand campaigns
             </h1>
             <p className="mt-4 text-base leading-relaxed text-muted">
-              Join NagarInfluence as a creator. Get matched with tech & SaaS
+              Join Grow My Influence as a creator. Get matched with tech & SaaS
               brands, clear briefs, and on-time payouts.
             </p>
             <button

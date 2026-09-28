@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function SuperAdminLoginPage() {
@@ -34,14 +35,15 @@ export default function SuperAdminLoginPage() {
       <div className="w-full max-w-md">
         <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
           {/* Logo */}
-          <div className="flex items-center gap-2 mb-8">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-600 text-sm font-bold text-white">
-              SA
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-900">NagarInfluence</p>
-              <p className="text-xs text-gray-500">SuperAdmin Panel</p>
-            </div>
+          <div className="mb-8">
+            <Image
+              src="/gmi-logo.png"
+              alt="Grow My Influence"
+              width={140}
+              height={50}
+              className="h-auto w-auto mb-2"
+            />
+            <p className="text-xs text-gray-500">SuperAdmin Panel</p>
           </div>
 
           {/* Title */}

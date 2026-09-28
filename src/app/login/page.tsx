@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { getSupabaseEnv } from "@/lib/supabase/env";
@@ -98,7 +99,7 @@ function LoginForm() {
       ) : null}
 
       <p className="mt-6 text-center text-xs text-muted-light">
-        By continuing you agree to NagarInfluence terms.
+        By continuing you agree to Grow My Influence terms.
       </p>
     </div>
   );
@@ -117,10 +118,13 @@ export default function LoginPage() {
       <div className="relative mx-auto flex min-h-dvh w-full max-w-6xl flex-col px-8 py-10 lg:flex-row lg:items-center lg:gap-16">
         <div className="mb-10 max-w-lg lg:mb-0">
           <Link href="/" className="inline-flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange text-sm font-extrabold text-white">
-              NI
-            </div>
-            <span className="text-lg font-bold text-white">NagarInfluence</span>
+            <Image
+              src="/gmi-logo.png"
+              alt="Grow My Influence"
+              width={110}
+              height={40}
+              className="h-auto w-auto"
+            />
             <VerifiedBadge />
           </Link>
           <h2 className="mt-10 text-4xl font-extrabold leading-tight tracking-tight text-white lg:text-5xl">

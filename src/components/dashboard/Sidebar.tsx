@@ -82,7 +82,6 @@ export function Sidebar({ user }: Props) {
             alt="Grow My Influence"
             width={120}
             height={36}
-            className="h-auto w-auto"
           />
           <div>
             <p className="text-[11px] text-white/45">Brand workspace</p>

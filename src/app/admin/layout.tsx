@@ -62,7 +62,7 @@ export default function AdminLayout({
             alt="Grow My Influence"
             width={140}
             height={50}
-            className="h-auto w-auto mb-3"
+            className="mb-3"
           />
           <p className="text-xs text-gray-500">Manager Dashboard</p>
         </div>

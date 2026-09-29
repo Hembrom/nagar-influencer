@@ -15,7 +15,6 @@ export function Footer() {
                 alt="Grow My Influence"
                 width={120}
                 height={40}
-                className="h-auto w-auto"
               />
             </div>
             <p className="text-sm text-muted">

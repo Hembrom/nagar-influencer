@@ -275,7 +275,7 @@ function Logo() {
         alt="Grow My Influence"
         width={90}
         height={32}
-        className="h-auto w-auto"
+        priority
       />
     </Link>
   );

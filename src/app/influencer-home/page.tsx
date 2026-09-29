@@ -83,7 +83,7 @@ export default function InfluencerHomePage() {
               alt="Grow My Influence"
               width={120}
               height={40}
-              className="h-auto w-auto mb-2"
+              className="mb-2"
             />
             <p className="text-xs text-gray-500">Creator Hub</p>
           </div>

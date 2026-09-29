@@ -123,7 +123,6 @@ export default function LoginPage() {
               alt="Grow My Influence"
               width={110}
               height={40}
-              className="h-auto w-auto"
             />
             <VerifiedBadge />
           </Link>

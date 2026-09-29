@@ -41,7 +41,7 @@ export default function AdminLoginPage() {
               alt="Grow My Influence"
               width={140}
               height={50}
-              className="h-auto w-auto mb-2"
+              className="mb-2"
             />
             <p className="text-xs text-gray-500">Admin Panel</p>
           </div>

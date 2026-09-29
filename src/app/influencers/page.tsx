@@ -68,7 +68,6 @@ export default function InfluencersPage() {
               alt="Grow My Influence"
               width={100}
               height={36}
-              className="h-auto w-auto"
             />
             <VerifiedBadge />
           </Link>

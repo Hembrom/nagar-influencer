@@ -43,8 +43,16 @@ export async function GET(request: Request) {
         // Try direct REST API token exchange
         try {
           const tokenRes = await fetch(
-            `${env.url}/auth/v1/token?grant_type=authorization_code&code=${encodeURIComponent(code || "")}`,
-            { method: "POST", cache: 'no-store' }
+            `${env.url}/auth/v1/token?grant_type=authorization_code`,
+            { 
+              method: "POST",
+              headers: { 
+                "Content-Type": "application/json",
+                "apikey": env.anonKey,
+              },
+              body: JSON.stringify({ code }),
+              cache: 'no-store' 
+            }
           );
           
           if (tokenRes.ok) {

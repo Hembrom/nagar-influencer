@@ -1,24 +1,53 @@
-<svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" width="400" height="120">
-  <!-- Leaf icon -->
-  <g>
-    <!-- Main leaf -->
-    <path d="M 85 15 Q 95 5 105 20 Q 100 35 85 40 Q 70 35 75 20 Z" fill="#16a34a" stroke="none"/>
-    <!-- Leaf accent line -->
-    <path d="M 90 20 Q 95 15 100 25" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <!-- Small leaf -->
-    <path d="M 70 30 Q 75 25 80 32 Q 77 40 70 40 Z" fill="#22c55e" stroke="none"/>
+<svg viewBox="0 0 1280 420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
+      .logo-text {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-weight: 900;
+        font-size: 140px;
+        line-height: 1;
+      }
+      .influence-text {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-weight: 900;
+        font-size: 120px;
+        line-height: 1;
+      }
+    </style>
+  </defs>
+  
+  <!-- Leaves Group (Green) -->
+  <g transform="translate(420, 80)">
+    <!-- Main large leaf -->
+    <path d="M 0 -50 Q 30 -20 35 20 Q 30 45 0 55 Q -30 45 -35 20 Q -30 -20 0 -50" fill="#16a34a"/>
+    <!-- Left small leaf -->
+    <path d="M -35 -15 Q -50 0 -45 25 Q -35 35 -15 30 Q -25 15 -35 -15" fill="#22c55e"/>
+    <!-- Right small leaf -->
+    <path d="M 35 -15 Q 50 0 45 25 Q 35 35 15 30 Q 25 15 35 -15" fill="#059669"/>
+    <!-- White center vein on main leaf -->
+    <path d="M 0 -45 Q 3 0 0 50" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
   </g>
   
-  <!-- Grow text -->
-  <text x="60" y="75" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="#001f3f">Grow</text>
+  <!-- First line: "Grow" + circle "my" -->
+  <g>
+    <!-- "Gr" in dark blue -->
+    <text x="60" y="200" class="logo-text" fill="#001f5c" letter-spacing="-3">Gr</text>
+    
+    <!-- Circle background for "o" -->
+    <circle cx="425" cy="145" r="65" fill="#e63946"/>
+    <!-- White "o" in circle -->
+    <text x="380" y="210" class="logo-text" fill="white" letter-spacing="-3">o</text>
+    
+    <!-- "w" in dark blue -->
+    <text x="480" y="200" class="logo-text" fill="#001f5c" letter-spacing="-3">w</text>
+    
+    <!-- "my" in yellow -->
+    <text x="650" y="200" class="logo-text" fill="#fbbf24" letter-spacing="-3">my</text>
+  </g>
   
-  <!-- my text in yellow -->
-  <text x="215" y="75" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="#fbbf24">my</text>
-  
-  <!-- Influence text -->
-  <text x="60" y="115" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#001f3f">Influence</text>
-  
-  <!-- Circle accent for "o" in Grow -->
-  <circle cx="155" cy="50" r="18" fill="#ef4444" opacity="0.9"/>
-  <text x="148" y="60" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white">o</text>
+  <!-- Second line: "Influence" in dark blue -->
+  <g>
+    <text x="60" y="340" class="influence-text" fill="#001f5c" letter-spacing="-2">Influence</text>
+  </g>
 </svg>

@@ -30,7 +30,11 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${origin}${next}`);
     }
     // Log error for debugging
-    console.error("Auth exchange failed:", error);
+    console.error("[AUTH_CALLBACK_ERROR]", {
+      error: error?.message,
+      code: code?.substring(0, 20) + "...",
+      timestamp: new Date().toISOString(),
+    });
   }
 
   return NextResponse.redirect(`${origin}/login?error=auth`);

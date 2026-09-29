@@ -50,6 +50,7 @@ function LoginForm() {
           provider: "google",
           options: {
             redirectTo: `https://nagar-influencer.vercel.app/auth/callback?next=${encodeURIComponent(next)}`,
+            queryParams: { access_type: "offline", prompt: "consent" },
           },
         });
         if (authError) throw authError;

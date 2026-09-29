@@ -14,27 +14,51 @@ export async function GET(request: Request) {
   }
 
   if (code) {
-    const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        try {
-          await upsertProfileFromAuthServer(supabase, user);
-        } catch {
-          // login still succeeds even if profile table missing
+    try {
+      const supabase = await createClient();
+      
+      // Try to exchange the code for a session
+      const { error, data } = await supabase.auth.exchangeCodeForSession(code);
+      
+      if (!error) {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) {
+          try {
+            await upsertProfileFromAuthServer(supabase, user);
+          } catch {
+            // login still succeeds even if profile table missing
+          }
+        }
+        return NextResponse.redirect(`${origin}${next}`);
+      }
+      
+      // If exchange fails due to PKCE, log it but try alternative approach
+      console.error("[AUTH_CALLBACK_ERROR]", {
+        error: error?.message,
+        code: code?.substring(0, 20) + "...",
+        timestamp: new Date().toISOString(),
+      });
+      
+      // If it's a PKCE error, still redirect (Supabase may handle it differently)
+      if (error?.message?.includes("PKCE")) {
+        // Try to get the session from cookies that Supabase may have set
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) {
+          try {
+            await upsertProfileFromAuthServer(supabase, user);
+          } catch {
+            // continue anyway
+          }
+          return NextResponse.redirect(`${origin}${next}`);
         }
       }
-      return NextResponse.redirect(`${origin}${next}`);
+    } catch (err) {
+      console.error("[AUTH_CALLBACK_EXCEPTION]", err);
     }
-    // Log error for debugging
-    console.error("[AUTH_CALLBACK_ERROR]", {
-      error: error?.message,
-      code: code?.substring(0, 20) + "...",
-      timestamp: new Date().toISOString(),
-    });
   }
 
   return NextResponse.redirect(`${origin}/login?error=auth`);

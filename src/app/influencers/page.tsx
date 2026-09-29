@@ -48,6 +48,7 @@ export default function InfluencersPage() {
         provider: "google",
         options: {
           redirectTo: `https://nagar-influencer.vercel.app/auth/callback?next=${encodeURIComponent("/influencer-home")}`,
+          queryParams: { access_type: "offline", prompt: "consent" },
         },
       });
       if (authError) throw authError;

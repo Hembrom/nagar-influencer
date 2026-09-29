@@ -47,7 +47,7 @@ export default function InfluencersPage() {
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `https://nagar-influencer.vercel.app/auth/callback?next=${encodeURIComponent("/influencer-home")}`,
+          redirectTo: `https://www.growmyinfluence.in/auth-callback?next=${encodeURIComponent("/influencer-home")}`,
           queryParams: { access_type: "offline", prompt: "consent" },
         },
       });

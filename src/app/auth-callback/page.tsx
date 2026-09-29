@@ -14,11 +14,18 @@ export default function AuthCallbackPage() {
 
         // Get the next destination from URL
         const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
         const next = params.get('next') || '/dashboard/campaigns';
+
+        if (!code) {
+          console.error('[AUTH_CALLBACK_ERROR] No auth code found');
+          router.push(`/login?error=auth`);
+          return;
+        }
 
         // exchangeCodeForSession handles PKCE verification
         // since we're on the same domain, cookies with PKCE verifier are available
-        const { error } = await supabase.auth.exchangeCodeForSession();
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (error) {
           console.error('[AUTH_CALLBACK_ERROR]', error);

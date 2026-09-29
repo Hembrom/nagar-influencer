@@ -29,6 +29,8 @@ export async function GET(request: Request) {
       }
       return NextResponse.redirect(`${origin}${next}`);
     }
+    // Log error for debugging
+    console.error("Auth exchange failed:", error);
   }
 
   return NextResponse.redirect(`${origin}/login?error=auth`);

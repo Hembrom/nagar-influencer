@@ -9,21 +9,18 @@ export async function GET(request: Request) {
   // Default to /dashboard/campaigns for business owners, but allow override via 'next' param
   const next = searchParams.get("next") || "/dashboard/campaigns";
 
-  if (!getSupabaseEnv()) {
+  const env = getSupabaseEnv();
+  if (!env) {
     return NextResponse.redirect(`${origin}${next}`);
   }
 
   if (code) {
     try {
       const supabase = await createClient();
-      
-      // Try to exchange the code for a session
-      const { error, data } = await supabase.auth.exchangeCodeForSession(code);
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
       
       if (!error) {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+        const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           try {
             await upsertProfileFromAuthServer(supabase, user);
@@ -33,31 +30,45 @@ export async function GET(request: Request) {
         }
         return NextResponse.redirect(`${origin}${next}`);
       }
-      
-      // If exchange fails due to PKCE, log it but try alternative approach
-      console.error("[AUTH_CALLBACK_ERROR]", {
+
+      console.error("[AUTH_EXCHANGE_FAILED]", {
         error: error?.message,
-        code: code?.substring(0, 20) + "...",
-        timestamp: new Date().toISOString(),
+        code: code?.substring(0, 20),
       });
-      
-      // If it's a PKCE error, still redirect (Supabase may handle it differently)
+
+      // PKCE error is expected for cross-domain auth - try direct token exchange
       if (error?.message?.includes("PKCE")) {
-        // Try to get the session from cookies that Supabase may have set
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user) {
-          try {
-            await upsertProfileFromAuthServer(supabase, user);
-          } catch {
-            // continue anyway
+        console.log("[AUTH_ATTEMPTING_DIRECT_EXCHANGE] for code:", code?.substring(0, 20));
+        
+        // Try direct REST API token exchange
+        try {
+          const tokenRes = await fetch(
+            `${env.url}/auth/v1/token?grant_type=authorization_code&code=${encodeURIComponent(code || "")}`,
+            { method: "POST", cache: 'no-store' }
+          );
+          
+          if (tokenRes.ok) {
+            console.log("[AUTH_DIRECT_EXCHANGE_SUCCESS]");
+            // Tokens were set via Set-Cookie header, try getting user again
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+              try {
+                await upsertProfileFromAuthServer(supabase, user);
+              } catch (err) {
+                console.error("[PROFILE_UPDATE_FAILED]", err);
+              }
+              return NextResponse.redirect(`${origin}${next}`);
+            }
+          } else {
+            const err = await tokenRes.json();
+            console.error("[DIRECT_EXCHANGE_FAILED]", err);
           }
-          return NextResponse.redirect(`${origin}${next}`);
+        } catch (err) {
+          console.error("[DIRECT_EXCHANGE_ERROR]", err);
         }
       }
     } catch (err) {
-      console.error("[AUTH_CALLBACK_EXCEPTION]", err);
+      console.error("[AUTH_EXCEPTION]", err);
     }
   }
 

@@ -6,6 +6,7 @@ import { upsertProfileFromAuthServer } from "@/lib/profile-server";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
+  // Default to /dashboard/campaigns for business owners, but allow override via 'next' param
   const next = searchParams.get("next") || "/dashboard/campaigns";
 
   if (!getSupabaseEnv()) {

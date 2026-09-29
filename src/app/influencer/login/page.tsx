@@ -37,7 +37,7 @@ export default function InfluencerLoginPage() {
     setLoading(true);
     try {
       if (!configured || !env) {
-        // Demo mode - redirect to setup
+        // Demo mode - redirect to home
         sessionStorage.setItem("demo_mode", "true");
         sessionStorage.setItem("influencer_demo_user", JSON.stringify({
           email: demoEmail || "creator@example.com",
@@ -47,7 +47,7 @@ export default function InfluencerLoginPage() {
         if (demoEmail) {
           sessionStorage.setItem("influencer_email", demoEmail);
         }
-        router.push("/influencer/setup");
+        router.push("/influencer-home");
         return;
       }
 
@@ -64,7 +64,7 @@ export default function InfluencerLoginPage() {
         if (demoEmail) {
           sessionStorage.setItem("influencer_email", demoEmail);
         }
-        router.push("/influencer/setup");
+        router.push("/influencer-home");
         return;
       }
 
@@ -72,7 +72,7 @@ export default function InfluencerLoginPage() {
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `https://nagar-influencer.vercel.app/auth/callback?next=${encodeURIComponent("/influencer/setup")}`,
+          redirectTo: `https://nagar-influencer.vercel.app/auth/callback?next=${encodeURIComponent("/influencer-home")}`,
         },
       });
 

@@ -46,11 +46,10 @@ function LoginForm() {
           return;
         }
         const supabase = createClient();
-        const origin = window.location.origin;
         const { error: authError } = await supabase.auth.signInWithOAuth({
           provider: "google",
           options: {
-            redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
+            redirectTo: `https://nagar-influencer.vercel.app/auth/callback?next=${encodeURIComponent(next)}`,
           },
         });
         if (authError) throw authError;

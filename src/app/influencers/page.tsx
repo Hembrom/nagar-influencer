@@ -44,11 +44,10 @@ export default function InfluencersPage() {
 
       // Production: Use Supabase OAuth
       const supabase = createClient();
-      const origin = window.location.origin;
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${origin}/auth/callback?next=${encodeURIComponent("/influencer-home")}`,
+          redirectTo: `https://nagar-influencer.vercel.app/auth/callback?next=${encodeURIComponent("/influencer-home")}`,
         },
       });
       if (authError) throw authError;

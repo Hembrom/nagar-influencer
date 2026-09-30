@@ -51,7 +51,7 @@ function LoginForm() {
         const { error: authError } = await supabase.auth.signInWithOAuth({
           provider: "google",
           options: {
-            redirectTo: `https://www.growmyinfluence.in/auth-callback?next=${encodeURIComponent(next)}`,
+            redirectTo: `${typeof window !== 'undefined' ? window.location.origin : 'https://www.growmyinfluence.in'}/auth-callback?next=${encodeURIComponent(next)}`,
             queryParams: { access_type: "offline", prompt: "consent" },
           },
         });

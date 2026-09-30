@@ -175,8 +175,8 @@ export async function saveProfile(
 export type InfluencerProfile = {
   displayName: string;
   bio: string;
-  location?: string;
-  profilePhoto?: string;
+  location?: string | null;
+  profilePhoto?: string | null;
   categories: string[];
   socialLinks: { instagram: string; youtube: string; tiktok: string };
   audienceSize: string;

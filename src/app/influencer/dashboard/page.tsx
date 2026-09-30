@@ -3,20 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { loadInfluencerProfile } from "@/lib/profile";
-
-interface InfluencerProfile {
-  displayName: string;
-  bio: string;
-  location?: string;
-  profilePhoto?: string;
-  categories: string[];
-  socialLinks: { instagram: string; youtube: string; tiktok: string };
-  audienceSize: string;
-  collaborationInterests: string[];
-  portfolioLinks: string[];
-  createdAt: string;
-}
+import { loadInfluencerProfile, type InfluencerProfile } from "@/lib/profile";
 
 type ActiveSection = "home" | "profile" | "collaborations" | "messages" | "settings";
 

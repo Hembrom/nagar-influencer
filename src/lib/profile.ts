@@ -203,7 +203,7 @@ export async function saveInfluencerProfile(
   if (getSupabaseEnv()) {
     try {
       const supabase = createClient();
-      await supabase.from("profiles").upsert(
+      const { error } = await supabase.from("profiles").upsert(
         {
           id: userId,
           influencer_data: profile,
@@ -211,10 +211,18 @@ export async function saveInfluencerProfile(
         },
         { onConflict: "id" },
       );
+      
+      if (error) {
+        console.error("❌ Supabase error saving influencer profile:", error.message, error.details);
+      } else {
+        console.log("✓ Influencer profile saved to Supabase");
+      }
     } catch (err) {
-      console.warn("Failed to save influencer profile to Supabase:", err);
+      console.error("❌ Exception saving influencer profile to Supabase:", err);
       // Local save still succeeded
     }
+  } else {
+    console.warn("⚠️ Supabase not configured - profile saved to localStorage only");
   }
 
   return profile;
@@ -230,22 +238,27 @@ export async function loadInfluencerProfile(
   if (userId && getSupabaseEnv()) {
     try {
       const supabase = createClient();
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .select("influencer_data")
         .eq("id", userId)
         .maybeSingle();
 
-      if (data?.influencer_data) {
+      if (error) {
+        console.error("❌ Supabase error loading influencer profile:", error.message, error.details);
+      } else if (data?.influencer_data) {
         const profile = data.influencer_data as InfluencerProfile;
+        console.log("✓ Influencer profile loaded from Supabase");
         // Update localStorage cache
         if (typeof window !== "undefined") {
           localStorage.setItem(INFLUENCER_LOCAL_KEY, JSON.stringify(profile));
         }
         return profile;
+      } else {
+        console.log("ℹ️ No influencer profile found in Supabase for user:", userId);
       }
     } catch (err) {
-      console.warn("Failed to load influencer profile from Supabase:", err);
+      console.error("❌ Exception loading influencer profile from Supabase:", err);
       // Fall back to localStorage
     }
   }

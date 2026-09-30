@@ -174,18 +174,19 @@ export default function InfluencerSetupPage() {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       
       if (userError || !user?.id) {
-        console.error("Error getting user:", userError);
+        console.error("❌ Error getting user:", userError);
         setErrors({ save: "Error saving profile. Please sign in again." });
         return;
       }
 
       // Save to localStorage and Supabase
       await saveInfluencerProfile(user.id, profile);
-      console.log("✓ Profile saved to Supabase and localStorage:", profile);
+      console.log("✓ Profile saved successfully (check browser console for Supabase save status)", profile);
       setErrors({}); // Clear errors on success
     } catch (e) {
-      console.error("Error saving profile:", e);
-      setErrors({ save: "Error saving profile. Please try again." });
+      console.error("❌ Error saving profile:", e);
+      const errorMsg = e instanceof Error ? e.message : String(e);
+      setErrors({ save: `Error saving profile: ${errorMsg}` });
       return;
     }
 

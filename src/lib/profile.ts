@@ -167,3 +167,98 @@ export async function saveProfile(
 
   return next;
 }
+
+// ============================================================================
+// INFLUENCER PROFILE FUNCTIONS
+// ============================================================================
+
+export type InfluencerProfile = {
+  displayName: string;
+  bio: string;
+  location?: string;
+  profilePhoto?: string;
+  categories: string[];
+  socialLinks: { instagram: string; youtube: string; tiktok: string };
+  audienceSize: string;
+  collaborationInterests: string[];
+  portfolioLinks: string[];
+  createdAt: string;
+};
+
+const INFLUENCER_LOCAL_KEY = "influencer_profile";
+
+/**
+ * Save influencer profile to localStorage and Supabase
+ */
+export async function saveInfluencerProfile(
+  userId: string,
+  profile: InfluencerProfile,
+): Promise<InfluencerProfile> {
+  // Always save to localStorage
+  if (typeof window !== "undefined") {
+    localStorage.setItem(INFLUENCER_LOCAL_KEY, JSON.stringify(profile));
+  }
+
+  // Try to save to Supabase
+  if (getSupabaseEnv()) {
+    try {
+      const supabase = createClient();
+      await supabase.from("profiles").upsert(
+        {
+          id: userId,
+          influencer_data: profile,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "id" },
+      );
+    } catch (err) {
+      console.warn("Failed to save influencer profile to Supabase:", err);
+      // Local save still succeeded
+    }
+  }
+
+  return profile;
+}
+
+/**
+ * Load influencer profile from Supabase or localStorage
+ */
+export async function loadInfluencerProfile(
+  userId: string | null,
+): Promise<InfluencerProfile | null> {
+  // Try Supabase first if authenticated
+  if (userId && getSupabaseEnv()) {
+    try {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("profiles")
+        .select("influencer_data")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (data?.influencer_data) {
+        const profile = data.influencer_data as InfluencerProfile;
+        // Update localStorage cache
+        if (typeof window !== "undefined") {
+          localStorage.setItem(INFLUENCER_LOCAL_KEY, JSON.stringify(profile));
+        }
+        return profile;
+      }
+    } catch (err) {
+      console.warn("Failed to load influencer profile from Supabase:", err);
+      // Fall back to localStorage
+    }
+  }
+
+  // Fall back to localStorage
+  if (typeof window !== "undefined") {
+    try {
+      const raw = localStorage.getItem(INFLUENCER_LOCAL_KEY);
+      return raw ? (JSON.parse(raw) as InfluencerProfile) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  return null;
+}

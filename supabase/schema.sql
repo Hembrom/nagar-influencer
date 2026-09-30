@@ -88,6 +88,7 @@ create table if not exists public.profiles (
   mobile text,
   company_name text,
   website text,
+  influencer_data jsonb default null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

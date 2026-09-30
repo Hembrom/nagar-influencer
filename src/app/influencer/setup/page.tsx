@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { saveInfluencerProfile } from "@/lib/profile";
 
 const CONTENT_CATEGORIES = [
   "Fashion",
@@ -166,10 +168,20 @@ export default function InfluencerSetupPage() {
       createdAt: new Date().toISOString(),
     };
 
-    // ALWAYS save to localStorage (not just in demo mode)
+    // Get user ID and save profile
     try {
-      localStorage.setItem("influencer_profile", JSON.stringify(profile));
-      console.log("✓ Profile saved to localStorage:", profile);
+      const supabase = createClient();
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user?.id) {
+        console.error("Error getting user:", userError);
+        setErrors({ save: "Error saving profile. Please sign in again." });
+        return;
+      }
+
+      // Save to localStorage and Supabase
+      await saveInfluencerProfile(user.id, profile);
+      console.log("✓ Profile saved to Supabase and localStorage:", profile);
       setErrors({}); // Clear errors on success
     } catch (e) {
       console.error("Error saving profile:", e);

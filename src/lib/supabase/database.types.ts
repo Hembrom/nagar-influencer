@@ -49,6 +49,7 @@ export type Database = {
           mobile: string | null;
           company_name: string | null;
           website: string | null;
+          influencer_data: Record<string, unknown> | null;
           created_at: string;
           updated_at: string;
         };
@@ -60,6 +61,7 @@ export type Database = {
           mobile?: string | null;
           company_name?: string | null;
           website?: string | null;
+          influencer_data?: Record<string, unknown> | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -71,6 +73,7 @@ export type Database = {
           mobile?: string | null;
           company_name?: string | null;
           website?: string | null;
+          influencer_data?: Record<string, unknown> | null;
           created_at?: string;
           updated_at?: string;
         };

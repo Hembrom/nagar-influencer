@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { loadInfluencerProfile } from "@/lib/profile";
 
 interface InfluencerProfile {
   displayName: string;
@@ -40,18 +41,58 @@ export default function InfluencerDashboardPage() {
         setUserEmail(email);
         console.log("Demo mode - email from sessionStorage:", email);
       }
+      // Load profile from localStorage for demo mode
+      try {
+        const savedProfile = localStorage.getItem("influencer_profile");
+        if (savedProfile) {
+          const profileData = JSON.parse(savedProfile);
+          console.log("Parsed profile data from localStorage (demo):", profileData);
+          setProfile(profileData);
+          setUserName(profileData.displayName || "Creator");
+        }
+      } catch (e) {
+        console.error("Error loading profile:", e);
+      }
     } else {
-      // Try to get authenticated user from Supabase
+      // Try to get authenticated user from Supabase and load their profile
       const supabase = createClient();
-      supabase.auth.getUser().then(({ data: { user }, error }) => {
+      supabase.auth.getUser().then(async ({ data: { user }, error }) => {
         if (error) {
           console.error("Error getting user from Supabase:", error);
           setUserEmail("Not authenticated");
+          // Fall back to localStorage
+          try {
+            const savedProfile = localStorage.getItem("influencer_profile");
+            if (savedProfile) {
+              const profileData = JSON.parse(savedProfile);
+              setProfile(profileData);
+              setUserName(profileData.displayName || "Creator");
+            }
+          } catch (e) {
+            console.error("Error loading profile from localStorage:", e);
+          }
           return;
         }
         if (user?.email) {
           setUserEmail(user.email);
           console.log("✓ Got user email from Supabase:", user.email);
+          
+          // Load influencer profile from Supabase or localStorage
+          try {
+            const profile = await loadInfluencerProfile(user.id);
+            if (profile) {
+              console.log("✓ Loaded influencer profile:", profile);
+              setProfile(profile);
+              setUserName(profile.displayName || "Creator");
+            } else {
+              console.log("No influencer profile found for user");
+              // Get email prefix as username
+              setUserName(user.email.split("@")[0] || "Creator");
+            }
+          } catch (err) {
+            console.error("Error loading influencer profile:", err);
+            setUserName(user.email.split("@")[0] || "Creator");
+          }
         } else {
           console.log("No user email found");
           setUserEmail("Not available");
@@ -59,46 +100,26 @@ export default function InfluencerDashboardPage() {
       }).catch((err) => {
         console.error("Error getting user from Supabase:", err);
         setUserEmail("Not available");
-      });
-    }
-
-    // Load profile from localStorage - ALWAYS check fresh
-    try {
-      const savedProfile = localStorage.getItem("influencer_profile");
-      console.log("Raw localStorage data:", savedProfile);
-      
-      if (savedProfile) {
-        const profileData = JSON.parse(savedProfile) as InfluencerProfile;
-        console.log("Parsed profile data:", profileData);
-        setProfile(profileData);
-        setUserName(profileData.displayName || "Creator");
-      } else {
-        console.log("No profile found in localStorage");
-        // First time - try to get email from sessionStorage
-        const email = sessionStorage.getItem("influencer_email");
-        if (email) {
-          setUserName(email.split("@")[0] || "Creator");
-        } else {
-          const demoUser = sessionStorage.getItem("influencer_demo_user");
-          if (demoUser) {
-            try {
-              const user = JSON.parse(demoUser);
-              setUserName(user.email?.split("@")[0] || "Creator");
-            } catch (e) {
-              console.error("Error parsing user:", e);
-            }
+        // Fall back to localStorage
+        try {
+          const savedProfile = localStorage.getItem("influencer_profile");
+          if (savedProfile) {
+            const profileData = JSON.parse(savedProfile);
+            setProfile(profileData);
+            setUserName(profileData.displayName || "Creator");
           }
+        } catch (e) {
+          console.error("Error loading profile from localStorage:", e);
         }
-      }
-    } catch (e) {
-      console.error("Error loading profile:", e);
+      });
     }
   }, []);
 
   const handleSignOut = () => {
     sessionStorage.removeItem("demo_mode");
     sessionStorage.removeItem("influencer_demo_user");
-    localStorage.removeItem("influencer_profile");
+    // Don't clear profile - it should persist across login sessions
+    // localStorage.removeItem("influencer_profile");
     router.push("/influencer/login");
   };
 

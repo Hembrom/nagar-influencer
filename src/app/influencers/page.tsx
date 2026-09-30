@@ -46,10 +46,12 @@ export default function InfluencersPage() {
 
       // Production: Use Supabase OAuth
       const supabase = createClient();
+      // Store the destination in sessionStorage since query params get stripped by Google's redirect
+      sessionStorage.setItem('auth_next', '/influencer-home');
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${getAppUrl()}/auth-callback?next=${encodeURIComponent("/influencer-home")}`,
+          redirectTo: `${getAppUrl()}/auth-callback`,
           queryParams: { access_type: "offline", prompt: "consent" },
         },
       });

@@ -12,10 +12,16 @@ export default function AuthCallbackPage() {
       try {
         const supabase = createClient();
 
-        // Get the next destination from URL
+        // Get the next destination from URL or sessionStorage
         const params = new URLSearchParams(window.location.search);
         const code = params.get('code');
-        const next = params.get('next') || '/dashboard/campaigns';
+        const urlNext = params.get('next');
+        const storedNext = sessionStorage.getItem('auth_next');
+        const next = urlNext || storedNext || '/dashboard/campaigns';
+        // Clear the stored next after using it
+        if (storedNext) {
+          sessionStorage.removeItem('auth_next');
+        }
 
         if (!code) {
           console.error('[AUTH_CALLBACK_ERROR] No auth code found');

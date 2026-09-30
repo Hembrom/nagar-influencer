@@ -231,7 +231,7 @@ const FOOTER_COLUMNS = [
     title: "For Creators",
     links: [
       { label: "Join as creator", href: CREATOR_HREF },
-      { label: "Creator hub", href: "/influencer-home" },
+      { label: "Creator hub", href: "/influencer/dashboard" },
       { label: "Build your profile", href: "/influencer/setup" },
     ],
   },

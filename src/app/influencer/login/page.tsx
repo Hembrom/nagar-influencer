@@ -39,7 +39,7 @@ export default function InfluencerLoginPage() {
     setLoading(true);
     try {
       if (!configured || !env) {
-        // Demo mode - redirect to home
+        // Demo mode - redirect to dashboard
         sessionStorage.setItem("demo_mode", "true");
         sessionStorage.setItem("influencer_demo_user", JSON.stringify({
           email: demoEmail || "creator@example.com",
@@ -49,7 +49,7 @@ export default function InfluencerLoginPage() {
         if (demoEmail) {
           sessionStorage.setItem("influencer_email", demoEmail);
         }
-        router.push("/influencer-home");
+        router.push("/influencer/dashboard");
         return;
       }
 
@@ -66,7 +66,7 @@ export default function InfluencerLoginPage() {
         if (demoEmail) {
           sessionStorage.setItem("influencer_email", demoEmail);
         }
-        router.push("/influencer-home");
+        router.push("/influencer/dashboard");
         return;
       }
 
@@ -74,7 +74,7 @@ export default function InfluencerLoginPage() {
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${getAppUrl()}/auth-callback?next=${encodeURIComponent("/influencer-home")}`,
+          redirectTo: `${getAppUrl()}/auth-callback?next=${encodeURIComponent("/influencer/dashboard")}`,
           queryParams: { access_type: "offline", prompt: "consent" },
         },
       });

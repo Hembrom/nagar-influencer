@@ -26,7 +26,6 @@ export default function InfluencerDashboardPage() {
   const [isDemo, setIsDemo] = useState(false);
   const [activeSection, setActiveSection] = useState<ActiveSection>("home");
   const [userEmail, setUserEmail] = useState<string>("");
-  const [applied, setApplied] = useState<number[]>([]);
 
   useEffect(() => {
     console.log("Dashboard mount - loading profile and auth...");
@@ -103,67 +102,6 @@ export default function InfluencerDashboardPage() {
     router.push("/influencer/login");
   };
 
-  // Tasks data
-  const AVAILABLE_TASKS = [
-    {
-      id: 1,
-      brand: "Priya Fashion",
-      campaignName: "Summer Collection Launch",
-      type: "Instagram Reel",
-      budget: "₹50,000",
-      deadline: "5 days",
-      followers: "100K+",
-      engagement: "4%+",
-      description: "Showcase our new summer collection with a creative reel. Focus on styling and trends.",
-      status: "open",
-    },
-    {
-      id: 2,
-      brand: "NutriWell Foods",
-      campaignName: "Healthy Lifestyle Campaign",
-      type: "YouTube Video",
-      budget: "₹75,000",
-      deadline: "7 days",
-      followers: "200K+",
-      engagement: "5%+",
-      description: "Create an authentic video showcasing how NutriWell fits into your daily routine.",
-      status: "open",
-    },
-    {
-      id: 3,
-      brand: "TechGadget Pro",
-      campaignName: "Product Review Series",
-      type: "Instagram Reels + Stories",
-      budget: "₹60,000",
-      deadline: "3 days",
-      followers: "50K+",
-      engagement: "3%+",
-      description: "Honest review of our latest gadget in your signature style. Full creative freedom.",
-      status: "open",
-    },
-    {
-      id: 4,
-      brand: "Urban Cafe",
-      campaignName: "Cafe Experience Challenge",
-      type: "TikTok Video",
-      budget: "₹40,000",
-      deadline: "10 days",
-      followers: "75K+",
-      engagement: "6%+",
-      description: "Create a fun, engaging video featuring our cafe vibe. Perfect for food creators!",
-      status: "open",
-    },
-  ];
-
-  const handleApply = (taskId: number) => {
-    if (!applied.includes(taskId)) {
-      setApplied([...applied, taskId]);
-      setTimeout(() => {
-        alert("Application sent! The brand will review and get back to you soon.");
-      }, 300);
-    }
-  };
-
   const MENU_ITEMS: { id: ActiveSection; icon: string; label: string }[] = [
     { id: "home", icon: "🏠", label: "Home" },
     { id: "profile", icon: "📋", label: "Your Profile" },
@@ -176,127 +114,20 @@ export default function InfluencerDashboardPage() {
     switch (activeSection) {
       case "home":
         return (
-          <div>
-            <h2 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "16px", color: "#1a1a1a" }}>
-              🎯 Available Opportunities
-            </h2>
-
-            {/* Task Flow - Per Row Breakdown */}
-            <div style={{ marginBottom: "32px" }}>
-              <div style={{
-                background: "white",
-                border: "1px solid #e0dcff",
-                borderRadius: "12px",
-                overflow: "hidden",
-              }}>
-                {/* Header Row */}
-                <div style={{
-                  display: "grid",
-                  gridTemplateColumns: "2fr 1.5fr 1fr",
-                  gap: "24px",
-                  padding: "16px 24px",
-                  background: "#f0f9ff",
-                  borderBottom: "2px solid #bfdbfe",
-                  fontWeight: "600",
-                  color: "#1a1a1a",
-                  fontSize: "13px",
-                }}>
-                  <div>🎯 NICHE</div>
-                  <div>📱 FORMAT</div>
-                  <div>💰 BUDGET</div>
-                </div>
-
-                {/* Task Rows */}
-                {[
-                  { niche: "Fashion", format: "Instagram Reel", budget: "₹50,000" },
-                  { niche: "Food & Lifestyle", format: "YouTube Video", budget: "₹75,000" },
-                  { niche: "Tech & Gadgets", format: "Instagram Reels + Stories", budget: "₹60,000" },
-                  { niche: "Cafe & Food", format: "TikTok Video", budget: "₹40,000" },
-                ].map((task, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "2fr 1.5fr 1fr",
-                      gap: "24px",
-                      padding: "16px 24px",
-                      borderBottom: index < 3 ? "1px solid #f0f9ff" : "none",
-                      alignItems: "center",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#f5f3ff";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "white";
-                    }}
-                  >
-                    <div>
-                      <span style={{
-                        display: "inline-block",
-                        padding: "6px 12px",
-                        background: "#e0dcff",
-                        color: "#6366f1",
-                        borderRadius: "16px",
-                        fontSize: "13px",
-                        fontWeight: "600",
-                      }}>
-                        {task.niche}
-                      </span>
-                    </div>
-                    <div style={{ fontSize: "13px", fontWeight: "500", color: "#1a1a1a" }}>
-                      {task.format}
-                    </div>
-                    <div style={{ fontSize: "14px", fontWeight: "700", color: "#6366f1" }}>
-                      {task.budget}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <p style={{ fontSize: "12px", color: "#999", marginTop: "12px", marginLeft: "0" }}>
-                📊 Showing 4 active task flows • More opportunities added daily
-              </p>
-            </div>
-
-            {/* How It Works */}
-            <div style={{ marginTop: "32px", paddingTop: "32px", borderTop: "2px solid #e0dcff" }}>
-              <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#1a1a1a", marginBottom: "20px" }}>
-                How It Works
-              </h3>
-              <div style={{
-                background: "#f0f9ff",
-                border: "2px solid #bfdbfe",
-                borderRadius: "12px",
-                padding: "24px",
-                textAlign: "center",
-              }}>
-                <p style={{ fontSize: "16px", fontWeight: "600", color: "#1a1a1a", margin: "0 0 12px 0" }}>
-                  🎯 Snatch Opportunity
-                </p>
-                <p style={{ fontSize: "14px", color: "#666", margin: "0", lineHeight: "1.8" }}>
-                  You will get tasks assigned by the Admins of Grow My Influence. 
-                  <br />
-                  <br />
-                  Complete your profile to start receiving opportunities that match your niche and audience size. Our team carefully selects and assigns tasks that align with your expertise.
-                </p>
-              </div>
-            </div>
-
-            {/* Call to Action */}
-            <div style={{ marginTop: "32px", padding: "24px", background: "#e0dcff", borderRadius: "12px", textAlign: "center" }}>
-              <p style={{ fontSize: "14px", color: "#1a1a1a", margin: "0 0 16px 0", fontWeight: "600" }}>
+          <div style={{ maxWidth: "600px", margin: "60px auto", textAlign: "center" }}>
+            <div style={{ padding: "40px 24px", background: "#e0dcff", borderRadius: "16px" }}>
+              <p style={{ fontSize: "18px", color: "#1a1a1a", margin: "0 0 20px 0", fontWeight: "600" }}>
                 ✨ Complete your profile to unlock opportunities
               </p>
               <button
                 onClick={() => setActiveSection("profile")}
                 style={{
-                  padding: "12px 24px",
+                  padding: "14px 32px",
                   background: "#6366f1",
                   color: "white",
                   border: "none",
                   borderRadius: "8px",
-                  fontSize: "14px",
+                  fontSize: "15px",
                   fontWeight: "600",
                   cursor: "pointer",
                   transition: "all 0.2s ease",

@@ -10,8 +10,6 @@ import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { Footer } from "@/components/Footer";
 import { createClient } from "@/lib/supabase/client";
 import { getSupabaseEnv, getAppUrl } from "@/lib/supabase/env";
-import { createClient } from "@/lib/supabase/client";
-import { getSupabaseEnv } from "@/lib/supabase/env";
 import { isSupabaseAuthReachable } from "@/lib/supabase/health";
 
 export default function InfluencersPage() {

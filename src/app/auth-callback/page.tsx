@@ -38,7 +38,7 @@ export default function AuthCallbackPage() {
           console.log('[AUTH_CALLBACK_SUCCESS]', user.email);
           // Redirect to backend dashboard
           // The session is stored in Supabase cookies which the backend will read
-          window.location.href = `https://nagar-influencer.vercel.app${next}`;
+          window.location.href = `${window.location.origin}${next}`;
         }
       } catch (err) {
         console.error('[AUTH_CALLBACK_EXCEPTION]', err);

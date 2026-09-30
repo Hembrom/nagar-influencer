@@ -133,7 +133,7 @@ export default function InfluencerSetupPage() {
     }
   };
 
-  const handleSaveProfile = () => {
+  const handleSaveProfile = async () => {
     const newErrors: { [key: string]: string } = {};
 
     // Validate required fields

@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { getSupabaseEnv } from "@/lib/supabase/env";
+import { getSupabaseEnv, getAppUrl } from "@/lib/supabase/env";
 import { isSupabaseAuthReachable } from "@/lib/supabase/health";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { Footer } from "@/components/Footer";
@@ -51,7 +51,7 @@ function LoginForm() {
         const { error: authError } = await supabase.auth.signInWithOAuth({
           provider: "google",
           options: {
-            redirectTo: `${typeof window !== 'undefined' ? window.location.origin : 'https://www.growmyinfluence.in'}/auth-callback?next=${encodeURIComponent(next)}`,
+            redirectTo: `${getAppUrl()}/auth-callback?next=${encodeURIComponent(next)}`,
             queryParams: { access_type: "offline", prompt: "consent" },
           },
         });

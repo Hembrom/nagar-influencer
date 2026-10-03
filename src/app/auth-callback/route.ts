@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { upsertProfileFromAuthServer } from '@/lib/profile-server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -24,6 +25,16 @@ export async function GET(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       console.log('[AUTH_CALLBACK_SUCCESS]', user.email);
+      
+      // 🔥 CREATE/UPDATE PROFILE AND AUTO-CREATE INFLUENCER ENTRY
+      try {
+        await upsertProfileFromAuthServer(supabase, user);
+        console.log('[PROFILE_CREATED]', user.email);
+      } catch (profileErr) {
+        console.error('[PROFILE_CREATION_ERROR]', profileErr);
+        // Don't fail auth callback if profile creation fails - still redirect
+      }
+      
       // Redirect to the destination
       return NextResponse.redirect(new URL(next, request.url));
     }

@@ -60,7 +60,7 @@ export default function AdminInfluencersPage() {
         name: formData.name,
         email: formData.email,
         handle: formData.handle,
-        followers: formData.followers || null,
+        followers: formData.followers || "",
         category: formData.category,
         instagram_url: formData.instagram_url || null,
         youtube_url: formData.youtube_url || null,

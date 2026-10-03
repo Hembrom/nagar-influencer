@@ -16,11 +16,14 @@ export default function AdminLoginPage() {
     setError("");
     setLoading(true);
 
-    // Hardcoded credentials
-    if (username === "Admin" && password === "Admin") {
+    // Get credentials from environment variables
+    const adminUsername = process.env.NEXT_PUBLIC_ADMIN_USERNAME || "Admin";
+    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "Admin@1234";
+
+    if (username === adminUsername && password === adminPassword) {
       // Set admin session
       localStorage.setItem("admin_session", JSON.stringify({
-        username: "Admin",
+        username: adminUsername,
         loginTime: new Date().toISOString(),
       }));
       router.push("/admin");

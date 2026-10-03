@@ -2,6 +2,7 @@ import type { User } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/client";
 import { getSupabaseEnv } from "@/lib/supabase/env";
+import { addInfluencerSelfRegistered } from "@/lib/supabase/influencers";
 
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
@@ -203,7 +204,13 @@ export async function saveInfluencerProfile(
   if (getSupabaseEnv()) {
     try {
       const supabase = createClient();
-      const { error } = await supabase.from("profiles").upsert(
+      
+      // Get user email for influencers table
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      const userEmail = user?.email || `influencer-${userId}@growmyinfluence.in`;
+
+      // Save to profiles table (existing)
+      const { error: profileError } = await supabase.from("profiles").upsert(
         {
           id: userId,
           influencer_data: profile,
@@ -212,10 +219,35 @@ export async function saveInfluencerProfile(
         { onConflict: "id" },
       );
       
-      if (error) {
-        console.error("❌ Supabase error saving influencer profile:", error.message, error.details);
+      if (profileError) {
+        console.error("❌ Supabase error saving influencer profile:", profileError.message, profileError.details);
       } else {
-        console.log("✓ Influencer profile saved to Supabase");
+        console.log("✓ Influencer profile saved to profiles table");
+      }
+
+      // Also save to influencers table (NEW)
+      try {
+        const influencerData = {
+          id: userId,
+          name: profile.displayName,
+          email: userEmail,
+          handle: profile.displayName.toLowerCase().replace(/\s+/g, "_"),
+          bio: profile.bio,
+          location: profile.location || null,
+          profile_photo: profile.profilePhoto || null,
+          category: profile.categories[0] || "Other",
+          instagram_url: profile.socialLinks.instagram || null,
+          youtube_url: profile.socialLinks.youtube || null,
+          tiktok_url: profile.socialLinks.tiktok || null,
+          audience_size: profile.audienceSize || null,
+          collaboration_interests: profile.collaborationInterests.join(", ") || null,
+          portfolio_links: profile.portfolioLinks || [],
+        };
+
+        await addInfluencerSelfRegistered(influencerData as any);
+        console.log("✓ Influencer registered in influencers table");
+      } catch (influencerErr) {
+        console.error("❌ Error saving to influencers table:", influencerErr);
       }
     } catch (err) {
       console.error("❌ Exception saving influencer profile to Supabase:", err);

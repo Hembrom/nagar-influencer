@@ -16,11 +16,14 @@ export default function SuperAdminLoginPage() {
     setError("");
     setLoading(true);
 
-    // Hardcoded superadmin credentials
-    if (username === "SuperAdmin" && password === "SuperAdmin123") {
+    // Get credentials from environment variables
+    const superadminUsername = process.env.NEXT_PUBLIC_SUPERADMIN_USERNAME || "SuperAdmin";
+    const superadminPassword = process.env.NEXT_PUBLIC_SUPERADMIN_PASSWORD || "SuperAdmin123";
+
+    if (username === superadminUsername && password === superadminPassword) {
       // Set superadmin session
       localStorage.setItem("superadmin_session", JSON.stringify({
-        username: "SuperAdmin",
+        username: superadminUsername,
         loginTime: new Date().toISOString(),
       }));
       router.push("/superadmin");

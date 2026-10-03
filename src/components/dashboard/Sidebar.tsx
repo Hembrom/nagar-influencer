@@ -69,6 +69,13 @@ export function Sidebar({ user }: Props) {
     } catch {
       // ignore when supabase unset
     }
+    
+    // Clear cached profile data from localStorage
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("ni_profile");
+      localStorage.removeItem("influencer_profile");
+    }
+    
     router.push("/login");
     router.refresh();
   }

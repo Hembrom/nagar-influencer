@@ -105,8 +105,9 @@ export default function InfluencerDashboardPage() {
   const handleSignOut = () => {
     sessionStorage.removeItem("demo_mode");
     sessionStorage.removeItem("influencer_demo_user");
-    // Don't clear profile - it should persist across login sessions
-    // localStorage.removeItem("influencer_profile");
+    // Clear cached profile data when logging out
+    localStorage.removeItem("influencer_profile");
+    localStorage.removeItem("ni_profile");
     router.push("/influencer/login");
   };
 

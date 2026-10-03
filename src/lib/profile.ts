@@ -142,7 +142,12 @@ export async function loadProfile(user: User | null): Promise<LocalProfile | nul
   }
 
   const local = readLocal();
-  if (local?.id === user.id) return local;
+  // Validate that cached profile matches current user (by ID and email)
+  if (local?.id === user.id && local?.email === user.email) {
+    return local;
+  }
+  
+  // If cached profile doesn't match current user, refresh from auth data
   return upsertProfileFromAuth(user);
 }
 

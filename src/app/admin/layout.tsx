@@ -39,6 +39,8 @@ export default function AdminLayout({
 
   const handleLogout = () => {
     localStorage.removeItem("admin_session");
+    localStorage.removeItem("ni_profile");
+    localStorage.removeItem("influencer_profile");
     router.push("/admin/login");
   };
 

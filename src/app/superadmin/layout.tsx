@@ -40,6 +40,8 @@ export default function SuperAdminLayout({
 
   const handleLogout = () => {
     localStorage.removeItem("superadmin_session");
+    localStorage.removeItem("ni_profile");
+    localStorage.removeItem("influencer_profile");
     router.push("/superadmin/login");
   };
 

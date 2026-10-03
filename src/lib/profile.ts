@@ -53,6 +53,11 @@ export async function upsertProfileFromAuth(user: User) {
   const fromGoogle = profileFromGoogleUser(user);
   const existing = readLocal();
 
+  console.log("📱 [PROFILE] Gmail OAuth - Local Profile:", {
+    from_google: fromGoogle,
+    existing: existing,
+  });
+
   const merged: LocalProfile = {
     ...fromGoogle,
     mobile: existing?.mobile ?? fromGoogle.mobile,
@@ -67,10 +72,20 @@ export async function upsertProfileFromAuth(user: User) {
 
   try {
     const supabase = createClient();
-    await supabase.from("profiles").upsert(
+    
+    // Ensure we have an email
+    const emailToUse = merged.email || `user-${merged.id}@nagar-influencer.local`;
+    
+    console.log("💾 [PROFILE] Upserting to Supabase profiles:", {
+      id: merged.id,
+      email: emailToUse,
+      full_name: merged.full_name,
+    });
+    
+    const { error } = await supabase.from("profiles").upsert(
       {
         id: merged.id,
-        email: merged.email,
+        email: emailToUse,
         full_name: merged.full_name,
         avatar_url: merged.avatar_url,
         mobile: merged.mobile,
@@ -80,7 +95,14 @@ export async function upsertProfileFromAuth(user: User) {
       },
       { onConflict: "id" },
     );
-  } catch {
+    
+    if (error) {
+      console.error("❌ [PROFILE] Error upserting to Supabase:", error);
+    } else {
+      console.log("✅ [PROFILE] Profile upserted to Supabase");
+    }
+  } catch (err) {
+    console.error("❌ [PROFILE] Exception during upsert:", err);
     // local still saved
   }
 

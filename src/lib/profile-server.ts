@@ -71,17 +71,27 @@ export async function upsertProfileFromAuthServer(
       name: full_name || "New Influencer",
       email: emailToUse,
       handle,
+      profile_photo: avatar_url,
     });
 
     // Use UPSERT on email to avoid unique constraint issues
-    // Note: Only using fields that exist in the auto-generated types
+    // Now includes all available fields from the updated types
     const { error: influencerError } = await supabase.from("influencers").upsert(
       {
         email: emailToUse,
         name: full_name || "New Influencer",
         handle: handle,
-        followers: "", // Empty string as per schema
-        category: "Other", // Default category
+        profile_photo: avatar_url || null,
+        followers: null,
+        category: "Other",
+        bio: null,
+        location: null,
+        instagram_url: null,
+        youtube_url: null,
+        tiktok_url: null,
+        audience_size: null,
+        collaboration_interests: null,
+        portfolio_links: null,
         source: "self-registered",
         status: "verified",
       },

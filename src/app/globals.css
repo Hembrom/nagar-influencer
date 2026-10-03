@@ -32,7 +32,7 @@
   --color-green-soft: var(--green-soft);
   --color-border: var(--border);
   --color-navy: var(--navy);
-  --font-sans: var(--font-jakarta);
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
 * {
@@ -47,7 +47,7 @@ body {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-jakarta), system-ui, sans-serif;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 

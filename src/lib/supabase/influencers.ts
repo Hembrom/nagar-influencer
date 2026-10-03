@@ -8,7 +8,7 @@ export type Influencer = Database["public"]["Tables"]["influencers"]["Row"];
 export type InfluencerSource = "self-registered" | "admin-added";
 
 // Add influencer (by admin)
-export async function addInfluencerByAdmin(influencerData: Omit<Influencer, 'id' | 'source' | 'created_at' | 'updated_at'>) {
+export async function addInfluencerByAdmin(influencerData: Partial<Database["public"]["Tables"]["influencers"]["Insert"]> & { name: string; email: string; handle: string }) {
   const supabase = createClient();
   
   const { data, error } = await supabase
@@ -26,7 +26,7 @@ export async function addInfluencerByAdmin(influencerData: Omit<Influencer, 'id'
 }
 
 // Add influencer (self-registered)
-export async function addInfluencerSelfRegistered(influencerData: Omit<Influencer, 'id' | 'source' | 'created_at' | 'updated_at'>) {
+export async function addInfluencerSelfRegistered(influencerData: Partial<Database["public"]["Tables"]["influencers"]["Insert"]> & { name: string; email: string; handle: string }) {
   const supabase = createClient();
   
   const { data, error } = await supabase

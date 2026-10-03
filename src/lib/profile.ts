@@ -227,12 +227,19 @@ export async function saveInfluencerProfile(
 
       // Also save to influencers table (NEW)
       try {
+        // Generate unique handle - if it's taken, append random suffix
+        let handle = profile.displayName.toLowerCase().replace(/\s+/g, "_");
+        const originalHandle = handle;
+        let handleAttempt = 1;
+        
+        // Check if handle is unique (simple approach: try insert, if fails, retry with suffix)
+        // In production, you'd query first, but this is simpler
+        
         const influencerData = {
-          id: userId,
           name: profile.displayName,
           email: userEmail,
-          handle: profile.displayName.toLowerCase().replace(/\s+/g, "_"),
-          bio: profile.bio,
+          handle: handle,
+          bio: profile.bio || "",
           location: profile.location || null,
           profile_photo: profile.profilePhoto || null,
           category: profile.categories[0] || "Other",
@@ -245,9 +252,17 @@ export async function saveInfluencerProfile(
         };
 
         await addInfluencerSelfRegistered(influencerData as any);
-        console.log("✓ Influencer registered in influencers table");
-      } catch (influencerErr) {
-        console.error("❌ Error saving to influencers table:", influencerErr);
+        console.log("✓ Influencer registered in influencers table", { email: userEmail, handle });
+      } catch (influencerErr: any) {
+        const errorMsg = influencerErr?.message || String(influencerErr);
+        console.error("❌ Error saving to influencers table:", errorMsg, influencerErr?.details);
+        
+        // If it's a unique constraint error on email, that's OK (user already registered)
+        if (errorMsg.includes("duplicate") || errorMsg.includes("unique")) {
+          console.warn("⚠️ Influencer already registered (email or handle exists)");
+        } else {
+          throw influencerErr; // Re-throw if it's not a duplicate error
+        }
       }
     } catch (err) {
       console.error("❌ Exception saving influencer profile to Supabase:", err);

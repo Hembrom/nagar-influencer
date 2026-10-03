@@ -62,9 +62,6 @@ export default function AdminInfluencersPage() {
         handle: formData.handle,
         followers: formData.followers || "",
         category: formData.category,
-        instagram_url: formData.instagram_url || null,
-        youtube_url: formData.youtube_url || null,
-        tiktok_url: formData.tiktok_url || null,
         status: "verified",
       });
 

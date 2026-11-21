@@ -27,12 +27,12 @@ export function Footer() {
             <h3 className="font-semibold text-foreground mb-4">For Brands</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/" className="hover:text-foreground transition">
+                <Link href="/#how" className="hover:text-foreground transition">
                   How it works
                 </Link>
               </li>
               <li>
-                <Link href="/" className="hover:text-foreground transition">
+                <Link href="/faq" className="hover:text-foreground transition">
                   Pricing
                 </Link>
               </li>
@@ -42,8 +42,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/" className="hover:text-foreground transition">
-                  Success stories
+                <Link href="/dashboard/campaigns/new" className="hover:text-foreground transition">
+                  Start a campaign
                 </Link>
               </li>
             </ul>
@@ -59,7 +59,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/" className="hover:text-foreground transition">
+                <Link href="/faq" className="hover:text-foreground transition">
                   Payment terms
                 </Link>
               </li>
@@ -69,7 +69,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/" className="hover:text-foreground transition">
+                <Link href="/faq" className="hover:text-foreground transition">
                   FAQ
                 </Link>
               </li>
@@ -81,19 +81,19 @@ export function Footer() {
             <h3 className="font-semibold text-foreground mb-4">Company</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/" className="hover:text-foreground transition">
+                <Link href="/#categories" className="hover:text-foreground transition">
                   About us
                 </Link>
               </li>
               <li>
-                <Link href="/" className="hover:text-foreground transition">
-                  Blog
+                <Link href="/faq" className="hover:text-foreground transition">
+                  Resources
                 </Link>
               </li>
               <li>
-                <Link href="/" className="hover:text-foreground transition">
+                <a href="mailto:hello@growmyinfluence.com" className="hover:text-foreground transition">
                   Contact
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -103,17 +103,17 @@ export function Footer() {
             <h3 className="font-semibold text-foreground mb-4">Legal</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/" className="hover:text-foreground transition">
+                <Link href="/terms" className="hover:text-foreground transition">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/" className="hover:text-foreground transition">
+                <Link href="/privacy" className="hover:text-foreground transition">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <a href="mailto:hello@nagarinfluence.com" className="hover:text-foreground transition">
+                <a href="mailto:hello@growmyinfluence.com" className="hover:text-foreground transition">
                   Contact us
                 </a>
               </li>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { addInfluencerByAdmin, getAllInfluencers, deleteInfluencer } from "@/lib/supabase/influencers";
 
 export default function AdminInfluencersPage() {
@@ -360,12 +361,20 @@ export default function AdminInfluencersPage() {
                 )}
               </div>
 
-              <button
-                onClick={() => handleDeleteInfluencer(influencer.id)}
-                className="w-full px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg text-sm font-medium transition"
-              >
-                Delete
-              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  href={`/admin/influencers/${influencer.id}`}
+                  className="px-3 py-2 text-center bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 rounded-lg text-sm font-medium transition"
+                >
+                  View profile
+                </Link>
+                <button
+                  onClick={() => handleDeleteInfluencer(influencer.id)}
+                  className="px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg text-sm font-medium transition"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>

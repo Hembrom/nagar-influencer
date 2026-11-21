@@ -239,8 +239,8 @@ const FOOTER_COLUMNS = [
     title: "Resources",
     links: [
       { label: "Categories", href: "#categories" },
-      { label: "FAQ", href: "/" },
-      { label: "Contact us", href: "mailto:hello@nagarinfluence.com" },
+      { label: "FAQ", href: "/faq" },
+      { label: "Contact us", href: "mailto:hello@growmyinfluence.com" },
     ],
   },
 ];
@@ -504,6 +504,7 @@ export function HomeLanding() {
   const [modal, setModal] = useState<ModalType | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
+  const [language, setLanguage] = useState<"en" | "hi">("en");
 
   const closeModal = useCallback(() => setModal(null), []);
   const open = (m: ModalType) => {
@@ -550,6 +551,22 @@ export function HomeLanding() {
             ))}
           </nav>
           <div className="flex items-center gap-2">
+            <div className="flex rounded-lg border border-border p-0.5" aria-label="Language">
+              <button
+                onClick={() => setLanguage("en")}
+                aria-pressed={language === "en"}
+                className={`rounded-md px-2 py-1.5 text-xs font-bold ${language === "en" ? "bg-navy text-white" : "text-muted"}`}
+              >
+                EN
+              </button>
+              <button
+                onClick={() => setLanguage("hi")}
+                aria-pressed={language === "hi"}
+                className={`rounded-md px-2 py-1.5 text-xs font-bold ${language === "hi" ? "bg-navy text-white" : "text-muted"}`}
+              >
+                हिंदी
+              </button>
+            </div>
             <button
               onClick={() => setMenuOpen((v) => !v)}
               aria-expanded={menuOpen}
@@ -614,13 +631,16 @@ export function HomeLanding() {
               Growing, right in your city
             </span>
             <h1 className="mt-5 text-4xl font-extrabold leading-[1.08] tracking-tight text-navy sm:text-5xl lg:text-6xl">
-              Your city has stories{" "}
-              <span className="text-purple">worth sharing.</span>
+              {language === "en" ? (
+                <>Your city has stories <span className="text-purple">worth sharing.</span></>
+              ) : (
+                <>आपके शहर की कहानी, <span className="text-purple">लोकप्रिय बनाएं।</span></>
+              )}
             </h1>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted">
-              Grow My Influence connects local businesses with trusted creators
-              to build authentic promotions, bring in more customers, and grow
-              stronger communities — right where you live.
+              {language === "en"
+                ? "Grow My Influence connects local businesses with trusted creators to build authentic promotions, bring in more customers, and grow stronger communities — right where you live."
+                : "Grow My Influence स्थानीय व्यवसायों को विश्वसनीय क्रिएटर्स से जोड़ता है, ताकि प्रचार प्रामाणिक हो, नए ग्राहक आएं और आपका समुदाय मजबूत बने — वहीं, जहाँ आप रहते हैं।"}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href={BUSINESS_HREF} className={primaryBtn}>
@@ -648,39 +668,31 @@ export function HomeLanding() {
             <div className="rounded-2xl border border-border bg-card p-5 shadow-[0_20px_50px_rgba(26,26,46,0.08)]">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple text-sm font-bold text-white">
-                  MR
+                  AK
                 </div>
                 <div>
-                  <p className="font-bold text-navy">Meera R.</p>
+                  <p className="font-bold text-navy">Ashutosh Kalbande</p>
                   <p className="text-xs text-muted">
-                    Fashion &amp; Beauty · Tier 2 city
+                    Creator · @ashutosh_kalbande
                   </p>
                 </div>
               </div>
-              <div className="mt-5 grid grid-cols-3 gap-3 border-t border-border pt-4 text-center">
-                {[
-                  { v: "12.4K", l: "reach" },
-                  { v: "4.9", l: "rating" },
-                  { v: "18", l: "collabs" },
-                ].map((s) => (
-                  <div key={s.l}>
-                    <p className="text-lg font-extrabold text-navy">{s.v}</p>
-                    <p className="text-xs text-muted">{s.l}</p>
-                  </div>
-                ))}
+              <div className="mt-5 border-t border-border pt-4">
+                <p className="text-sm font-semibold text-navy">Verified creator profile</p>
+                <p className="mt-1 text-xs text-muted">Identity and linked profile details reviewed</p>
               </div>
             </div>
 
             <div className="relative z-10 -mt-4 ml-10 rounded-2xl border border-border bg-card p-5 shadow-[0_20px_50px_rgba(26,26,46,0.1)] sm:ml-16">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange text-sm font-bold text-white">
-                  SG
+                  GMI
                 </div>
                 <div className="flex-1">
                   <p className="font-bold text-navy">
-                    Sundar&apos;s General Store
+                    Local collaboration opportunity
                   </p>
-                  <p className="text-xs text-muted">Local Shop</p>
+                  <p className="text-xs text-muted">Matched to creator fit</p>
                 </div>
                 <span className="inline-flex items-center gap-1 rounded-full bg-green-soft px-2.5 py-1 text-xs font-semibold text-green">
                   <CheckIcon className="h-3 w-3" /> Verified
@@ -690,7 +702,7 @@ export function HomeLanding() {
 
             <div className="animate-pulse-soft absolute -bottom-10 left-0 z-20 inline-flex items-center gap-2 rounded-full bg-navy px-4 py-2 text-xs font-semibold text-white shadow-lg">
               <span className="h-2 w-2 rounded-full bg-green" />
-              New collaboration matched
+              Verified creator available
             </div>
           </div>
         </div>
@@ -706,6 +718,45 @@ export function HomeLanding() {
             d="M0 40c240 40 480 40 720 20S1200 0 1440 30v50H0Z"
           />
         </svg>
+      </section>
+
+      {/* Verification */}
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        <div className="rounded-2xl border border-border bg-card p-6 sm:p-8">
+          <div className="max-w-2xl">
+            <p className="text-xs font-bold uppercase tracking-wider text-purple">Safe &amp; verified profiles</p>
+            <h2 className="mt-2 text-2xl font-extrabold text-navy">What verification means</h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted">
+              We review identity information, linked social accounts, follower authenticity signals, and claimed past work before a profile is marked verified. Verification is updated if a profile or its linked accounts change materially.
+            </p>
+          </div>
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            {["Identity details reviewed", "Social profiles checked", "Past work assessed"].map((item) => (
+              <div key={item} className="flex items-center gap-2 rounded-xl bg-background px-4 py-3 text-sm font-semibold text-navy">
+                <CheckIcon className="text-green" /> {item}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Our promise */}
+      <section className="border-y border-border bg-card px-6 py-14">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-2xl font-extrabold text-navy">Our promise</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {[
+              ["Clear pricing", "Scope and fees are agreed before work starts."],
+              ["Payment protection", "Campaign payments follow visible milestones and approval steps."],
+              ["Zero surprise fees", "Any platform or payment charge is disclosed before confirmation."],
+            ].map(([title, body]) => (
+              <div key={title} className="border-l-2 border-purple pl-4">
+                <p className="font-bold text-navy">{title}</p>
+                <p className="mt-1 text-sm text-muted">{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Goals */}
@@ -916,6 +967,7 @@ export function HomeLanding() {
               {[
                 {
                   label: "Instagram",
+                  href: "https://www.instagram.com/growmyinfluence/",
                   path: (
                     <>
                       <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -925,16 +977,8 @@ export function HomeLanding() {
                   ),
                 },
                 {
-                  label: "YouTube",
-                  path: (
-                    <>
-                      <rect x="2" y="5" width="20" height="14" rx="4" />
-                      <path d="m10 9 5 3-5 3Z" />
-                    </>
-                  ),
-                },
-                {
                   label: "LinkedIn",
+                  href: "https://www.linkedin.com/company/grow-my-influence/",
                   path: (
                     <>
                       <rect x="3" y="3" width="18" height="18" rx="3" />
@@ -942,14 +986,12 @@ export function HomeLanding() {
                     </>
                   ),
                 },
-                {
-                  label: "X",
-                  path: <path d="M4 4l16 16M20 4 4 20" />,
-                },
               ].map((s) => (
                 <a
                   key={s.label}
-                  href="#"
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={s.label}
                   className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted transition hover:border-purple/40 hover:text-purple"
                 >
@@ -964,10 +1006,10 @@ export function HomeLanding() {
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 border-t border-border px-6 py-6 text-sm text-muted">
           <p>© 2026 Grow My Influence. All rights reserved.</p>
           <div className="flex gap-5">
-            <Link href="/" className="hover:text-navy">
+            <Link href="/privacy" className="hover:text-navy">
               Privacy Policy
             </Link>
-            <Link href="/" className="hover:text-navy">
+            <Link href="/terms" className="hover:text-navy">
               Terms of Service
             </Link>
           </div>

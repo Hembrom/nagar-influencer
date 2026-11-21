@@ -17,6 +17,9 @@ export type Database = {
           instagram_url: string | null;
           youtube_url: string | null;
           tiktok_url: string | null;
+          instagram_followers: string | null;
+          instagram_following: string | null;
+          instagram_posts: string | null;
           audience_size: string | null;
           collaboration_interests: string | null;
           portfolio_links: string[] | null;
@@ -40,6 +43,9 @@ export type Database = {
           instagram_url?: string | null;
           youtube_url?: string | null;
           tiktok_url?: string | null;
+          instagram_followers?: string | null;
+          instagram_following?: string | null;
+          instagram_posts?: string | null;
           audience_size?: string | null;
           collaboration_interests?: string | null;
           portfolio_links?: string[] | null;
@@ -63,6 +69,9 @@ export type Database = {
           instagram_url?: string | null;
           youtube_url?: string | null;
           tiktok_url?: string | null;
+          instagram_followers?: string | null;
+          instagram_following?: string | null;
+          instagram_posts?: string | null;
           audience_size?: string | null;
           collaboration_interests?: string | null;
           portfolio_links?: string[] | null;

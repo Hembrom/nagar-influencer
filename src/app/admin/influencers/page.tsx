@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { addInfluencerByAdmin, getAllInfluencers, deleteInfluencer } from "@/lib/supabase/influencers";
+import { addInfluencerByAdmin, getAllInfluencers } from "@/lib/supabase/influencers";
 
 export default function AdminInfluencersPage() {
   const [influencers, setInfluencers] = useState<any[]>([]);
@@ -20,10 +20,19 @@ export default function AdminInfluencersPage() {
     handle: "",
     email: "",
     category: "",
+    bio: "",
+    location: "",
+    profile_photo: "",
     followers: "",
+    audience_size: "",
+    collaboration_interests: "",
     instagram_url: "",
     youtube_url: "",
     tiktok_url: "",
+    instagram_followers: "",
+    instagram_following: "",
+    instagram_posts: "",
+    portfolio_links: ["", "", "", "", ""],
   });
 
   // Load influencers on mount
@@ -61,14 +70,26 @@ export default function AdminInfluencersPage() {
         name: formData.name,
         email: formData.email,
         handle: formData.handle,
-        followers: formData.followers || "",
+        followers: formData.followers || formData.instagram_followers || "",
         category: formData.category,
+        bio: formData.bio || null,
+        location: formData.location || null,
+        profile_photo: formData.profile_photo || null,
+        audience_size: formData.audience_size || null,
+        collaboration_interests: formData.collaboration_interests || null,
+        instagram_url: formData.instagram_url || null,
+        youtube_url: formData.youtube_url || null,
+        tiktok_url: formData.tiktok_url || null,
+        instagram_followers: formData.instagram_followers || null,
+        instagram_following: formData.instagram_following || null,
+        instagram_posts: formData.instagram_posts || null,
+        portfolio_links: formData.portfolio_links.filter((link) => link.trim()),
         status: "verified",
       });
 
       if (result && result[0]) {
         setInfluencers([result[0], ...influencers]);
-        setFormData({ name: "", handle: "", email: "", category: "", followers: "", instagram_url: "", youtube_url: "", tiktok_url: "" });
+        setFormData({ name: "", handle: "", email: "", category: "", bio: "", location: "", profile_photo: "", followers: "", audience_size: "", collaboration_interests: "", instagram_url: "", youtube_url: "", tiktok_url: "", instagram_followers: "", instagram_following: "", instagram_posts: "", portfolio_links: ["", "", "", "", ""] });
         setShowAddForm(false);
         setSuccess("✅ Influencer added successfully!");
         setTimeout(() => setSuccess(""), 3000);
@@ -81,19 +102,7 @@ export default function AdminInfluencersPage() {
     }
   };
 
-  const handleDeleteInfluencer = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this influencer?")) return;
-    
-    try {
-      await deleteInfluencer(id);
-      setInfluencers(influencers.filter((inf) => inf.id !== id));
-      setSuccess("Influencer deleted successfully!");
-      setTimeout(() => setSuccess(""), 3000);
-    } catch (err) {
-      console.error("Error deleting influencer:", err);
-      setError("Failed to delete influencer");
-    }
-  };
+
 
   // Get unique categories
   const allCategories = ["all", ...new Set(influencers.map(i => i.category).filter(Boolean))];
@@ -238,6 +247,103 @@ export default function AdminInfluencersPage() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-orange-500"
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+                <textarea
+                  value={formData.bio}
+                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                  placeholder="Short creator profile summary"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-orange-500"
+                  rows={3}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                <input
+                  value={formData.location}
+                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                  placeholder="Mumbai, Maharashtra"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-orange-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Profile photo URL</label>
+                <input
+                  type="url"
+                  value={formData.profile_photo}
+                  onChange={(e) => setFormData({ ...formData, profile_photo: e.target.value })}
+                  placeholder="https://.../profile.jpg"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-orange-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Audience size</label>
+                <select
+                  value={formData.audience_size}
+                  onChange={(e) => setFormData({ ...formData, audience_size: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-orange-500"
+                >
+                  <option value="">Not provided</option>
+                  <option value="1K - 10K">1K - 10K</option>
+                  <option value="10K - 50K">10K - 50K</option>
+                  <option value="50K - 100K">50K - 100K</option>
+                  <option value="100K - 500K">100K - 500K</option>
+                  <option value="500K - 1M">500K - 1M</option>
+                  <option value="1M+">1M+</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Instagram followers</label>
+                <input
+                  value={formData.instagram_followers}
+                  onChange={(e) => setFormData({ ...formData, instagram_followers: e.target.value })}
+                  placeholder="e.g. 220K"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-orange-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Instagram following</label>
+                <input
+                  value={formData.instagram_following}
+                  onChange={(e) => setFormData({ ...formData, instagram_following: e.target.value })}
+                  placeholder="e.g. 695"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-orange-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Instagram posts</label>
+                <input
+                  value={formData.instagram_posts}
+                  onChange={(e) => setFormData({ ...formData, instagram_posts: e.target.value })}
+                  placeholder="e.g. 3,201"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-orange-500"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Collaboration interests</label>
+                <input
+                  value={formData.collaboration_interests}
+                  onChange={(e) => setFormData({ ...formData, collaboration_interests: e.target.value })}
+                  placeholder="Food reviews, Brand partnerships, Event promotion"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-orange-500"
+                />
+              </div>
+              {formData.portfolio_links.map((link, index) => (
+                <div key={index}>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Portfolio / video link {index + 1}</label>
+                  <input
+                    type="url"
+                    value={link}
+                    onChange={(e) => {
+                      const nextLinks = [...formData.portfolio_links];
+                      nextLinks[index] = e.target.value;
+                      setFormData({ ...formData, portfolio_links: nextLinks });
+                    }}
+                    placeholder="https://instagram.com/p/..."
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:border-orange-500"
+                  />
+                </div>
+              ))}
             </div>
             <div className="flex gap-2">
               <button
@@ -361,20 +467,12 @@ export default function AdminInfluencersPage() {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <Link
-                  href={`/admin/influencers/${influencer.id}`}
-                  className="px-3 py-2 text-center bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 rounded-lg text-sm font-medium transition"
-                >
-                  View profile
-                </Link>
-                <button
-                  onClick={() => handleDeleteInfluencer(influencer.id)}
-                  className="px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg text-sm font-medium transition"
-                >
-                  Delete
-                </button>
-              </div>
+              <Link
+                href={`/admin/influencers/${influencer.id}`}
+                className="block w-full px-3 py-2 text-center bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 rounded-lg text-sm font-medium transition"
+              >
+                View profile
+              </Link>
             </div>
           ))}
         </div>

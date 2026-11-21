@@ -3,7 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { use, useEffect, useState } from "react";
-import { getInfluencerById, type Influencer } from "@/lib/supabase/influencers";
+import { useRouter } from "next/navigation";
+import { deleteInfluencer, getInfluencerById, type Influencer } from "@/lib/supabase/influencers";
 
 function getPlatform(url: string) {
   const value = url.toLowerCase();
@@ -27,9 +28,14 @@ export default function AdminInfluencerDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const router = useRouter();
   const [influencer, setInfluencer] = useState<Influencer | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [confirmationName, setConfirmationName] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   useEffect(() => {
     async function load() {
@@ -44,6 +50,21 @@ export default function AdminInfluencerDetailPage({
     }
     load();
   }, [id]);
+
+  async function handleDeleteProfile() {
+    if (!influencer || confirmationName.trim() !== influencer.name.trim()) return;
+
+    try {
+      setDeleting(true);
+      setDeleteError("");
+      await deleteInfluencer(influencer.id);
+      router.push("/admin/influencers");
+      router.refresh();
+    } catch (deleteFailure) {
+      setDeleteError(deleteFailure instanceof Error ? deleteFailure.message : "Failed to delete influencer.");
+      setDeleting(false);
+    }
+  }
 
   if (loading) {
     return <div className="p-8 text-sm text-gray-600">Loading influencer profile...</div>;
@@ -112,8 +133,8 @@ export default function AdminInfluencerDetailPage({
 
           <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
             {[
-              ["Audience", influencer.audience_size || influencer.followers || "Not provided"],
-              ["Portfolio videos", String(portfolioLinks.length)],
+              ["Audience", influencer.audience_size || influencer.instagram_followers || influencer.followers || "Not provided"],
+              ["Instagram posts", influencer.instagram_posts || "Not provided"],
               ["Platforms", String(socialLinks.length)],
               ["Collaboration tags", String(collaborationTags.length)],
             ].map(([label, value]) => (
@@ -224,10 +245,78 @@ export default function AdminInfluencerDetailPage({
       </div>
 
       <section className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-5">
-        <h2 className="text-sm font-bold text-amber-900">Video performance</h2>
-        <p className="mt-1 text-sm text-amber-800">
-          Views, reach, engagement, likes, comments, and shares are not currently stored in the database. Add video analytics ingestion to show verified collaboration performance here.
+        <h2 className="text-sm font-bold text-amber-900">Manual Instagram metrics</h2>
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {[
+            ["Followers", influencer.instagram_followers || influencer.followers],
+            ["Following", influencer.instagram_following],
+            ["Posts", influencer.instagram_posts],
+          ].map(([label, value]) => (
+            <div key={label} className="rounded-lg border border-amber-200 bg-white p-4">
+              <p className="text-xs font-medium text-amber-800">{label}</p>
+              <p className="mt-1 text-lg font-bold text-gray-900">{value || "Not provided"}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 text-xs text-amber-800">
+          These values are entered manually and are not verified through the Instagram API.
         </p>
+      </section>
+
+      <section className="mt-6 rounded-xl border border-red-200 bg-red-50 p-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="text-sm font-bold text-red-900">Danger Zone</h2>
+            <p className="mt-1 text-sm text-red-700">Deleting this profile removes it from the influencer database.</p>
+          </div>
+          {!showDeleteConfirmation && (
+            <button
+              type="button"
+              onClick={() => {
+                setConfirmationName("");
+                setDeleteError("");
+                setShowDeleteConfirmation(true);
+              }}
+              className="rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-bold text-red-700 hover:bg-red-100"
+            >
+              Delete influencer profile
+            </button>
+          )}
+        </div>
+
+        {showDeleteConfirmation && (
+          <div className="mt-5 rounded-lg border border-red-200 bg-white p-5">
+            <p className="text-sm font-semibold text-gray-900">Verify deletion</p>
+            <p className="mt-1 text-sm text-gray-600">
+              Type <span className="font-bold text-gray-900">{influencer.name}</span> to confirm removal.
+            </p>
+            <input
+              value={confirmationName}
+              onChange={(event) => setConfirmationName(event.target.value)}
+              placeholder={influencer.name}
+              className="mt-4 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-900 outline-none focus:border-red-500"
+            />
+            {deleteError && <p className="mt-3 text-sm text-red-700">{deleteError}</p>}
+            <div className="mt-4 flex gap-2">
+              <button
+                type="button"
+                onClick={handleDeleteProfile}
+                disabled={deleting || confirmationName.trim() !== influencer.name.trim()}
+                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-bold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {deleting ? "Deleting..." : "Permanently delete"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowDeleteConfirmation(false)}
+                disabled={deleting}
+                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </section>
     </div>
   );

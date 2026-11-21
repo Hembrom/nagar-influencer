@@ -126,13 +126,13 @@ export default function AdminInfluencersPage() {
             <h1 className="text-3xl font-bold text-gray-900">Influencers Management</h1>
             <p className="text-gray-600">Manage and view registered influencers from database</p>
           </div>
-          <button
-            onClick={() => setShowAddForm(!showAddForm)}
-            disabled={loading}
-            className="px-4 py-2 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 disabled:opacity-50 transition"
+          <Link
+            href="/admin/influencers/new"
+            aria-disabled={loading}
+            className={`px-4 py-2 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition ${loading ? "pointer-events-none opacity-50" : ""}`}
           >
             + Add Influencer
-          </button>
+          </Link>
         </div>
 
         {/* Error Message */}

@@ -99,7 +99,7 @@ export default function AdminInfluencerDetailPage({
   ].map((value) => value || "—");
 
   return (
-    <div className="min-h-dvh bg-[#0b1020] p-4 text-white sm:p-8">
+    <div className="min-h-dvh bg-[#f4f6f8] p-4 text-slate-900 sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link href="/admin/influencers" className="text-sm font-semibold text-orange-600 hover:underline">
           ← Back to influencer search
@@ -152,9 +152,9 @@ export default function AdminInfluencerDetailPage({
               ["Fake score", influencer.fake_score || "Not provided"],
               ["Trust score", influencer.trust_score || "Not provided"],
             ].map(([label, value]) => (
-              <div key={label} className="rounded-xl border border-[#202b4d] bg-[#11182b] p-4">
-                <p className="text-xs font-medium text-[#7f89a5]">{label}</p>
-                <p className={`mt-1 text-2xl font-bold ${label === "Engagement" ? "text-[#18d6a5]" : label === "Followers" ? "text-white" : "text-[#22b7e5]"}`}>{value}</p>
+              <div key={label} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs font-medium text-slate-500">{label}</p>
+                <p className={`mt-1 text-2xl font-bold ${label === "Engagement" ? "text-teal-700" : label === "Trust score" ? "text-amber-700" : "text-slate-900"}`}>{value}</p>
               </div>
             ))}
           </div>
@@ -203,8 +203,8 @@ export default function AdminInfluencerDetailPage({
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <section className="rounded-xl border border-[#202b4d] bg-[#11182b] p-6 text-white">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-[#7f89a5]">Audience breakdown</h2>
+        <section className="rounded-xl border border-slate-200 bg-white p-6">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500">Audience breakdown</h2>
           {[
             ["Female", influencer.female_audience],
             ["Male", influencer.male_audience],
@@ -213,25 +213,25 @@ export default function AdminInfluencerDetailPage({
             ["Languages", influencer.languages],
           ].map(([label, value]) => (
             <div key={label} className="mt-4">
-              <div className="mb-1 flex items-center justify-between text-xs text-[#9ba4bd]"><span>{label}</span><span>{value || "—"}</span></div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-[#26304a]"><div className="h-full rounded-full bg-[#23a8d8]" style={{ width: value?.endsWith("%") ? value : "28%" }} /></div>
+              <div className="mb-1 flex items-center justify-between text-xs text-slate-600"><span>{label}</span><span className="font-semibold text-slate-800">{value || "—"}</span></div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-teal-600" style={{ width: value?.endsWith("%") ? value : "28%" }} /></div>
             </div>
           ))}
         </section>
 
-        <section className="rounded-xl border border-[#202b4d] bg-[#11182b] p-6 text-white">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-[#7f89a5]">Pricing & platform</h2>
-          <p className="mt-5 text-3xl font-bold">{influencer.estimated_post_price || "Not provided"}</p>
-          <p className="mt-1 text-xs text-[#7f89a5]">Estimated per post</p>
-          <div className="mt-5 border-t border-[#202b4d] pt-5">
-            {socialLinks.map(([platform]) => <p key={platform} className="mt-2 text-sm font-bold text-[#d6dbea]">● {platform}</p>)}
-            <p className="mt-5 text-xs text-[#7f89a5]">Trust score</p>
-            <p className="mt-1 text-sm font-bold text-[#e0a100]">{influencer.trust_score || "Not provided"}</p>
+        <section className="rounded-xl border border-slate-200 bg-white p-6">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500">Pricing & platform</h2>
+          <p className="mt-5 text-3xl font-bold text-slate-900">{influencer.estimated_post_price || "Not provided"}</p>
+          <p className="mt-1 text-xs text-slate-500">Estimated per post</p>
+          <div className="mt-5 border-t border-slate-200 pt-5">
+            {socialLinks.map(([platform]) => <p key={platform} className="mt-2 text-sm font-bold text-slate-700">● {platform}</p>)}
+            <p className="mt-5 text-xs text-slate-500">Trust score</p>
+            <p className="mt-1 text-sm font-bold text-amber-700">{influencer.trust_score || "Not provided"}</p>
           </div>
         </section>
 
-        <section className="rounded-xl border border-[#202b4d] bg-[#11182b] p-6 text-white">
-          <h2 className="text-sm font-bold text-gray-900">Content and collaboration tags</h2>
+        <section className="rounded-xl border border-slate-200 bg-white p-6">
+          <h2 className="text-sm font-bold text-slate-900">Content and collaboration tags</h2>
           <div className="mt-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Content categories</p>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -283,14 +283,14 @@ export default function AdminInfluencerDetailPage({
             </div>
           )}
         </section>
-        <section className="rounded-xl border border-[#202b4d] bg-[#11182b] p-6 text-white">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-[#7f89a5]">Reach estimate · 4 week campaign</h2>
-          <div className="mt-6 flex h-44 items-end gap-3 border-b border-dashed border-[#26304a]">
+        <section className="rounded-xl border border-slate-200 bg-white p-6">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500">Reach estimate · 4 week campaign</h2>
+          <div className="mt-6 flex h-44 items-end gap-3 border-b border-dashed border-slate-200">
             {reachValues.map((value, index) => (
-              <div key={index} className="flex h-full flex-1 items-end"><div className="w-full rounded-t-sm bg-[#e09a00]" style={{ height: value === "—" ? "8%" : `${25 + index * 18}%` }} title={`Week ${index + 1}: ${value}`} /></div>
+              <div key={index} className="flex h-full flex-1 items-end"><div className="w-full rounded-t-sm bg-orange-500" style={{ height: value === "—" ? "8%" : `${25 + index * 18}%` }} title={`Week ${index + 1}: ${value}`} /></div>
             ))}
           </div>
-          <div className="mt-2 grid grid-cols-4 text-center text-xs text-[#697696]">{reachValues.map((value, index) => <div key={index}>W{index + 1}<br /><span className="text-[#aab2c8]">{value}</span></div>)}</div>
+          <div className="mt-2 grid grid-cols-4 text-center text-xs text-slate-500">{reachValues.map((value, index) => <div key={index}>W{index + 1}<br /><span className="font-semibold text-slate-700">{value}</span></div>)}</div>
         </section>
       </div>
 

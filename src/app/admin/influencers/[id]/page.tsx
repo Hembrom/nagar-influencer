@@ -148,9 +148,9 @@ export default function AdminInfluencerDetailPage({
           <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
             {[
               ["Followers", influencer.instagram_followers || influencer.followers || influencer.audience_size || "Not provided"],
+              ["Following", influencer.instagram_following || "Not provided"],
+              ["Posts", influencer.instagram_posts || "Not provided"],
               ["Engagement", influencer.engagement_rate || "Not provided"],
-              ["Fake score", influencer.fake_score || "Not provided"],
-              ["Trust score", influencer.trust_score || "Not provided"],
             ].map(([label, value]) => (
               <div key={label} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                 <p className="text-xs font-medium text-slate-500">{label}</p>
@@ -293,25 +293,6 @@ export default function AdminInfluencerDetailPage({
           <div className="mt-2 grid grid-cols-4 text-center text-xs text-slate-500">{reachValues.map((value, index) => <div key={index}>W{index + 1}<br /><span className="font-semibold text-slate-700">{value}</span></div>)}</div>
         </section>
       </div>
-
-      <section className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-5">
-        <h2 className="text-sm font-bold text-amber-900">Manual Instagram metrics</h2>
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {[
-            ["Followers", influencer.instagram_followers || influencer.followers],
-            ["Following", influencer.instagram_following],
-            ["Posts", influencer.instagram_posts],
-          ].map(([label, value]) => (
-            <div key={label} className="rounded-lg border border-amber-200 bg-white p-4">
-              <p className="text-xs font-medium text-amber-800">{label}</p>
-              <p className="mt-1 text-lg font-bold text-gray-900">{value || "Not provided"}</p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-3 text-xs text-amber-800">
-          These values are entered manually and are not verified through the Instagram API.
-        </p>
-      </section>
 
       <section className="mt-6 rounded-xl border border-red-200 bg-red-50 p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
